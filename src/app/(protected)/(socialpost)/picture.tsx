@@ -3,8 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Button from "@/src/components/Button";
+import { router } from "expo-router";
 
-const PostSocial = () => {
+const Picture = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>("back");
@@ -35,22 +36,30 @@ const PostSocial = () => {
   }
 
   const handleRecord = async () => {
-    if (isRecording) {
-      cameraRef.current?.stopRecording();
-    } else {
-      if (cameraRef.current) {
-        setIsRecording(true);
-        const video = await cameraRef.current.recordAsync();
+    try {
+      if (isRecording) {
+        cameraRef.current?.stopRecording();
+        console.log("stop");
         setIsRecording(false);
-        if (video) {
-          Alert.alert(
-            "Video Recorded",
-            "Your video has been recorded successfully!",
-            [{ text: "OK" }]
-          );
-          console.log(video.uri);
+      } else {
+        if (cameraRef.current) {
+          setIsRecording(true);
+          console.log("start");
+          const video = await cameraRef.current.recordAsync();
+          console.log(video);
+          setIsRecording(false);
+          if (video) {
+            Alert.alert(
+              "Video Recorded",
+              "Your video has been recorded successfully!",
+              [{ text: "OK" }]
+            );
+            console.log(video.uri);
+          }
         }
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -68,7 +77,7 @@ const PostSocial = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => console.log("Open gallery")}
+            onPress={() => router.push("/gallery")}
           >
             <Ionicons name="image-outline" size={30} color="white" />
           </TouchableOpacity>
@@ -109,7 +118,7 @@ const PostSocial = () => {
   );
 };
 
-export default PostSocial;
+export default Picture;
 
 const styles = StyleSheet.create({
   container: {

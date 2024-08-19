@@ -11,6 +11,7 @@ import {
 import { lightColors } from "../utils/colors";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import merge from "deepmerge";
+import { AuthProvider } from "../context/Auth";
 
 const { LightTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -23,20 +24,24 @@ const CombinedDefaultTheme = merge(LightTheme, {
 
 export default function Root() {
   return (
-    <PaperProvider theme={CombinedDefaultTheme}>
-      <ThemeProvider value={CombinedDefaultTheme}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-        >
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(protected)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="terms" options={{ headerShown: false }} />
-          </Stack>
-        </KeyboardAvoidingView>
-      </ThemeProvider>
-    </PaperProvider>
+    <AuthProvider>
+      <PaperProvider theme={CombinedDefaultTheme}>
+        <ThemeProvider value={CombinedDefaultTheme}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+          >
+            <Stack>
+              <Stack.Screen
+                name="(protected)"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="terms" options={{ headerShown: false }} />
+            </Stack>
+          </KeyboardAvoidingView>
+        </ThemeProvider>
+      </PaperProvider>
+    </AuthProvider>
   );
 }

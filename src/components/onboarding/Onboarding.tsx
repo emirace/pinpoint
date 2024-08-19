@@ -20,6 +20,7 @@ import Animated, {
 } from "react-native-reanimated";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Dot from "./Dot";
+import { useAuth } from "@/src/context/Auth";
 
 interface OnboardingItem {
   id: string;
@@ -56,6 +57,8 @@ const { width: WIDTH, height: HEIGHT } = Dimensions.get("screen");
 
 const Onboarding: React.FC = () => {
   const { colors } = useTheme();
+  const { completeOnboarding } = useAuth();
+
   const x = useSharedValue(0);
   const flatlistIndex = useSharedValue(0);
   const flatlistRef = useAnimatedRef<FlatList<OnboardingItem>>();
@@ -187,12 +190,13 @@ const Onboarding: React.FC = () => {
             borderRadius: 5,
           }}
           onPress={() => {
+            console.log("here");
             if (flatlistIndex.value < data.length - 1) {
               flatlistRef.current?.scrollToIndex({
                 index: flatlistIndex.value + 1,
               });
             } else {
-              //   navigation.push('SignIn');
+              completeOnboarding();
             }
           }}
         >
@@ -241,6 +245,7 @@ const Onboarding: React.FC = () => {
             style={{
               borderRadius: 5,
             }}
+            onPress={() => completeOnboarding()}
           >
             Skip
           </Button>

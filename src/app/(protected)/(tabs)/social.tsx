@@ -1,6 +1,6 @@
 import { FlatList, SafeAreaView, StyleSheet, View, Image } from "react-native";
 import React from "react";
-import { Appbar } from "react-native-paper";
+import { Appbar, Divider, Menu } from "react-native-paper";
 import FeedItem from "@/src/components/social/FeedItem";
 import HeaderStories from "@/src/components/social/HeaderStories";
 import { router } from "expo-router";
@@ -64,6 +64,11 @@ const data = [
 ];
 
 const Social = () => {
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header>
@@ -73,7 +78,35 @@ const Social = () => {
           resizeMode="contain"
         />
         <Appbar.Content title="" />
-        <Appbar.Action icon="plus" onPress={() => router.push("/postsocial")} />
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchor={<Appbar.Action icon="plus" onPress={openMenu} />}
+          anchorPosition="bottom"
+          mode="flat"
+        >
+          <Menu.Item
+            leadingIcon="image-edit-outline"
+            onPress={() => {
+              closeMenu();
+              router.push("/detail");
+            }}
+            title="Post"
+          />
+          {/* <Menu.Item
+            leadingIcon="book-open-page-variant"
+            onPress={() => {}}
+            title="Story"
+          /> */}
+          <Menu.Item
+            leadingIcon="movie-open-play-outline"
+            onPress={() => {
+              closeMenu();
+              router.push("/picture");
+            }}
+            title="Reel"
+          />
+        </Menu>
         <Appbar.Action icon="magnify" onPress={() => {}} />
         <Appbar.Action icon="bell-outline" onPress={() => {}} />
         <Appbar.Action icon="email-outline" onPress={() => {}} />
@@ -93,7 +126,7 @@ const Social = () => {
 export default Social;
 
 const styles = StyleSheet.create({
-  logo: {},
+  logo: { height: 40, width: 150 },
   story: {
     fontSize: 14,
     fontWeight: "medium",

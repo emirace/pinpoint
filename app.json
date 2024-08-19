@@ -35,7 +35,9 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      "expo-video",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

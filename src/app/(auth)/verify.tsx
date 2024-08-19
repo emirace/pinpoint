@@ -11,9 +11,11 @@ import React, { useState, useRef } from "react";
 import Button from "@/src/components/Button";
 import { useTheme } from "react-native-paper";
 import { Link } from "expo-router";
+import { useAuth } from "@/src/context/Auth";
 
 const OTPVerification = () => {
   const { colors } = useTheme();
+  const { login } = useAuth();
   const [otp, setOtp] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,7 +104,9 @@ const OTPVerification = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <Button loading={loading}>Verify</Button>
+      <Button loading={loading} onPress={() => login("username")}>
+        Verify
+      </Button>
       <View style={[styles.remember, styles.signupContainer]}>
         <Text>Don't have an account?</Text>
         <Link href={"/register"} style={styles.signup}>
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   logo: {
-    width: 100,
+    width: 150,
     height: 50,
     marginBottom: 20,
     alignSelf: "center",

@@ -6,7 +6,7 @@ const SplashScreen = () => {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
-          source={require("../../assets/images/logo1.png")}
+          source={require("../../assets/images/logo2.png")}
           style={styles.logo}
         />
       </View>
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
   logoContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
   logo: {
-    width: 100,
+    width: 250,
     height: 100,
     resizeMode: "contain",
   },

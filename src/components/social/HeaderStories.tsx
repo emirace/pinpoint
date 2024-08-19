@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const storiesData = [
   {
@@ -49,10 +50,13 @@ const storiesData = [
 ];
 
 const HeaderStories = () => {
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: any) => {
     if (item.isAddButton) {
       return (
-        <TouchableOpacity style={styles.storyItem}>
+        <TouchableOpacity
+          style={styles.storyItem}
+          onPress={() => router.push("/reel")}
+        >
           <View style={styles.addStoryContainer}>
             <Image source={item.image} style={styles.storyImage} />
             <Ionicons

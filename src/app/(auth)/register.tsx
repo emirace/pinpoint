@@ -82,9 +82,12 @@ const Register = () => {
             <View style={styles.nameContainer}>
               <TextInput
                 containerStyle={{ flex: 1 }}
-                placeholder="First Name"
+                placeholder="Owner First Name"
               />
-              <TextInput containerStyle={{ flex: 1 }} placeholder="Last Name" />
+              <TextInput
+                containerStyle={{ flex: 1 }}
+                placeholder="Owner Last Name"
+              />
             </View>
             <TextInput placeholder="Business Physical Address" />
             <View style={styles.selectContainer}>
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   logo: {
-    width: 100,
+    width: 150,
     height: 50,
     marginBottom: 20,
     alignSelf: "center",
