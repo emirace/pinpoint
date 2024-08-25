@@ -6,9 +6,13 @@ import {
   ImageBackground,
   Image,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import { AVPlaybackStatusSuccess, ResizeMode, Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
+import { Menu } from "react-native-paper";
+import { router } from "expo-router";
+import CommentModal from "./Comment";
+import Share from "./Share";
 
 interface Feed {
   id: string;
@@ -27,8 +31,44 @@ interface Props {
 
 const FeedItem: React.FC<Props> = ({ item }) => {
   const [liked, setLiked] = useState(false);
-  const video = useRef(null);
+  const video = useRef<Video>(null);
   const [status, setStatus] = useState<any>({});
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
+
+  const handlePlayPause = useCallback(() => {
+    if (status?.isPlaying) {
+      video.current?.pauseAsync();
+    } else {
+      video.current?.playAsync();
+    }
+  }, [status]);
+
+  const renderOption = () => (
+    <Menu
+      visible={visible}
+      onDismiss={closeMenu}
+      anchor={
+        <TouchableOpacity onPress={openMenu}>
+          <Ionicons name="ellipsis-horizontal" size={25} color="gray" />
+        </TouchableOpacity>
+      }
+      anchorPosition="bottom"
+      mode="flat"
+    >
+      <TouchableOpacity
+        onPress={closeMenu}
+        style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
+      >
+        <Ionicons name="flag-outline" size={20} />
+        <Text>Report Partner</Text>
+      </TouchableOpacity>
+    </Menu>
+  );
+
   return (
     <View style={styles.feedItem}>
       {item.video ? (
@@ -45,11 +85,7 @@ const FeedItem: React.FC<Props> = ({ item }) => {
           <View style={[styles.mediaBackground, styles.videoCont]}>
             <Ionicons
               name={status.isPlaying ? "pause-circle" : "play-circle"}
-              onPress={() =>
-                status.isPlaying
-                  ? video.current.pauseAsync()
-                  : video.current.playAsync()
-              }
+              onPress={handlePlayPause}
               size={40}
               color="white"
             />
@@ -57,10 +93,27 @@ const FeedItem: React.FC<Props> = ({ item }) => {
               name={
                 status.isMuted ? "volume-mute-outline" : "volume-high-outline"
               }
-              style={{ position: "absolute", bottom: 4, right: 4 }}
+              style={{ position: "absolute", bottom: 15, right: 20 }}
               size={40}
               color="white"
             />
+            <View
+              style={{ position: "absolute", top: 15, left: 20, right: 20 }}
+            >
+              <View style={styles.userInfo}>
+                <Image source={item.image} style={styles.userAvatar} />
+                <View style={styles.userDetails}>
+                  <Text
+                    onPress={() => router.push("/location")}
+                    style={styles.username}
+                  >
+                    {item.username}
+                  </Text>
+                  <Text style={styles.location}>{item.location}</Text>
+                </View>
+                {renderOption()}
+              </View>
+            </View>
           </View>
         </>
       ) : item.image ? (
@@ -72,29 +125,33 @@ const FeedItem: React.FC<Props> = ({ item }) => {
           <View style={styles.userInfo}>
             <Image source={item.image} style={styles.userAvatar} />
             <View style={styles.userDetails}>
-              <Text style={styles.username}>{item.username}</Text>
+              <Text
+                onPress={() => router.push("/location")}
+                style={styles.username}
+              >
+                {item.username}
+              </Text>
               <Text style={styles.location}>{item.location}</Text>
             </View>
-            <TouchableOpacity>
-              <Ionicons name="ellipsis-horizontal" size={25} color="white" />
-            </TouchableOpacity>
+            {renderOption()}
           </View>
         </ImageBackground>
       ) : (
         <View style={[styles.userInfo]}>
           <Image
-            source={require("../../../assets/images/slide1.png")}
+            source={require("../../../../assets/images/slide1.png")}
             style={styles.userAvatar}
           />
           <View style={styles.userDetails}>
-            <Text style={[styles.username, { color: "black" }]}>
+            <Text
+              onPress={() => router.push("/location")}
+              style={[styles.username, { color: "black" }]}
+            >
               {item.username}
             </Text>
             <Text style={styles.location}>{item.location}</Text>
           </View>
-          <TouchableOpacity>
-            <Ionicons name="ellipsis-horizontal" size={25} color="gray" />
-          </TouchableOpacity>
+          {renderOption()}
         </View>
       )}
 
@@ -115,12 +172,8 @@ const FeedItem: React.FC<Props> = ({ item }) => {
             color={liked ? "red" : "black"}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="chatbubble-outline" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="paper-plane-outline" size={24} color="black" />
-        </TouchableOpacity>
+        <CommentModal />
+        <Share />
       </View>
       <Text style={styles.stats}>
         {item.likes} Likes · {item.comments} Comments
@@ -142,6 +195,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
+    left: 15,
+    top: 15,
     width: "100%",
   },
   userInfo: {

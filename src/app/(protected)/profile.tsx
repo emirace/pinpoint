@@ -11,9 +11,9 @@ import React, { useState } from "react";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { BlurView } from "expo-blur";
-import Activity from "@/src/components/menu/Activity";
 import Followers from "@/src/components/menu/Followers";
 import Favourites from "@/src/components/menu/Favourites";
+import Activity from "@/src/components/Activity";
 
 const Profile = () => {
   const [currentTab, setCurrentTab] = useState("Activity");

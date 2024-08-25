@@ -28,8 +28,8 @@ export default function Layout() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(socialpost)" options={{ headerShown: false }} />
+      <Stack.Screen name="(explores)" options={{ headerShown: false }} />
       <Stack.Screen name="profile" options={{ headerShown: false }} />
-      <Stack.Screen name="reel" options={{ headerShown: false }} />
     </Stack>
   );
 }

@@ -8,8 +8,8 @@ import {
   ViewStyle,
   TextStyle,
   GestureResponderEvent,
+  View,
 } from "react-native";
-import { useTheme } from "react-native-paper";
 import { lightColors } from "../utils/colors";
 
 type ButtonVariant = "contained" | "outlined";
@@ -34,6 +34,8 @@ const Button: React.FC<CustomButtonProps> = ({
   variant = "contained",
 }) => {
   const isOutlined = variant === "outlined";
+  const isTextChild =
+    typeof children === "string" || typeof children === "number";
 
   return (
     <TouchableOpacity
@@ -51,31 +53,38 @@ const Button: React.FC<CustomButtonProps> = ({
         <ActivityIndicator
           size="small"
           color={isOutlined ? lightColors.colors.primary : "#fff"}
+          style={styles.loader}
         />
       )}
-      <Text
-        style={[
-          styles.buttonText,
-          isOutlined ? styles.outlinedText : styles.containedText,
-          textStyle,
-        ]}
-        numberOfLines={1}
-      >
-        {children}
-      </Text>
+      {isTextChild ? (
+        <Text
+          style={[
+            styles.buttonText,
+            isOutlined ? styles.outlinedText : styles.containedText,
+            textStyle,
+          ]}
+          numberOfLines={1}
+        >
+          {children}
+        </Text>
+      ) : (
+        <View style={styles.childrenContainer}>{children}</View>
+      )}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
+    // flex: 1,
+    width: "100%",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     maxHeight: 48,
+    flexDirection: "row",
   },
   containedButton: {
     backgroundColor: lightColors.colors.primary,
@@ -98,6 +107,14 @@ const styles = StyleSheet.create({
   },
   outlinedText: {
     color: "gray",
+  },
+  loader: {
+    marginRight: 8,
+  },
+  childrenContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

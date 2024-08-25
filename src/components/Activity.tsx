@@ -1,9 +1,7 @@
-import { FlatList, SafeAreaView, StyleSheet, View, Image } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { Appbar, Divider, Menu } from "react-native-paper";
-import FeedItem from "@/src/components/social/FeedItem";
-import HeaderStories from "@/src/components/social/HeaderStories";
-import { router } from "expo-router";
+import FeedItem from "./social/FeedItem";
+import Rating from "./Rating";
 
 const data = [
   {
@@ -21,7 +19,7 @@ const data = [
     id: "1",
     username: "Traveler",
     location: "Paris, France",
-    image: require("../../../../assets/images/feeds/feed1.png"),
+    image: require("../../assets/images/feeds/feed1.png"),
     video: null,
     likes: 245,
     comments: 30,
@@ -32,7 +30,7 @@ const data = [
     id: "3",
     username: "NatureLover",
     location: "Yosemite National Park",
-    image: require("../../../../assets/images/feeds/feed2.png"),
+    image: require("../../assets/images/feeds/feed2.png"),
     video: null,
     likes: 876,
     comments: 120,
@@ -44,7 +42,7 @@ const data = [
     username: "Photographer",
     location: "Santorini, Greece",
     image: null,
-    video: require("../../../../assets/videos/feed2.mp4"),
+    video: require("../../assets/videos/feed2.mp4"),
     likes: 1024,
     comments: 85,
     // description:
@@ -55,7 +53,7 @@ const data = [
     username: "Foodie",
     location: "The Burger Place",
     image: null,
-    video: require("../../../../assets/videos/feed3.mp4"),
+    video: require("../../assets/videos/feed3.mp4"),
     likes: 560,
     comments: 45,
     description:
@@ -63,84 +61,70 @@ const data = [
   },
 ];
 
-const Social = () => {
-  const [visible, setVisible] = React.useState(false);
+const review = {
+  id: 4,
+  title: "Product title",
+  rating: 5,
+  comment:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doeiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
+  images: [
+    require("../../assets/images/product.png"),
+    require("../../assets/images/product.png"),
+    require("../../assets/images/product.png"),
+  ],
+  user: "Daniel Wilson",
+  date: "07-07-24",
+};
 
-  const openMenu = () => setVisible(true);
-
-  const closeMenu = () => setVisible(false);
+const Activity = () => {
   return (
-    <View style={{ flex: 1 }}>
-      <Appbar.Header>
-        <Image
-          source={require("../../../../assets/images/logo2.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <Appbar.Content title="" />
-        <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          anchor={<Appbar.Action icon="plus" onPress={openMenu} />}
-          anchorPosition="bottom"
-          mode="flat"
+    <View>
+      {data.map((item) => (
+        <FeedItem key={item.id} item={item} />
+      ))}
+
+      <View
+        style={{
+          padding: 15,
+          borderBottomWidth: 1,
+          borderBottomColor: "#e8e8e8",
+        }}
+      >
+        <Rating rating={5} show={false} />
+        <Text
+          style={[styles.sectionText, { fontWeight: "500", marginVertical: 3 }]}
         >
-          <Menu.Item
-            leadingIcon="image-edit-outline"
-            onPress={() => {
-              closeMenu();
-              router.push("/detail");
-            }}
-            title="Post"
-          />
-          {/* <Menu.Item
-            leadingIcon="book-open-page-variant"
-            onPress={() => {}}
-            title="Story"
-          /> */}
-          <Menu.Item
-            leadingIcon="movie-open-play-outline"
-            onPress={() => {
-              closeMenu();
-              router.push("/picture");
-            }}
-            title="Reel"
-          />
-        </Menu>
-        <Appbar.Action icon="magnify" onPress={() => {}} />
-        <Appbar.Action icon="bell-outline" onPress={() => {}} />
-        <Appbar.Action icon="email-outline" onPress={() => {}} />
-      </Appbar.Header>
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <FeedItem item={item} />}
-          keyExtractor={(item) => item.id}
-          ListHeaderComponent={<HeaderStories />}
-        />
-      </SafeAreaView>
+          {review.title}
+        </Text>
+        {review.comment && (
+          <Text style={[styles.sectionText, { marginBottom: 8 }]}>
+            {review.comment}
+          </Text>
+        )}
+        <View style={{ flexDirection: "row", gap: 5, marginBottom: 8 }}>
+          {review.images.map((image, index) => (
+            <Image
+              key={index}
+              source={image}
+              style={{ width: 50, height: 50, borderRadius: 8 }}
+              resizeMode="cover"
+            />
+          ))}
+        </View>
+        <Text style={[styles.sectionText, { fontWeight: "500" }]}>
+          {review.user}
+        </Text>
+        <Text style={styles.sectionText}>{review.date}</Text>
+      </View>
     </View>
   );
 };
 
-export default Social;
+export default Activity;
 
 const styles = StyleSheet.create({
-  logo: { height: 40, width: 150 },
-  story: {
+  sectionText: {
     fontSize: 14,
-    fontWeight: "medium",
-    paddingVertical: 15,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  storiesContainer: {
-    height: 100,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    marginBottom: 10,
+    color: "#555",
   },
 });

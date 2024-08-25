@@ -18,7 +18,7 @@ const { height, width } = Dimensions.get("window");
 const videos = [
   {
     id: "1",
-    uri: require("../../../assets/videos/feed4.mp4"),
+    uri: require("../../../../assets/videos/feed4.mp4"),
     user: {
       name: "John Doe",
       profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -26,7 +26,7 @@ const videos = [
   },
   {
     id: "2",
-    uri: require("../../../assets/videos/feed3.mp4"),
+    uri: require("../../../../assets/videos/feed3.mp4"),
     user: {
       name: "Jane Smith",
       profilePic: "https://randomuser.me/api/portraits/women/2.jpg",
@@ -34,7 +34,7 @@ const videos = [
   },
   {
     id: "3",
-    uri: require("../../../assets/videos/feed2.mp4"),
+    uri: require("../../../../assets/videos/feed2.mp4"),
     user: {
       name: "Alice Johnson",
       profilePic: "https://randomuser.me/api/portraits/women/3.jpg",

@@ -8,27 +8,27 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Social",
           tabBarIcon: ({ color }) => (
-            <Octicons name="home" size={24} color={color} />
+            <Ionicons name="location-outline" size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="discover"
+        name="explore"
         options={{
-          title: "Discover",
+          title: "Explore",
           tabBarIcon: ({ color }) => (
             <Ionicons name="compass-outline" size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="social"
+        name="map"
         options={{
-          title: "Social",
+          title: "Map",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="location-outline" size={24} color={color} />
+            <Ionicons name="map-outline" size={24} color={color} />
           ),
         }}
       />

@@ -12,6 +12,8 @@ import { lightColors } from "../utils/colors";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import merge from "deepmerge";
 import { AuthProvider } from "../context/Auth";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const { LightTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -31,14 +33,21 @@ export default function Root() {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{ flex: 1 }}
           >
-            <Stack>
-              <Stack.Screen
-                name="(protected)"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="terms" options={{ headerShown: false }} />
-            </Stack>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <BottomSheetModalProvider>
+                <Stack>
+                  <Stack.Screen
+                    name="(protected)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="terms" options={{ headerShown: false }} />
+                </Stack>
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
           </KeyboardAvoidingView>
         </ThemeProvider>
       </PaperProvider>

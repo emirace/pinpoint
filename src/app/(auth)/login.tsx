@@ -86,24 +86,30 @@ const Login = () => {
         <Text style={styles.description}>Sign in to access your account</Text>
       </View>
       <View style={styles.tabContainer}>
-        <Button
-          onPress={() => setCurrentTab(Tabs.User)}
-          variant={currentTab === Tabs.User ? "contained" : "outlined"}
-        >
-          As a User
-        </Button>
-        <Button
-          onPress={() => setCurrentTab(Tabs.Partner)}
-          variant={currentTab === Tabs.Partner ? "contained" : "outlined"}
-        >
-          As a Partner
-        </Button>
-        <Button
-          onPress={() => setCurrentTab(Tabs.Assistant)}
-          variant={currentTab === Tabs.Assistant ? "contained" : "outlined"}
-        >
-          Assistant
-        </Button>
+        <View style={{ flex: 1 }}>
+          <Button
+            onPress={() => setCurrentTab(Tabs.User)}
+            variant={currentTab === Tabs.User ? "contained" : "outlined"}
+          >
+            As a User
+          </Button>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            onPress={() => setCurrentTab(Tabs.Partner)}
+            variant={currentTab === Tabs.Partner ? "contained" : "outlined"}
+          >
+            As a Partner
+          </Button>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            onPress={() => setCurrentTab(Tabs.Assistant)}
+            variant={currentTab === Tabs.Assistant ? "contained" : "outlined"}
+          >
+            Assistant
+          </Button>
+        </View>
       </View>
       {renderForm()}
     </SafeAreaView>

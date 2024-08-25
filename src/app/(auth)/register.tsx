@@ -160,12 +160,14 @@ const Register = () => {
         <Button
           onPress={() => setCurrentTab("User")}
           variant={currentTab === "User" ? "contained" : "outlined"}
+          containerStyle={{ flex: 1 }}
         >
           As a User
         </Button>
         <Button
           onPress={() => setCurrentTab("Partner")}
           variant={currentTab === "Partner" ? "contained" : "outlined"}
+          containerStyle={{ flex: 1 }}
         >
           As a Partner
         </Button>
