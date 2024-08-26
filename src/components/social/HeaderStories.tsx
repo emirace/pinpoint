@@ -54,8 +54,8 @@ const HeaderStories = () => {
     if (item.isAddButton) {
       return (
         <TouchableOpacity
+          onPress={() => router.push("/camera")}
           style={styles.storyItem}
-          onPress={() => router.push("/reel")}
         >
           <View style={styles.addStoryContainer}>
             <Image source={item.image} style={styles.storyImage} />
@@ -71,9 +71,12 @@ const HeaderStories = () => {
     }
 
     return (
-      <View style={styles.storyItem}>
+      <TouchableOpacity
+        onPress={() => router.push("/reel")}
+        style={styles.storyItem}
+      >
         <Image source={item.image} style={styles.storyImage} />
-      </View>
+      </TouchableOpacity>
     );
   };
 

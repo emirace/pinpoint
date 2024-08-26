@@ -19,6 +19,7 @@ import {
 import { router } from "expo-router";
 import { BlurView } from "expo-blur";
 import { Appbar, useTheme } from "react-native-paper";
+import Button from "@/src/components/Button";
 
 const Menu = () => {
   const { colors } = useTheme();
@@ -48,12 +49,7 @@ const Menu = () => {
         </View>
         <View style={styles.userDetail}>
           <View style={styles.name}>
-            <Text
-              onPress={() => router.push("/profile")}
-              style={styles.fullname}
-            >
-              Username Last name
-            </Text>
+            <Text style={styles.fullname}>Username Last name</Text>
             <Text style={styles.username}>User nickname</Text>
             <View style={styles.editCont}>
               <Text
@@ -68,11 +64,27 @@ const Menu = () => {
               <Feather name="edit" size={20} color={colors.primary} />
             </View>
           </View>
-          <MaterialCommunityIcons
-            name="shield-star-outline"
-            size={35}
-            color="red"
-          />
+          <View
+            style={{ justifyContent: "space-between", alignItems: "flex-end" }}
+          >
+            <MaterialCommunityIcons
+              name="shield-star-outline"
+              size={35}
+              color="red"
+            />
+            <Button
+              onPress={() => router.push("/profile")}
+              variant="outlined"
+              containerStyle={{
+                paddingVertical: 5,
+                backgroundColor: "white",
+                width: 100,
+                marginTop: 15,
+              }}
+            >
+              View Profile
+            </Button>
+          </View>
         </View>
         <View style={styles.container}>
           <View style={styles.gridContainer}>

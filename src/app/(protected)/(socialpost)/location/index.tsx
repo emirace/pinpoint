@@ -168,7 +168,7 @@ const Location = () => {
                 style={{ alignItems: "center", flexDirection: "row", gap: 5 }}
               >
                 <Entypo name="location" size={16} />
-                <Text>Check into Location</Text>
+                <Text>Check In</Text>
               </View>
             </Button>
           </View>

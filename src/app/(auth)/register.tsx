@@ -14,9 +14,9 @@ import { Checkbox, useTheme } from "react-native-paper";
 import Select from "@/src/components/Select";
 
 const businessType = [
-  { label: "Product", value: "product" },
+  { label: "Retail", value: "retail" },
   { label: "Service", value: "service" },
-  { label: "Product & Services", value: "product & service" },
+  { label: "Retail & Services", value: "retail & service" },
 ];
 
 const Register = () => {

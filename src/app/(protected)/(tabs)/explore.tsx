@@ -16,6 +16,7 @@ import Select from "@/src/components/Select";
 import BottomSheetComponent from "@/src/components/BottomSheetComponent";
 import Filter from "@/src/components/Filter";
 import { router } from "expo-router";
+import MultiSelect from "@/src/components/select/MultiSelect";
 
 type Option = {
   label: string;
@@ -120,6 +121,12 @@ const Discover = () => {
   const [selectedItem, setSelectedItem] = useState("Products");
   const [selectedType, setSelectedType] = useState("Clothing");
   const [selectedDetail, setSelectedDetail] = useState("Shirt");
+  const [selectedTypeValues, setSelectedTypeValues] = useState<
+    (string | number)[]
+  >([]);
+  const [selectedDetailValues, setSelectedDetailValues] = useState<
+    (string | number)[]
+  >([]);
 
   const handleValueChange = (value: string | number) => {
     // Handle value change logic
@@ -133,9 +140,11 @@ const Discover = () => {
 
   const renderHeader = () => {
     const options = getOptions();
-    const selectedTypeOptions =
-      options.find((option) => option.value === selectedType)?.detailOptions ||
-      [];
+
+    // Get the detail options based on the first selected type
+    const selectedTypeOptions = options
+      .filter((option) => selectedTypeValues.includes(option.value))
+      .flatMap((option) => option.detailOptions);
 
     return (
       <View style={styles.headerContainer}>
@@ -161,19 +170,21 @@ const Discover = () => {
           />
         </View>
         <View style={styles.selectGroup}>
-          <Select
-            onValueChange={(value) => setSelectedType(value.toString())}
+          <MultiSelect
+            placeholder="Select type..."
+            selectedValues={selectedTypeValues}
+            onValuesChange={(values) => setSelectedTypeValues(values)}
             options={options.map((option) => ({
               label: option.label,
               value: option.value,
             }))}
-            selectedValue={selectedType}
             containerStyle={styles.selectContainer}
           />
-          <Select
-            onValueChange={(value) => setSelectedDetail(value.toString())}
+          <MultiSelect
+            placeholder="Select details..."
+            selectedValues={selectedDetailValues}
+            onValuesChange={(values) => setSelectedDetailValues(values)}
             options={selectedTypeOptions}
-            selectedValue={selectedDetail}
             containerStyle={styles.selectContainer}
           />
         </View>
@@ -181,22 +192,44 @@ const Discover = () => {
     );
   };
 
-  const renderItem = ({ item }: { item: Item }) => (
-    <TouchableOpacity
-      onPress={() => router.push("/details")}
-      style={styles.card}
-    >
-      <Image source={item.image} style={styles.image} />
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.price}>{item.price}</Text>
-      <Text
-        style={{ flexDirection: "row", alignItems: "center", color: "#888" }}
+  const RenderItem = ({ item }: { item: Item }) => {
+    const [isSelected, setIsSelected] = useState(false);
+    return (
+      <TouchableOpacity
+        onPress={() => router.push("/service-detail")}
+        style={styles.card}
       >
-        Buy Online - Shopping
-        <Ionicons name="chevron-down" size={12} />
-      </Text>
-    </TouchableOpacity>
-  );
+        <Image source={item.image} style={styles.image} />
+        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.price}>{item.price}</Text>
+        <Text
+          style={{ flexDirection: "row", alignItems: "center", color: "#888" }}
+        >
+          Buy Online - Shopping <Ionicons name="checkmark" size={12} />
+        </Text>
+        <TouchableOpacity
+          onPress={() => setIsSelected(!isSelected)}
+          style={{
+            width: 20,
+            height: 20,
+            borderWidth: 2,
+            borderRadius: 20,
+            backgroundColor: isSelected ? colors.primary : "transparent",
+            position: "absolute",
+            borderColor: isSelected ? colors.primary : "gray",
+            top: 10,
+            right: 10,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {isSelected && (
+            <Ionicons name="checkmark" color={"white"} size={14} />
+          )}
+        </TouchableOpacity>
+      </TouchableOpacity>
+    );
+  };
 
   const getColor = (item: string) =>
     selectedItem === item ? colors.primary : "black";
@@ -205,7 +238,7 @@ const Discover = () => {
     <SafeAreaView style={styles.container}>
       <FlatList
         data={products}
-        renderItem={renderItem}
+        renderItem={({ item }) => <RenderItem item={item} />}
         keyExtractor={(item) => item.id}
         numColumns={2}
         ListHeaderComponent={renderHeader}

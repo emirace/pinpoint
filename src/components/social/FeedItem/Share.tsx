@@ -29,9 +29,17 @@ const Share = () => {
       mode="flat"
     >
       <Text style={{ marginBottom: 10, textAlign: "center" }}>Share to</Text>
-      <View style={{ flexDirection: "row", gap: 5, padding: 5 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 5,
+          padding: 5,
+          paddingLeft: 15,
+          maxWidth: 300,
+        }}
+      >
         <FlatList
-          data={[1, 2, 3, 4, 5, 6, 7, 8]}
+          data={[1, 2, 3, 4]}
           ListHeaderComponent={() => (
             <View style={{ alignItems: "center", marginRight: 18 }}>
               <View
@@ -60,6 +68,7 @@ const Share = () => {
           )}
           keyExtractor={(item) => item.toString()}
           horizontal
+          showsHorizontalScrollIndicator={false}
         />
       </View>
     </Menu>

@@ -5,8 +5,10 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
+import { ResizeMode, Video } from "expo-av"; // For video playback
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { Appbar, useTheme } from "react-native-paper";
@@ -35,9 +37,16 @@ const galleryItems = [
   },
 ];
 
-const pictures = () => {
+const Pictures = () => {
   const { colors } = useTheme();
   const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const handleItemPress = (item: any) => {
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
+
   const renderGalleryItem = ({ item }: { item: any }) => (
     <TouchableOpacity
       style={[
@@ -47,7 +56,7 @@ const pictures = () => {
           borderColor: colors.primary,
         },
       ]}
-      onPress={() => setSelectedItem(item)}
+      onPress={() => handleItemPress(item)}
     >
       <Image
         style={styles.image}
@@ -56,18 +65,17 @@ const pictures = () => {
         transition={1000}
       />
       {item.isVideo && (
-        <>
-          <Ionicons
-            name="play-circle"
-            size={24}
-            color="white"
-            style={styles.playIcon}
-          />
-        </>
+        <Ionicons
+          name="play-circle"
+          size={24}
+          color="white"
+          style={styles.playIcon}
+        />
       )}
       {selectedItem?.id === item.id && <View style={styles.overlay} />}
     </TouchableOpacity>
   );
+
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header>
@@ -81,18 +89,50 @@ const pictures = () => {
         numColumns={3}
         contentContainerStyle={styles.galleryGrid}
       />
+
+      {/* Modal for displaying selected image/video */}
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Ionicons name="close-circle" size={40} color="white" />
+          </TouchableOpacity>
+
+          {selectedItem?.isVideo ? (
+            <Video
+              source={selectedItem?.uri}
+              style={styles.modalContent}
+              useNativeControls
+              resizeMode={ResizeMode.CONTAIN}
+              isLooping
+            />
+          ) : (
+            <Image
+              source={selectedItem?.uri}
+              style={styles.modalContent}
+              contentFit="contain"
+            />
+          )}
+        </View>
+      </Modal>
     </View>
   );
 };
 
-export default pictures;
 const WIDTH = Dimensions.get("screen").width;
+
 const styles = StyleSheet.create({
   galleryGrid: {},
   itemContainer: {
     width: WIDTH / 3,
     height: WIDTH / 3,
-    // padding: 5,
   },
   image: {
     width: "100%",
@@ -110,4 +150,22 @@ const styles = StyleSheet.create({
     top: "40%",
     left: "40%",
   },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "90%",
+    height: "90%",
+  },
+  modalCloseButton: {
+    position: "absolute",
+    top: 50,
+    right: 30,
+    zIndex: 1,
+  },
 });
+
+export default Pictures;
