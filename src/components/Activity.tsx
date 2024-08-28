@@ -78,7 +78,7 @@ const review = {
 
 const Activity = () => {
   return (
-    <View>
+    <View style={{ backgroundColor: "white" }}>
       {data.map((item) => (
         <FeedItem key={item.id} item={item} />
       ))}

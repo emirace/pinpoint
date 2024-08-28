@@ -124,16 +124,16 @@ const Onboarding: React.FC = () => {
       [1, 0],
       Extrapolation.CLAMP
     );
-    const width = interpolate(
+    const translateX = interpolate(
       x.value,
       [(data.length - 2) * WIDTH, (data.length - 1) * WIDTH],
-      [WIDTH * 0.8, 0],
+      [40, -500],
       Extrapolation.CLAMP
     );
 
     return {
       opacity,
-      width,
+      transform: [{ translateX }],
     };
   });
 
@@ -144,16 +144,16 @@ const Onboarding: React.FC = () => {
       [0, 1],
       Extrapolation.CLAMP
     );
-    const width = interpolate(
+    const translateX = interpolate(
       x.value,
       [(data.length - 2) * WIDTH, (data.length - 1) * WIDTH],
-      [0, WIDTH * 0.6],
+      [100, -30],
       Extrapolation.CLAMP
     );
 
     return {
       opacity,
-      width,
+      transform: [{ translateX }],
     };
   });
 

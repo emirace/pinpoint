@@ -6,7 +6,7 @@ import { useTheme } from "react-native-paper";
 const Favourites = () => {
   const { colors } = useTheme();
   return (
-    <View style={{ padding: 20 }}>
+    <View style={{ padding: 20, backgroundColor: "white" }}>
       {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
         <View
           key={index}

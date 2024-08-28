@@ -1,4 +1,12 @@
-import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Platform,
+  StatusBar,
+} from "react-native";
 import React, { useState } from "react";
 import Button from "@/src/components/Button";
 import TextInput from "@/src/components/TextInput";
@@ -121,6 +129,7 @@ export default Login;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     marginHorizontal: 20,
   },
   logo: {

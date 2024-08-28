@@ -14,7 +14,7 @@ import {
 import Select from "../Select";
 import Rating from "../Rating";
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get("screen");
 
 const services = [
   {

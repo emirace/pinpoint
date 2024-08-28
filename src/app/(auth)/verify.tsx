@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Platform,
+  StatusBar,
 } from "react-native";
 import React, { useState, useRef } from "react";
 import Button from "@/src/components/Button";
@@ -122,6 +124,7 @@ export default OTPVerification;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     margin: 20,
   },
   logo: {

@@ -6,7 +6,6 @@ import { Stack } from "expo-router";
 
 export default function Layout() {
   const { user, loading, onboardingCompleted } = useAuth();
-  console.log(onboardingCompleted);
 
   // You can keep the splash screen open, or render a loading screen like we do here.
   if (loading) {

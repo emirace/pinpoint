@@ -5,6 +5,8 @@ import {
   View,
   Image,
   ScrollView,
+  Platform,
+  StatusBar,
 } from "react-native";
 import React, { useState } from "react";
 import Button from "@/src/components/Button";
@@ -185,6 +187,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     marginHorizontal: 20,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   logo: {
     width: 150,

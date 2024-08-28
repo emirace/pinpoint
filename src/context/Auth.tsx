@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = async (username: string) => {
-    console.log("login");
     setUser(username);
     await SecureStore.setItemAsync("user", username);
   };

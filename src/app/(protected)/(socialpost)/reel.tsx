@@ -13,7 +13,7 @@ import { Video, ResizeMode } from "expo-av";
 import { Ionicons, Entypo, FontAwesome, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
-const { height, width } = Dimensions.get("window");
+const { height, width } = Dimensions.get("screen");
 
 const videos = [
   {

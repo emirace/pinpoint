@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get("screen");
 
 const users = [
   { id: "1", name: "User Name", username: "@username", following: false },
@@ -83,7 +83,7 @@ const Followers = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#000",
     paddingTop: 20,
     paddingHorizontal: 10,
   },

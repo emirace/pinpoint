@@ -17,6 +17,7 @@ import BottomSheetComponent from "@/src/components/BottomSheetComponent";
 import Filter from "@/src/components/Filter";
 import { router } from "expo-router";
 import MultiSelect from "@/src/components/select/MultiSelect";
+import { StatusBar } from "expo-status-bar";
 
 type Option = {
   label: string;
@@ -236,6 +237,7 @@ const Discover = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
       <FlatList
         data={products}
         renderItem={({ item }) => <RenderItem item={item} />}
