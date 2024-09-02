@@ -37,16 +37,11 @@ export default function Root() {
             <GestureHandlerRootView style={{ flex: 1 }}>
               <BottomSheetModalProvider>
                 <StatusBar style="dark" />
-                <Stack>
-                  <Stack.Screen
-                    name="(protected)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="(auth)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="terms" options={{ headerShown: false }} />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="(protected)" />
+                  <Stack.Screen name="(auth)" />
+                  <Stack.Screen name="terms" />
+                  <Stack.Screen name="privacy" />
                 </Stack>
               </BottomSheetModalProvider>
             </GestureHandlerRootView>

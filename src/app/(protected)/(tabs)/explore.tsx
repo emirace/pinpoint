@@ -12,131 +12,42 @@ import {
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Surface, useTheme } from "react-native-paper";
 import Button from "@/src/components/Button";
-import Select from "@/src/components/Select";
 import BottomSheetComponent from "@/src/components/BottomSheetComponent";
 import Filter from "@/src/components/Filter";
 import { router } from "expo-router";
 import MultiSelect from "@/src/components/select/MultiSelect";
 import { StatusBar } from "expo-status-bar";
-
-type Option = {
-  label: string;
-  value: string | number;
-};
-
-const productOptions: {
-  label: string;
-  value: string;
-  detailOptions: Option[];
-}[] = [
-  {
-    label: "Clothing",
-    value: "Clothing",
-    detailOptions: [
-      { label: "Shirt", value: "Shirt" },
-      { label: "Shorts", value: "Shorts" },
-      { label: "Jackets", value: "Jackets" },
-    ],
-  },
-  {
-    label: "Electronics",
-    value: "Electronics",
-    detailOptions: [
-      { label: "Phone", value: "Phone" },
-      { label: "Laptop", value: "Laptop" },
-    ],
-  },
-];
-
-const serviceOptions: {
-  label: string;
-  value: string;
-  detailOptions: Option[];
-}[] = [
-  {
-    label: "Consulting",
-    value: "Consulting",
-    detailOptions: [
-      { label: "Business", value: "Business" },
-      { label: "Technology", value: "Technology" },
-    ],
-  },
-  {
-    label: "Tutoring",
-    value: "Tutoring",
-    detailOptions: [
-      { label: "Math", value: "Math" },
-      { label: "Science", value: "Science" },
-    ],
-  },
-];
-
-type Item = {
-  id: string;
-  name: string;
-  price: string;
-  image: any;
-};
-
-const products: Item[] = [
-  {
-    id: "1",
-    name: "Product Name",
-    price: "$10.99",
-    image: require("../../../../assets/images/product.png"),
-  },
-  {
-    id: "2",
-    name: "Product Name",
-    price: "$10.99",
-    image: require("../../../../assets/images/product.png"),
-  },
-  {
-    id: "3",
-    name: "Product Name",
-    price: "$10.99",
-    image: require("../../../../assets/images/product.png"),
-  },
-  {
-    id: "4",
-    name: "Product Name",
-    price: "$10.99",
-    image: require("../../../../assets/images/product.png"),
-  },
-  {
-    id: "5",
-    name: "Product Name",
-    price: "$10.99",
-    image: require("../../../../assets/images/product.png"),
-  },
-  {
-    id: "6",
-    name: "Product Name",
-    price: "$10.99",
-    image: require("../../../../assets/images/product.png"),
-  },
-];
+import {
+  productOptions,
+  products,
+  serviceOptions,
+  services,
+} from "@/src/utils/data/explore";
+import { Product } from "@/src/types/product";
 
 const Discover = () => {
   const { colors } = useTheme();
   const [selectedItem, setSelectedItem] = useState("Products");
-  const [selectedType, setSelectedType] = useState("Clothing");
-  const [selectedDetail, setSelectedDetail] = useState("Shirt");
   const [selectedTypeValues, setSelectedTypeValues] = useState<
     (string | number)[]
   >([]);
   const [selectedDetailValues, setSelectedDetailValues] = useState<
     (string | number)[]
   >([]);
-
-  const handleValueChange = (value: string | number) => {
-    // Handle value change logic
-  };
+  const [isSelected, setIsSelected] = useState<string[]>([]);
 
   const getOptions = () => {
     if (selectedItem === "Products") return productOptions;
     if (selectedItem === "Services") return serviceOptions;
     return [];
+  };
+
+  const handleSelect = (value: string) => {
+    if (isSelected.includes(value)) {
+      setIsSelected(isSelected.filter((item) => item !== value));
+    } else {
+      setIsSelected([...isSelected, value]);
+    }
   };
 
   const renderHeader = () => {
@@ -193,11 +104,14 @@ const Discover = () => {
     );
   };
 
-  const RenderItem = ({ item }: { item: Item }) => {
-    const [isSelected, setIsSelected] = useState(false);
+  const RenderItem = ({ item }: { item: Product }) => {
     return (
       <TouchableOpacity
-        onPress={() => router.push("/service-detail")}
+        onPress={() =>
+          router.push(
+            selectedItem === "Products" ? "/product-detail" : "/service-detail"
+          )
+        }
         style={styles.card}
       >
         <Image source={item.image} style={styles.image} />
@@ -206,28 +120,32 @@ const Discover = () => {
         <Text
           style={{ flexDirection: "row", alignItems: "center", color: "#888" }}
         >
-          Buy Online - Shopping <Ionicons name="checkmark" size={12} />
+          {item.options} <Ionicons name="checkmark" size={12} />
         </Text>
-        <TouchableOpacity
-          onPress={() => setIsSelected(!isSelected)}
-          style={{
-            width: 20,
-            height: 20,
-            borderWidth: 2,
-            borderRadius: 20,
-            backgroundColor: isSelected ? colors.primary : "transparent",
-            position: "absolute",
-            borderColor: isSelected ? colors.primary : "gray",
-            top: 10,
-            right: 10,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {isSelected && (
-            <Ionicons name="checkmark" color={"white"} size={14} />
-          )}
-        </TouchableOpacity>
+        {selectedItem === "Services" && (
+          <TouchableOpacity
+            onPress={() => handleSelect(item.id)}
+            style={{
+              width: 20,
+              height: 20,
+              borderWidth: 2,
+              borderRadius: 20,
+              backgroundColor: isSelected.includes(item.id)
+                ? colors.primary
+                : "transparent",
+              position: "absolute",
+              borderColor: isSelected ? colors.primary : "gray",
+              top: 10,
+              right: 10,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {isSelected.includes(item.id) && (
+              <Ionicons name="checkmark" color={"white"} size={14} />
+            )}
+          </TouchableOpacity>
+        )}
       </TouchableOpacity>
     );
   };
@@ -239,17 +157,35 @@ const Discover = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <FlatList
-        data={products}
+        data={selectedItem === "Products" ? products : services}
         renderItem={({ item }) => <RenderItem item={item} />}
         keyExtractor={(item) => item.id}
         numColumns={2}
         ListHeaderComponent={renderHeader}
         contentContainerStyle={styles.productGrid}
       />
+      {isSelected.length > 0 && (
+        <Button
+          onPress={() => {
+            setIsSelected([]);
+            router.push("/inquire");
+          }}
+          containerStyle={{ marginTop: 10 }}
+        >
+          Send Leads
+        </Button>
+      )}
       <BottomSheetComponent
         content={<Filter />}
         button={
-          <Surface style={styles.filterButton}>
+          <Surface
+            style={[
+              styles.filterButton,
+              {
+                bottom: isSelected.length > 0 ? 60 : 10,
+              },
+            ]}
+          >
             <Text>Filter</Text>
             <Ionicons name="filter-sharp" size={18} />
           </Surface>
@@ -360,10 +296,8 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     position: "absolute",
-    bottom: 10,
     paddingHorizontal: 10,
     left: WIDTH / 2 - 50,
-
     backgroundColor: "#fff",
     flexDirection: "row",
     gap: 5,

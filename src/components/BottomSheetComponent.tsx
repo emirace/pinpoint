@@ -19,6 +19,7 @@ const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
   content,
   snapPoints = ["60%"],
   button,
+  actionButtonStyle,
   contentContainerStyle,
   onOpen,
 }) => {
@@ -35,7 +36,9 @@ const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
 
   return (
     <>
-      <TouchableOpacity onPress={openSheet}>{button}</TouchableOpacity>
+      <TouchableOpacity style={actionButtonStyle} onPress={openSheet}>
+        {button}
+      </TouchableOpacity>
 
       <BottomSheetModal
         ref={bottomSheetRef}

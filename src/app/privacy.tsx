@@ -3,14 +3,14 @@ import React from "react";
 import { Appbar } from "react-native-paper";
 import { router } from "expo-router";
 
-const Terms = () => {
+const Privacy = () => {
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header
         style={{ borderBottomWidth: 1, borderBottomColor: "#f1f1f1" }}
       >
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Terms & Conditions" />
+        <Appbar.Content title="Privacy Policy" />
       </Appbar.Header>
       <ScrollView
         contentContainerStyle={{
@@ -19,7 +19,7 @@ const Terms = () => {
         }}
       >
         <Text style={{ fontWeight: "bold", marginBottom: 20 }}>
-          Terms & Conditions
+          Privacy Policy
         </Text>
         <Text>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -70,6 +70,6 @@ const Terms = () => {
   );
 };
 
-export default Terms;
+export default Privacy;
 
 const styles = StyleSheet.create({});

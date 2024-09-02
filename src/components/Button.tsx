@@ -42,8 +42,8 @@ const Button: React.FC<CustomButtonProps> = ({
       style={[
         styles.button,
         isOutlined ? styles.outlinedButton : styles.containedButton,
-        containerStyle,
         disabled && styles.disabledButton,
+        containerStyle,
       ]}
       onPress={onPress}
       disabled={disabled || loading}

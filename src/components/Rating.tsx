@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TextStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 
 interface RatingProps {
   rating: number;
   show?: boolean;
+  textStyle?: TextStyle;
   maxRating?: number; // Default is 5
 }
 
@@ -13,6 +14,7 @@ const Rating: React.FC<RatingProps> = ({
   rating,
   maxRating = 5,
   show = true,
+  textStyle,
 }) => {
   const fullStars = Math.floor(rating);
   const halfStars = rating - fullStars >= 0.5 ? 1 : 0;
@@ -21,7 +23,9 @@ const Rating: React.FC<RatingProps> = ({
 
   return (
     <View style={styles.container}>
-      {show && <Text style={styles.ratingText}>{rating.toFixed(1)}</Text>}
+      {show && (
+        <Text style={[styles.ratingText, textStyle]}>{rating.toFixed(1)}</Text>
+      )}
       <View style={styles.starsContainer}>
         {/* Full stars */}
         {Array.from({ length: fullStars }).map((_, index) => (

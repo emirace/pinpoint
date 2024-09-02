@@ -38,10 +38,7 @@ const reviews = [
 ];
 
 const Detail = () => {
-  const { colors } = useTheme();
   const [visible, setVisible] = React.useState(false);
-  const [showWebsite, setShowWebsite] = useState(false);
-  const [message, setMessage] = useState("");
 
   const openMenu = () => setVisible(true);
 
@@ -93,7 +90,7 @@ const Detail = () => {
       <ScrollView>
         <View style={styles.selectedItem}>
           <Image
-            source={require("../../../../assets/images/feeds/feed2.png")}
+            source={require("../../../../assets/images/service.png")}
             style={styles.mainImage}
             resizeMode="cover"
           />
@@ -107,7 +104,7 @@ const Detail = () => {
                 fontWeight: "500",
               }}
             >
-              Location Name{" "}
+              Username Name{" "}
             </Text>
           </View>
           <View style={{}}>
@@ -118,7 +115,7 @@ const Detail = () => {
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Product Name</Text>
+          <Text style={styles.sectionTitle}>Service Name</Text>
           <Text style={styles.sectionText}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -134,6 +131,19 @@ const Detail = () => {
           >
             $1500.9
           </Text>
+
+          <View style={{ flexDirection: "row", marginBottom: 10 }}>
+            <Text style={{ flex: 1, fontWeight: "500" }}>
+              Variant Category:
+            </Text>
+            <Text style={{ flex: 2 }}>Option</Text>
+          </View>
+          <View style={{ flexDirection: "row", marginBottom: 10 }}>
+            <Text style={{ flex: 1, fontWeight: "500" }}>
+              Variant Category:
+            </Text>
+            <Text style={{ flex: 2 }}>Option</Text>
+          </View>
         </View>
 
         <View
@@ -142,7 +152,7 @@ const Detail = () => {
             { flexDirection: "row", gap: 5, alignItems: "center" },
           ]}
         >
-          <Text style={{}}>Buy Online Shoopinv</Text>
+          <Text style={{}}>In Home Service</Text>
           <Ionicons name="checkmark" size={20} />
         </View>
         <View style={styles.section}>
@@ -198,57 +208,8 @@ const Detail = () => {
           ))}
         </View>
       </ScrollView>
-      <View style={styles.inputContainer}>
-        {showWebsite ? (
-          <>
-            <Button>View Websitee</Button>
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#D67732",
-                paddingVertical: 15,
-                fontSize: 16,
-              }}
-            >
-              No payments are made through our platform
-            </Text>
-          </>
-        ) : (
-          <>
-            <View style={[styles.inputCont, { borderColor: colors.primary }]}>
-              <TextInput
-                style={styles.input}
-                onChangeText={(text) => setMessage(text)}
-                value={message || "Hi, is this Product still in stock?"}
-                placeholderTextColor={"gray"}
-              />
-              <TouchableOpacity
-                style={styles.sendButton}
-                onPress={() => setShowWebsite(true)}
-              >
-                <Ionicons name="send" size={24} color={colors.primary} />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                borderWidth: 1,
-                borderRadius: 20,
-                alignSelf: "flex-start",
-                padding: 5,
-                marginVertical: 10,
-                borderColor: "#e1e1e1",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 12,
-                }}
-              >
-                I would like to discuss more about this Product
-              </Text>
-            </View>
-          </>
-        )}
+      <View style={styles.buttonContainer}>
+        <Button onPress={() => router.push("/inquire")}>Inquire</Button>
       </View>
     </View>
   );
@@ -383,12 +344,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 8,
   },
-  inputContainer: {
-    // flexDirection: "row",
-    // alignItems: "center",
+  buttonContainer: {
     padding: 8,
     paddingHorizontal: 16,
-    paddingBottom: 20,
+    paddingBottom: 30,
     borderTopWidth: 1,
     borderColor: "#ddd",
   },

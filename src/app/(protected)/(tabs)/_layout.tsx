@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import Octicons from "@expo/vector-icons/Octicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 export default function TabLayout() {
   // This layout can be deferred because it's not the root layout.

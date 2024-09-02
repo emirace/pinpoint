@@ -31,7 +31,7 @@ const Profile = () => {
       <ScrollView>
         <View style={styles.selectedItem}>
           <Image
-            source={require("../../../assets/images/user1.png")}
+            source={require("../../../../../assets/images/user1.png")}
             style={styles.mainImage}
             resizeMode="cover"
           />
@@ -45,7 +45,7 @@ const Profile = () => {
                 {[1, 2, 3].map((index) => (
                   <Image
                     key={index}
-                    source={require("../../../assets/images/badge.png")}
+                    source={require("../../../../../assets/images/badge.png")}
                     style={styles.badgeImage}
                     resizeMode="contain"
                   />
@@ -55,7 +55,7 @@ const Profile = () => {
                 {[1, 2, 3].map((index) => (
                   <Image
                     key={index}
-                    source={require("../../../assets/images/badge.png")}
+                    source={require("../../../../../assets/images/badge.png")}
                     style={styles.badgeImage}
                     resizeMode="contain"
                   />
@@ -69,7 +69,7 @@ const Profile = () => {
                     style={styles.mainImage}
                   >
                     <Image
-                      source={require("../../../assets/images/user1.png")}
+                      source={require("../../../../../assets/images/user1.png")}
                       style={styles.mainImage}
                       resizeMode="cover"
                     />

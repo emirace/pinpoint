@@ -20,12 +20,22 @@ import { router } from "expo-router";
 import { BlurView } from "expo-blur";
 import { Appbar, useTheme } from "react-native-paper";
 import Button from "@/src/components/Button";
+import Modal from "@/src/components/modals/modal";
+import Logout from "@/src/components/menu/Logout";
+import DeleteAccount from "@/src/components/menu/DeleteAccount";
 
 const Menu = () => {
   const { colors } = useTheme();
 
-  const renderGridItem = (icon: React.ReactNode, label: string) => (
-    <TouchableOpacity style={styles.gridItem}>
+  const renderGridItem = (
+    icon: React.ReactNode,
+    label: string,
+    onpress?: () => void
+  ) => (
+    <TouchableOpacity
+      style={styles.gridItem}
+      onPress={() => (onpress ? onpress() : null)}
+    >
       {icon}
       <Text style={styles.gridLabel}>{label}</Text>
     </TouchableOpacity>
@@ -51,7 +61,10 @@ const Menu = () => {
           <View style={styles.name}>
             <Text style={styles.fullname}>Username Last name</Text>
             <Text style={styles.username}>User nickname</Text>
-            <View style={styles.editCont}>
+            <TouchableOpacity
+              onPress={() => router.push("/profile/edit")}
+              style={styles.editCont}
+            >
               <Text
                 style={{
                   color: colors.primary,
@@ -62,7 +75,7 @@ const Menu = () => {
                 Edit Profile
               </Text>
               <Feather name="edit" size={20} color={colors.primary} />
-            </View>
+            </TouchableOpacity>
           </View>
           <View
             style={{ justifyContent: "space-between", alignItems: "flex-end" }}
@@ -90,7 +103,8 @@ const Menu = () => {
           <View style={styles.gridContainer}>
             {renderGridItem(
               <MaterialIcons name="question-answer" size={24} color="#555" />,
-              "Inquiries"
+              "Inquiries",
+              () => router.push("/inquiry")
             )}
             {renderGridItem(
               <MaterialCommunityIcons
@@ -98,43 +112,60 @@ const Menu = () => {
                 size={24}
                 color="#555"
               />,
-              "Badges"
+              "Badges",
+              () => router.push("/badges")
             )}
             {renderGridItem(
               <FontAwesome name="ticket" size={24} color="#555" />,
-              "Coupons"
+              "Coupons",
+              () => router.push("/coupons")
             )}
             {renderGridItem(
               <Ionicons name="notifications-outline" size={24} color="#555" />,
-              "Notification settings"
+              "Notification settings",
+              () => router.push("/notification_settings")
             )}
             {renderGridItem(
               <Ionicons name="heart-outline" size={24} color="#555" />,
-              "Favorites"
+              "Favorites",
+              () => router.push("/favourites")
             )}
             {renderGridItem(
               <Ionicons name="headset-outline" size={24} color="#555" />,
-              "Support"
+              "Support",
+              () => router.push("/support")
             )}
             {renderGridItem(
               <Ionicons name="document-text-outline" size={24} color="#555" />,
-              "Terms"
+              "Terms",
+              () => router.push("/terms")
             )}
             {renderGridItem(
               <Ionicons name="document-lock-outline" size={24} color="#555" />,
-              "Privacy Policy"
+              "Privacy Policy",
+              () => router.push("/privacy")
             )}
           </View>
-
-          <TouchableOpacity style={styles.logoutButton}>
-            <Text style={styles.logoutText}>Log out</Text>
-            <Ionicons name="log-out-outline" size={20} color="#555" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.deleteButton}>
-            <Text style={styles.deleteText}>Delete Account</Text>
-            <Ionicons name="trash-outline" size={20} color="#f00" />
-          </TouchableOpacity>
+          <Modal
+            button={
+              <View style={styles.logoutButton}>
+                <Text style={styles.logoutText}>Log out</Text>
+                <Ionicons name="log-out-outline" size={20} color="#555" />
+              </View>
+            }
+          >
+            <Logout />
+          </Modal>
+          <Modal
+            button={
+              <View style={styles.deleteButton}>
+                <Text style={styles.deleteText}>Delete Account</Text>
+                <Ionicons name="trash-outline" size={20} color="#f00" />
+              </View>
+            }
+          >
+            <DeleteAccount />
+          </Modal>
         </View>
       </ScrollView>
     </View>

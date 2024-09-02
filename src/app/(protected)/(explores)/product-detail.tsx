@@ -93,7 +93,7 @@ const Detail = () => {
       <ScrollView>
         <View style={styles.selectedItem}>
           <Image
-            source={require("../../../../assets/images/feeds/feed2.png")}
+            source={require("../../../../assets/images/product.png")}
             style={styles.mainImage}
             resizeMode="cover"
           />
@@ -142,7 +142,7 @@ const Detail = () => {
             { flexDirection: "row", gap: 5, alignItems: "center" },
           ]}
         >
-          <Text style={{}}>Buy Online Shoopinv</Text>
+          <Text style={{}}>Buy Online Shopping</Text>
           <Ionicons name="checkmark" size={20} />
         </View>
         <View style={styles.section}>
@@ -156,7 +156,7 @@ const Detail = () => {
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Ratinb & Reviewa (4.9/5)</Text>
+          <Text style={styles.sectionTitle}>Rating & Reviewa (4.9/5)</Text>
           {reviews.map((review) => (
             <View
               key={review.id}
@@ -201,7 +201,7 @@ const Detail = () => {
       <View style={styles.inputContainer}>
         {showWebsite ? (
           <>
-            <Button>View Websitee</Button>
+            <Button>View Website</Button>
             <Text
               style={{
                 textAlign: "center",

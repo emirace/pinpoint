@@ -13,7 +13,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyDKkCXlgRItuMK6eKdJ-X1todgObwINWcc"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +27,12 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.emirace.pinpoint"
+      "package": "com.emirace.pinpoint",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDKkCXlgRItuMK6eKdJ-X1todgObwINWcc"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -39,6 +47,12 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ],
       "expo-video",
