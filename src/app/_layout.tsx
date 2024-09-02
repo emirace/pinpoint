@@ -9,7 +9,7 @@ import {
   adaptNavigationTheme,
 } from "react-native-paper";
 import { lightColors } from "../utils/colors";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { KeyboardAvoidingView, Platform, Text, TextInput } from "react-native";
 import merge from "deepmerge";
 import { AuthProvider } from "../context/Auth";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -24,6 +24,18 @@ const CombinedDefaultTheme = merge(LightTheme, {
   ...MD3LightTheme,
   colors: lightColors.colors,
 });
+
+interface TextWithDefaultProps extends Text {
+  defaultProps?: { allowFontScalling?: boolean };
+}
+(Text as unknown as TextWithDefaultProps).defaultProps = {
+  ...((Text as unknown as TextWithDefaultProps).defaultProps || {}),
+  allowFontScalling: false,
+};
+(TextInput as unknown as TextWithDefaultProps).defaultProps = {
+  ...((TextInput as unknown as TextWithDefaultProps).defaultProps || {}),
+  allowFontScalling: false,
+};
 
 export default function Root() {
   return (
