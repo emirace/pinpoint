@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import MapView, { Camera, Marker, Polyline, Region } from "react-native-maps";
-import { StyleSheet, View, Text, Image } from "react-native";
+import MapView, {
+  Camera,
+  Marker,
+  PROVIDER_GOOGLE,
+  Polyline,
+  Region,
+} from "react-native-maps";
+import { StyleSheet, View, Text, Image, Platform } from "react-native";
 import * as Location from "expo-location";
 import { mapStyle } from "@/src/utils/map";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -98,7 +104,8 @@ export default function App() {
         style={styles.map}
         customMapStyle={mapStyle}
         userInterfaceStyle="light"
-        showsUserLocation={false} // Disable the default blue dot
+        showsUserLocation={false}
+        provider={PROVIDER_GOOGLE}
         region={mapRegion}
       >
         {location && (

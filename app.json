@@ -15,8 +15,9 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyDKkCXlgRItuMK6eKdJ-X1todgObwINWcc"
-      }
+        "googleMapsApiKey": "AIzaSyBAG6Xy390W6KIWFx3DFQAtIDVnW3gqCFQ"
+      },
+      "bundleIdentifier": "com.emirace.pinpoint"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +31,7 @@
       "package": "com.emirace.pinpoint",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDKkCXlgRItuMK6eKdJ-X1todgObwINWcc"
+          "apiKey": "AIzaSyBAG6Xy390W6KIWFx3DFQAtIDVnW3gqCFQ"
         }
       }
     },
