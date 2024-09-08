@@ -35,17 +35,15 @@ const Login = () => {
           mode="outlined"
           label="Password"
           value={password}
-          secureTextEntry
+          secureTextEntry={!isPasswordVisible}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
-          right
-          // right={
-          //   <Ionicons
-          //     name={isPasswordVisible ? "eye-off-outline" : "eye-outline"}
-          //     size={24}
-          //     color="#888"
-          //   />
-          // }
+          right={
+            <TextInput.Icon
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              icon={isPasswordVisible ? "eye-off-outline" : "eye-outline"}
+            />
+          }
         />
 
         <TouchableOpacity
