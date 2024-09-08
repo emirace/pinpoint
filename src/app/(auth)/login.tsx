@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   description: {
-    fontSize: 14,
+    // fontSize: 14,
     textAlign: "center",
   },
   tabContainer: {

@@ -3,6 +3,7 @@ import Onboarding from "@/src/components/onboarding/Onboarding";
 import { useAuth } from "@/src/context/Auth";
 import { Redirect } from "expo-router";
 import { Stack } from "expo-router";
+import { Platform } from "react-native";
 
 export default function Layout() {
   const { user, loading, onboardingCompleted } = useAuth();
@@ -12,7 +13,7 @@ export default function Layout() {
     return <SplashScreen />;
   }
 
-  if (!onboardingCompleted) {
+  if (!onboardingCompleted && Platform.OS !== "web") {
     return <Onboarding />;
   }
 

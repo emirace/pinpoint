@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { View, ActivityIndicator } from "react-native";
-import * as SecureStore from "expo-secure-store";
+import { removeValue, storeData } from "../utils/storage";
 
 interface AuthContextType {
   user: string | null;
@@ -44,18 +43,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (username: string) => {
     setUser(username);
-    await SecureStore.setItemAsync("user", username);
+    await storeData("user", username);
   };
 
   const logout = async () => {
     setUser(null);
-    await SecureStore.deleteItemAsync("user");
+    await removeValue("user");
   };
 
   const completeOnboarding = async () => {
     console.log("hello");
     setOnboardingCompleted(true);
-    await SecureStore.setItemAsync("onboarding", "completed");
+    await storeData("onboarding", "completed");
   };
 
   return (
