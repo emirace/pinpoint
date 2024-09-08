@@ -1,17 +1,36 @@
-import { Ionicons } from "@expo/vector-icons";
+import Button from "@/src/components/Button";
+import Carousel from "@/src/components/onboarding/Carousel";
+import { lightColors } from "@/src/utils/colors";
+import { router } from "expo-router";
 import * as React from "react";
-import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { TextInput, Button, Checkbox } from "react-native-paper";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
+import { TextInput, Checkbox } from "react-native-paper";
 
 const Login = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [rememberMe, setRememberMe] = React.useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+  const { width: WIDTH } = useWindowDimensions();
 
   return (
     <View style={styles.container}>
-      <View style={styles.leftContainer}>
+      <View
+        style={[
+          styles.leftContainer,
+          {
+            width: WIDTH > 768 ? "40%" : "100%",
+            padding: WIDTH > 768 ? 40 : 0,
+          },
+        ]}
+      >
         <Image
           source={require("../../../assets/images/logo2.png")}
           style={styles.logo}
@@ -54,29 +73,29 @@ const Login = () => {
           <Text style={styles.rememberMeText}>Remember me</Text>
         </TouchableOpacity>
 
-        <Button mode="contained" onPress={() => console.log("Sign In")}>
+        <Button onPress={() => router.push("/verify")} variant="contained">
           Sign In
         </Button>
 
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
+        <Text style={styles.forgotPassword} onPress={() => router.push("/")}>
+          Forgot Password?
+        </Text>
         <Text style={styles.signUpText}>
-          Don't have an account? <Text style={styles.signUpLink}>Sign Up</Text>
+          Don't have an account?{" "}
+          <Text
+            onPress={() => router.push("/register")}
+            style={styles.signUpLink}
+          >
+            Sign Up
+          </Text>
         </Text>
       </View>
 
-      <View style={styles.rightContainer}>
-        <Image
-          source={require("../../../assets/images/slide1.png")}
-          style={styles.image}
-        />
-        <View style={styles.overlayText}>
-          <Text style={styles.discoverTitle}>Discover Local Favorites.</Text>
-          <Text style={styles.discoverSubtitle}>
-            Quickly find and shop from nearby small businesses that offer Retail
-            & Services.
-          </Text>
+      {WIDTH > 768 && (
+        <View style={styles.rightContainer}>
+          <Carousel />
         </View>
-      </View>
+      )}
     </View>
   );
 };
@@ -89,9 +108,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   leftContainer: {
-    width: "40%",
     justifyContent: "center",
-    padding: 40,
+    // padding: 40,
   },
   rightContainer: {
     width: "55%",
@@ -121,7 +139,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 20,
-    height: 60,
+    height: 50,
   },
   rememberMeContainer: {
     flexDirection: "row",
@@ -133,34 +151,17 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     marginTop: 10,
-    color: "#0066cc",
+    color: lightColors.colors.primary,
     textAlign: "right",
   },
   signUpText: {
-    marginTop: 10,
+    marginTop: 15,
     fontSize: 16,
+    textAlign: "center",
   },
   signUpLink: {
-    color: "#0066cc",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
-  },
-  overlayText: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-  },
-  discoverTitle: {
-    fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
-  },
-  discoverSubtitle: {
-    fontSize: 16,
-    color: "#fff",
+    color: lightColors.colors.primary,
   },
 });
 
