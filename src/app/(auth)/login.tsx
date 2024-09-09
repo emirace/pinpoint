@@ -13,6 +13,7 @@ import TextInput from "@/src/components/TextInput";
 import { Link } from "expo-router";
 import { Checkbox, useTheme } from "react-native-paper";
 import { router } from "expo-router";
+import { useAuth } from "@/src/context/Auth";
 
 enum Tabs {
   User = "User",
@@ -21,6 +22,7 @@ enum Tabs {
 }
 
 const Login = () => {
+  const { login } = useAuth();
   const { colors } = useTheme();
   const [currentTab, setCurrentTab] = useState<Tabs>(Tabs.User);
   const [checked, setChecked] = useState(false);
@@ -44,7 +46,12 @@ const Login = () => {
           Forgot Password
         </Link>
       </View>
-      <Button onPress={() => router.push("/verify")} variant="contained">
+      <Button
+        onPress={() =>
+          currentTab === "Partner" ? login("partner") : router.push("/verify")
+        }
+        variant="contained"
+      >
         Sign In
       </Button>
       <View style={[styles.remember, styles.signupContainer]}>

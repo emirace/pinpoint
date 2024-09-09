@@ -1,3 +1,4 @@
+import useDimensions from "@/src/hooks/useDimension";
 import React, { useState, ReactNode } from "react";
 import {
   Modal as DefaultModal,
@@ -11,14 +12,7 @@ import {
   TextStyle,
   Image,
 } from "react-native";
-import { AntDesign, Ionicons } from "@expo/vector-icons"; // Replace this with your preferred icon library
-import { Checkbox } from "react-native-paper";
-import Button from "../Button";
-
-type Option = {
-  label: string;
-  value: string | number;
-};
+import { ScrollView } from "react-native-gesture-handler";
 
 type CustomModalProps = {
   children: ReactNode;
@@ -34,6 +28,7 @@ const Modal: React.FC<CustomModalProps> = ({
   buttonStyle,
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { isMobile } = useDimensions();
 
   return (
     <>
@@ -55,7 +50,17 @@ const Modal: React.FC<CustomModalProps> = ({
           activeOpacity={1}
           onPressOut={() => setIsModalVisible(false)}
         >
-          <View style={[styles.modalContent, modalStyle]}>{children}</View>
+          <View
+            style={[
+              styles.modalContent,
+              { width: isMobile ? "90%" : "40%" },
+              modalStyle,
+            ]}
+          >
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {children}
+            </ScrollView>
+          </View>
         </TouchableOpacity>
       </DefaultModal>
     </>
@@ -74,7 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 8,
     padding: 16,
-    // maxHeight: "50%",
+    maxHeight: "90%",
     // flex: 1,
   },
   info: { fontWeight: "500", fontSize: 18 },

@@ -116,7 +116,11 @@ const Menu = () => {
               () => router.push("/badges")
             )}
             {renderGridItem(
-              <FontAwesome name="ticket" size={24} color="#555" />,
+              <MaterialCommunityIcons
+                name="ticket-percent-outline"
+                size={24}
+                color="#555"
+              />,
               "Coupons",
               () => router.push("/coupons")
             )}
@@ -133,7 +137,7 @@ const Menu = () => {
             {renderGridItem(
               <Ionicons name="headset-outline" size={24} color="#555" />,
               "Support",
-              () => router.push("/support")
+              () => router.push("/dashboard")
             )}
             {renderGridItem(
               <Ionicons name="document-text-outline" size={24} color="#555" />,

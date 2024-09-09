@@ -1,5 +1,6 @@
 import Button from "@/src/components/Button";
 import Carousel from "@/src/components/onboarding/Carousel";
+import { useAuth } from "@/src/context/Auth";
 import { lightColors } from "@/src/utils/colors";
 import { router } from "expo-router";
 import * as React from "react";
@@ -14,6 +15,7 @@ import {
 import { TextInput, Checkbox } from "react-native-paper";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [rememberMe, setRememberMe] = React.useState(false);
@@ -73,7 +75,7 @@ const Login = () => {
           <Text style={styles.rememberMeText}>Remember me</Text>
         </TouchableOpacity>
 
-        <Button onPress={() => router.push("/verify")} variant="contained">
+        <Button onPress={() => login("partner")} variant="contained">
           Sign In
         </Button>
 

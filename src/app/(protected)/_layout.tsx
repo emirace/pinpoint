@@ -16,20 +16,21 @@ export default function Layout() {
   if (!onboardingCompleted && Platform.OS !== "web") {
     return <Onboarding />;
   }
-
-  // Only require authentication within the (app) group's layout as users
-  // need to be able to access the (auth) group and sign in again.
   if (!user) {
-    // On web, static rendering will stop here as the user is not authenticated
-    // in the headless Node process that the pages are rendered in.
     return <Redirect href="/login" />;
   }
+
+  // if (user && user === "partner") {
+  //   return <Redirect href="/dashboard" />;
+  // }
+
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(socialpost)" options={{ headerShown: false }} />
-      <Stack.Screen name="(explores)" options={{ headerShown: false }} />
-      <Stack.Screen name="(menu)" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="(socialpost)" />
+      <Stack.Screen name="(explores)" />
+      <Stack.Screen name="(menu)" />
+      <Stack.Screen name="(partner)" />
     </Stack>
   );
 }

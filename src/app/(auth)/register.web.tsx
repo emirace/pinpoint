@@ -15,6 +15,7 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { TextInput, Checkbox } from "react-native-paper";
 import { useState } from "react";
+import { useAuth } from "@/src/context/Auth";
 
 const businessType = [
   { label: "Retail", value: "retail" },
@@ -23,6 +24,7 @@ const businessType = [
 ];
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [rememberMe, setRememberMe] = React.useState(false);
@@ -175,8 +177,8 @@ const Login = () => {
             <Checkbox status={rememberMe ? "checked" : "unchecked"} />
             <Text style={styles.rememberMeText}>Remember me</Text>
           </TouchableOpacity>
-          <Button onPress={() => router.push("/verify")} variant="contained">
-            Sign In
+          <Button onPress={() => login("partner")} variant="contained">
+            Sign Up
           </Button>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
           <Text onPress={() => router.push("/login")} style={styles.signUpText}>
@@ -229,7 +231,7 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 20,
     height: 50,
-    flex: 1,
+    // flex: 1,
   },
   rememberMeContainer: {
     flexDirection: "row",
@@ -265,6 +267,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderRadius: 5,
     flex: 1,
+    height: 50,
   },
 });
 
