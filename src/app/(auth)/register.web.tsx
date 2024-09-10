@@ -11,8 +11,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
+  ScrollView,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { TextInput, Checkbox } from "react-native-paper";
 import { useState } from "react";
 import { useAuth } from "@/src/context/Auth";
@@ -231,7 +231,6 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 20,
     height: 50,
-    // flex: 1,
   },
   rememberMeContainer: {
     flexDirection: "row",

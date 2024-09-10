@@ -13,6 +13,14 @@ export default function Layout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="dashboard" />
           <Stack.Screen name="leads" />
+          <Stack.Screen name="locations" />
+          <Stack.Screen name="products" />
+          <Stack.Screen name="services" />
+          <Stack.Screen name="partnership" />
+          <Stack.Screen name="coupons" />
+          <Stack.Screen name="socials" />
+          <Stack.Screen name="polls" />
+          <Stack.Screen name="settings" />
         </Stack>
       </View>
     </View>

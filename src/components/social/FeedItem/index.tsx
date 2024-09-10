@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   mediaBackground: {
-    // width: "100%",
+    width: "100%",
     height: 450,
     borderRadius: 20,
     marginBottom: 10,

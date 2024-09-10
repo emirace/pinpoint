@@ -12,14 +12,17 @@ import {
 } from "react-native";
 import { Appbar, Avatar, Menu, useTheme } from "react-native-paper";
 import { Link, router } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
 import { lightColors } from "@/src/utils/colors";
 import { navList } from "./Sidebar";
+import Modal from "../modals/modal";
+import CreatePost from "./post/CreatePost";
+import AddPost from "@/src/app/(protected)/(socialpost)/addpost";
+import useDimensions from "@/src/hooks/useDimension";
 
 const Header = () => {
   const [visible, setVisible] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const { width, height } = useWindowDimensions();
+  const { width, height, isMobile } = useDimensions();
   const { colors } = useTheme();
   const animatedHeight = useRef(new Animated.Value(0)).current;
 
@@ -60,25 +63,54 @@ const Header = () => {
         <Menu
           visible={visible}
           onDismiss={closeMenu}
-          anchor={<Appbar.Action icon="plus" onPress={openMenu} />}
+          anchor={
+            <Appbar.Action icon="plus-circle-outline" onPress={openMenu} />
+          }
           anchorPosition="bottom"
           mode="flat"
         >
-          <Menu.Item
-            leadingIcon="image-edit-outline"
-            onPress={() => {
-              closeMenu();
-              router.push("/addpost");
-            }}
-            title="Post"
-          />
+          <Modal
+            button={
+              <Menu.Item
+                onPress={isMobile ? () => router.push("/addpost") : undefined}
+                leadingIcon="pencil-outline"
+                title="Create Post"
+              />
+            }
+          >
+            <AddPost />
+          </Modal>
           <Menu.Item
             leadingIcon="movie-open-play-outline"
             onPress={() => {
               closeMenu();
+              // router.push("/camera");
+            }}
+            title="Create Reel"
+          />
+          <Menu.Item
+            leadingIcon="cube-outline"
+            onPress={() => {
+              closeMenu();
+              router.push("/products/add");
+            }}
+            title="Add Product"
+          />
+          <Menu.Item
+            leadingIcon="account-outline"
+            onPress={() => {
+              closeMenu();
               router.push("/camera");
             }}
-            title="Reel"
+            title="Add Service"
+          />
+          <Menu.Item
+            leadingIcon="map-marker-outline"
+            onPress={() => {
+              closeMenu();
+              // router.push("/camera");
+            }}
+            title="Add Location"
           />
         </Menu>
 

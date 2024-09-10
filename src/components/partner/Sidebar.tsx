@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -21,9 +21,13 @@ import { Link } from "expo-router";
 import { lightColors } from "../../utils/colors";
 import { Href } from "expo-router";
 import { useTheme } from "react-native-paper";
-import { IconProps } from "@expo/vector-icons/build/createIconSet";
 
-export const navList = [
+export const navList: {
+  name: string;
+  icon: string;
+  iconType: any;
+  path: Href<string>;
+}[] = [
   {
     name: "Dashboard",
     icon: "home",
@@ -40,7 +44,7 @@ export const navList = [
     name: "Location",
     icon: "location-outline",
     iconType: Ionicons,
-    path: "/location",
+    path: "/locations",
   },
   {
     name: "Products",
@@ -73,10 +77,16 @@ export const navList = [
     path: "/polls",
   },
   {
+    name: "PinPooint Social",
+    icon: "location-outline",
+    iconType: Ionicons,
+    path: "/socials",
+  },
+  {
     name: "Pinpoint Partnership",
     icon: "diamond",
     iconType: FontAwesome,
-    path: "/polls",
+    path: "/partnership",
   },
   {
     name: "Settings",
@@ -87,7 +97,7 @@ export const navList = [
 ];
 
 const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [sidebarWidth] = useState(new Animated.Value(60)); // Initial sidebar width
   const pathname = usePathname();
   const { colors } = useTheme();
@@ -101,9 +111,12 @@ const Sidebar = () => {
     }).start();
     setIsCollapsed(!isCollapsed);
   };
+  useEffect(() => {
+    toggleSidebar();
+  }, []);
 
   return (
-    <Animated.View style={[styles.sidebarContainer]}>
+    <Animated.View style={[styles.sidebarContainer, { width: sidebarWidth }]}>
       <View style={styles.logoContainer}>
         {!isCollapsed ? (
           <Image
