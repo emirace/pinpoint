@@ -4,6 +4,7 @@ import {
   ScrollView,
   Text,
   View,
+  Platform,
   Image,
 } from "react-native";
 import React from "react";
@@ -73,14 +74,16 @@ const Socials = () => {
   const { height, isMobile } = useDimensions();
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        <Image
-          source={require("../../../../assets/images/logo2.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <View style={{ flex: 2 }} />
-      </View>
+      {Platform.OS === "web" && (
+        <View style={styles.row}>
+          <Image
+            source={require("../../../../assets/images/logo2.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <View style={{ flex: 2 }} />
+        </View>
+      )}
       <View style={[styles.row, { height: height }]}>
         <FlatList
           data={data}
@@ -135,7 +138,7 @@ export default Socials;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: Platform.OS === "web" ? 10 : 0,
     backgroundColor: "white",
   },
   row: {

@@ -5,6 +5,7 @@ import {
   View,
   ImageBackground,
   Image,
+  Platform,
 } from "react-native";
 import React, { useCallback, useRef, useState } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   mediaBackground: {
-    width: "100%",
+    width: Platform.OS === "web" ? "100%" : "auto",
     height: 450,
     borderRadius: 20,
     marginBottom: 10,

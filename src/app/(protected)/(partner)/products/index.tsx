@@ -1,5 +1,6 @@
 // LeadsMobile.tsx
 import Button from "@/src/components/Button";
+import Rating from "@/src/components/Rating";
 import Select from "@/src/components/Select";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -100,62 +101,125 @@ const LeadsMobile: React.FC = () => {
 
         {/* Leads List */}
         <View style={[styles.scrollView, styles.listContainer]}>
-          {leads.map((lead, index) => (
-            <View key={index} style={[styles.leadCard, styles.mobileCard]}>
-              <View style={styles.cardContent}>
-                <Text
-                  style={[
-                    styles.username,
-                    { backgroundColor: colors.elevation.level2 },
-                  ]}
-                >
-                  {lead.name}
-                </Text>
-                <View style={{ padding: 10, gap: 15 }}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.title}>Location (s): </Text>
-                    <Text style={{ flex: 2 }}>{lead.locationName}</Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.title}>Category: </Text>
-                    <Text style={{ flex: 2 }}>{lead.category}</Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.title}>Subcategory</Text>
-                    <Text style={{ flex: 2 }}>{lead.subCategory}</Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      borderTopWidth: 1,
-                      borderTopColor: "#e1e1e1",
-                      paddingTop: 10,
-                    }}
+          {leads.map((lead, index) =>
+            selected === "Products" ? (
+              <View key={index} style={[styles.leadCard, styles.mobileCard]}>
+                <View style={styles.cardContent}>
+                  <Text
+                    style={[
+                      styles.username,
+                      { backgroundColor: colors.elevation.level2 },
+                    ]}
                   >
-                    <Text style={{ flex: 1 }}>
-                      <Text style={styles.title}>Price: </Text>
-                      {lead.price}
-                    </Text>
-
+                    {lead.name}
+                  </Text>
+                  <View style={{ padding: 10, gap: 15 }}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Location (s): </Text>
+                      <Text style={{ flex: 2 }}>{lead.locationName}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Category: </Text>
+                      <Text style={{ flex: 2 }}>{lead.category}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Subcategory:</Text>
+                      <Text style={{ flex: 2 }}>{lead.subCategory}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Variant:</Text>
+                      <Text style={{ flex: 2 }}>Male, White</Text>
+                    </View>
                     <View
                       style={{
                         flexDirection: "row",
-                        gap: 10,
-                        flex: 1,
-                        borderLeftWidth: 1,
-                        borderLeftColor: "#e1e1e1",
-                        paddingHorizontal: 30,
+                        borderTopWidth: 1,
+                        borderTopColor: "#e1e1e1",
+                        paddingTop: 10,
                       }}
                     >
-                      <Feather name="link" size={20} color="gray" />
-                      <Feather name="edit" size={20} color="gray" />
-                      <Ionicons name="trash-outline" size={20} color="red" />
+                      <Text style={{ flex: 1 }}>
+                        <Text style={styles.title}>Price: </Text>
+                        {lead.price}
+                      </Text>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          gap: 10,
+                          flex: 1,
+                          borderLeftWidth: 1,
+                          borderLeftColor: "#e1e1e1",
+                          paddingHorizontal: 30,
+                        }}
+                      >
+                        <Feather name="link" size={20} color="gray" />
+                        <Feather name="edit" size={20} color="gray" />
+                        <Ionicons name="trash-outline" size={20} color="red" />
+                      </View>
                     </View>
                   </View>
                 </View>
               </View>
-            </View>
-          ))}
+            ) : (
+              <View key={index} style={[styles.leadCard, styles.mobileCard]}>
+                <View style={styles.cardContent}>
+                  <Text
+                    style={[
+                      styles.username,
+                      { backgroundColor: colors.elevation.level2 },
+                    ]}
+                  >
+                    {lead.name}
+                  </Text>
+                  <View style={{ padding: 10, gap: 15 }}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Variants: </Text>
+                      <Text style={{ flex: 2 }}>Male, White</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Customer Name: </Text>
+                      <Text style={{ flex: 2 }}>Customer Name</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Purchase Date:</Text>
+                      <Text style={{ flex: 2 }}>MM/DD/YY</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.title}>Description:</Text>
+                      <Text style={{ flex: 2 }}>Lorem iudgh jif ess hg...</Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        borderTopWidth: 1,
+                        borderTopColor: "#e1e1e1",
+                        paddingTop: 10,
+                      }}
+                    >
+                      <Text style={{ flex: 1 }}>
+                        <Text style={styles.title}>Price: </Text>
+                        {lead.price}
+                      </Text>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          gap: 10,
+                          flex: 1,
+                          borderLeftWidth: 1,
+                          borderLeftColor: "#e1e1e1",
+                          paddingHorizontal: 30,
+                        }}
+                      >
+                        <Rating rating={5} show={false} />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            )
+          )}
         </View>
       </View>
     </ScrollView>

@@ -6,7 +6,6 @@ import {
   Platform,
   Image,
   Animated,
-  useWindowDimensions,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
@@ -15,7 +14,6 @@ import { Link, router } from "expo-router";
 import { lightColors } from "@/src/utils/colors";
 import { navList } from "./Sidebar";
 import Modal from "../modals/modal";
-import CreatePost from "./post/CreatePost";
 import AddPost from "@/src/app/(protected)/(socialpost)/addpost";
 import useDimensions from "@/src/hooks/useDimension";
 
@@ -40,7 +38,7 @@ const Header = () => {
 
   return (
     <View style={{ backgroundColor: "transparent" }}>
-      <Appbar.Header style={{ backgroundColor: "white" }}>
+      <Appbar.Header style={styles.header}>
         {Platform.OS === "web" && width > 768 ? (
           <>
             <Appbar.Action icon="star" onPress={() => {}} color="gray" />
@@ -84,7 +82,6 @@ const Header = () => {
             leadingIcon="movie-open-play-outline"
             onPress={() => {
               closeMenu();
-              // router.push("/camera");
             }}
             title="Create Reel"
           />
@@ -108,7 +105,6 @@ const Header = () => {
             leadingIcon="map-marker-outline"
             onPress={() => {
               closeMenu();
-              // router.push("/camera");
             }}
             title="Add Location"
           />
@@ -168,11 +164,19 @@ const Header = () => {
 export default Header;
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: "white",
+    zIndex: 10, // Ensures the header stays on top
+  },
   logo: { height: 40, width: 150 },
   menuContainer: {
+    position: "absolute",
+    top: 60, // Adjust this based on the header height
+    left: 0,
+    right: 0,
     overflow: "hidden", // Ensures smooth animation of collapsing
-    marginTop: 5,
     backgroundColor: "white",
+    zIndex: 20,
   },
   menuItems: { paddingTop: 20 },
   menuItem: {
@@ -186,11 +190,6 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 16,
     marginLeft: 10,
-  },
-  collapseButton: {
-    position: "absolute",
-    top: 20,
-    right: 5,
   },
   activeItem: {
     backgroundColor: lightColors.colors.primary, // Light blue background for active item

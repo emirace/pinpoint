@@ -3,40 +3,66 @@ import React, { useState } from "react";
 import { useTheme } from "react-native-paper";
 import PollCard from "@/src/components/partner/poll/PollCard";
 import useDimensions from "@/src/hooks/useDimension";
+import Button from "@/src/components/Button";
 
 const Pools = () => {
   const { colors } = useTheme();
-  const [currentTab, setCurrentTab] = useState("Active Polls");
+  const [selected, setSelected] = useState("Active Polls");
   const { isMobile } = useDimensions();
   return (
     <View style={styles.container}>
-      <Text style={styles.breadcrum}>
-        <Text style={{ color: colors.primary, fontWeight: "500" }}>
-          Dashboard
-        </Text>{" "}
-        / Polls
-      </Text>
-      <View style={styles.headerCont}>
-        <Text style={styles.heading}> Polls</Text>
-      </View>
-      <ScrollView style={[styles.content, { padding: isMobile ? 0 : 20 }]}>
-        <View style={styles.tabs}>
-          {["Active Polls (6)", "Deleted Polls"].map((item) => (
-            <Text
-              key={item}
-              style={[
-                styles.tabText,
-                currentTab === item && {
-                  color: colors.primary,
-                  borderBottomColor: colors.primary,
-                  borderBottomWidth: 2,
-                },
-              ]}
-              onPress={() => setCurrentTab(item)}
-            >
-              {item}
-            </Text>
-          ))}
+      <ScrollView style={[styles.content, { padding: isMobile ? 10 : 20 }]}>
+        <View style={styles.buttonGroup}>
+          <Button
+            variant="outlined"
+            onPress={() => setSelected("Active Polls")}
+            containerStyle={[
+              styles.itemButton,
+              {
+                borderColor:
+                  selected === "Active Polls" ? colors.primary : "black",
+              },
+            ]}
+          >
+            <View style={styles.itemButtonContent}>
+              <Text
+                style={[
+                  styles.itemButtonText,
+                  {
+                    color:
+                      selected === "Active Polls" ? colors.primary : "black",
+                  },
+                ]}
+              >
+                Active Polls
+              </Text>
+            </View>
+          </Button>
+          <Button
+            variant="outlined"
+            onPress={() => setSelected("Deleted Polls")}
+            containerStyle={[
+              styles.itemButton,
+              {
+                borderColor:
+                  selected === "Deleted Polls" ? colors.primary : "black",
+              },
+            ]}
+          >
+            <View style={styles.itemButtonContent}>
+              <Text
+                style={[
+                  styles.itemButtonText,
+                  {
+                    color:
+                      selected === "Deleted Polls" ? colors.primary : "black",
+                  },
+                ]}
+              >
+                Deleted Polls
+              </Text>
+            </View>
+          </Button>
         </View>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
@@ -54,7 +80,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
-    padding: 10,
   },
   breadcrum: { marginBottom: 30 },
   heading: {
@@ -70,8 +95,8 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: "white",
-    // padding: 15,
-    borderRadius: 20,
+    marginTop: 5,
+    padding: 10,
   },
   tabs: {
     flexDirection: "row",
@@ -86,5 +111,22 @@ const styles = StyleSheet.create({
     color: "gray",
     flex: 1,
     textAlign: "center",
+  },
+  buttonGroup: {
+    flexDirection: "row",
+    paddingVertical: 10,
+    gap: 10,
+  },
+  itemButton: {
+    backgroundColor: "white",
+    flex: 1,
+  },
+  itemButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  itemButtonText: {
+    fontSize: 20,
   },
 });

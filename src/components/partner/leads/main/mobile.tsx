@@ -44,6 +44,10 @@ const LeadsMobile: React.FC = () => {
           selectedValue={selectedLeadType}
           onValueChange={(value) => setSelectedLeadType(value)}
           options={type}
+          containerStyle={{
+            backgroundColor: colors.elevation.level2,
+            borderColor: colors.elevation.level5,
+          }}
         />
         <View
           style={{ borderWidth: 1, borderColor: "#e1e1e1", marginVertical: 20 }}
@@ -54,12 +58,20 @@ const LeadsMobile: React.FC = () => {
           placeholder="Search here"
           style={styles.searchInput}
           left={<TextInput.Icon icon="magnify" />}
+          outlineStyle={{ borderColor: colors.primary, borderRadius: 10 }}
         />
 
         {/* Leads List */}
         <View style={[styles.scrollView, styles.listContainer]}>
           {leads.map((lead, index) => (
-            <View key={index} style={[styles.leadCard, styles.mobileCard]}>
+            <View
+              key={index}
+              style={[
+                styles.leadCard,
+                styles.mobileCard,
+                { borderColor: colors.elevation.level5 },
+              ]}
+            >
               <View style={styles.cardContent}>
                 <Text
                   style={[
@@ -113,7 +125,6 @@ const LeadsMobile: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#f9f9f9",
   },
   menuButtonContent: {
     flexDirection: "row",

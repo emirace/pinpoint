@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import {
   Divider,
@@ -8,7 +15,7 @@ import {
 } from "react-native-paper";
 import Button from "@/src/components/Button";
 import MultiSelect from "@/src/components/select/MultiSelect";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import HoursOfOperation from "@/src/components/partner/location/HoursOfOperation";
 import useDimensions from "@/src/hooks/useDimension";
 
@@ -23,16 +30,20 @@ const Location = () => {
   const [category, setCategory] = useState<(string | number)[]>([]);
   return (
     <View style={styles.container}>
-      <Text style={styles.breadcrum}>
-        <Text style={{ color: colors.primary, fontWeight: "500" }}>
-          Dashboard
-        </Text>{" "}
-        / Location
-      </Text>
-      <View style={styles.headerCont}>
-        <Text style={styles.heading}>Location Setup</Text>
-        <Button containerStyle={{ width: 100 }}>Save</Button>
-      </View>
+      {Platform.OS === "web" && (
+        <>
+          <Text style={styles.breadcrum}>
+            <Text style={{ color: colors.primary, fontWeight: "500" }}>
+              Dashboard
+            </Text>{" "}
+            / Location
+          </Text>
+          <View style={styles.headerCont}>
+            <Text style={styles.heading}>Location Setup</Text>
+            <Button containerStyle={{ width: 100 }}>Save</Button>
+          </View>
+        </>
+      )}
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.photoLabel}>Add a photo to your Location</Text>
         <View
@@ -51,30 +62,48 @@ const Location = () => {
                   style={[{ height: 35, width: 30, marginTop: 10 }]}
                   resizeMode="contain"
                 />
+                {Platform.OS !== "web" && (
+                  <AntDesign
+                    name="edit"
+                    size={20}
+                    color="white"
+                    style={{
+                      backgroundColor: "black",
+                      borderRadius: 10,
+                      padding: 5,
+                      overflow: "hidden",
+                      position: "absolute",
+                      bottom: 0,
+                      right: 0,
+                    }}
+                  />
+                )}
               </View>
             </View>
-            <View style={[styles.row, { gap: 10 }]}>
-              <Button
-                containerStyle={styles.photoButton}
-                textStyle={{ color: "black" }}
-                variant="outlined"
-              >
-                Replace Photo
-              </Button>
-              <Button
-                containerStyle={styles.photoButton}
-                textStyle={{ color: "black" }}
-                variant="outlined"
-              >
-                Remove
-              </Button>
-            </View>
+            {Platform.OS === "web" && (
+              <View style={[styles.row, { gap: 10 }]}>
+                <Button
+                  containerStyle={styles.photoButton}
+                  textStyle={{ color: "black" }}
+                  variant="outlined"
+                >
+                  Replace Photo
+                </Button>
+                <Button
+                  containerStyle={styles.photoButton}
+                  textStyle={{ color: "black" }}
+                  variant="outlined"
+                >
+                  Remove
+                </Button>
+              </View>
+            )}
           </View>
           <View style={[styles.rightCont, !isMobile && { flex: 3 }]}>
             <TextInput
               mode="outlined"
               label="Location Name"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
@@ -82,16 +111,16 @@ const Location = () => {
             <TextInput
               mode="outlined"
               label="Address"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
             <TextInput
               mode="outlined"
               label="Location Description"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
-              style={{ marginBottom: 20 }}
+              style={{ marginBottom: 20, height: 100 }}
               multiline
               numberOfLines={3}
               maxLength={100}
@@ -107,7 +136,7 @@ const Location = () => {
               <TextInput
                 mode="outlined"
                 label="Category"
-                value={email}
+                // value={email}
                 onChangeText={(text) => setEmail(text)}
                 style={styles.input}
               />
@@ -151,35 +180,35 @@ const Location = () => {
             <TextInput
               mode="outlined"
               label="Question"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
             <TextInput
               mode="outlined"
               label="Option 1"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
             <TextInput
               mode="outlined"
               label="Option 2"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
             <TextInput
               mode="outlined"
               label="Option 3"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
             <TextInput
               mode="outlined"
               label="Option 4"
-              value={email}
+              // value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
@@ -195,6 +224,7 @@ const Location = () => {
             </View>
           </View>
         </View>
+        <Button containerStyle={{}}>Save</Button>
       </ScrollView>
     </View>
   );

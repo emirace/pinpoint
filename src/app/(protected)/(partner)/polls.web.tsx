@@ -1,26 +1,27 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { useTheme } from "react-native-paper";
-import Profile from "@/src/components/partner/settings/Profile";
-import Notification from "@/src/components/partner/settings/Notification";
+import PollCard from "@/src/components/partner/poll/PollCard";
+import useDimensions from "@/src/hooks/useDimension";
 
-const Settings = () => {
+const Pools = () => {
   const { colors } = useTheme();
-  const [currentTab, setCurrentTab] = useState("Edit Profile");
+  const [currentTab, setCurrentTab] = useState("Active Polls");
+  const { isMobile } = useDimensions();
   return (
     <View style={styles.container}>
       <Text style={styles.breadcrum}>
         <Text style={{ color: colors.primary, fontWeight: "500" }}>
           Dashboard
-        </Text>
-        / Settings
+        </Text>{" "}
+        / Polls
       </Text>
       <View style={styles.headerCont}>
-        <Text style={styles.heading}> Settings</Text>
+        <Text style={styles.heading}> Polls</Text>
       </View>
-      <View style={styles.content}>
+      <ScrollView style={[styles.content, { padding: isMobile ? 0 : 20 }]}>
         <View style={styles.tabs}>
-          {["Edit Profile", "Notification Settings"].map((item) => (
+          {["Active Polls (6)", "Deleted Polls"].map((item) => (
             <Text
               key={item}
               style={[
@@ -37,14 +38,17 @@ const Settings = () => {
             </Text>
           ))}
         </View>
-        {currentTab === "Edit Profile" && <Profile />}
-        {currentTab === "Notification Settings" && <Notification />}
-      </View>
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+            <PollCard key={item} />
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
-export default Settings;
+export default Pools;
 
 const styles = StyleSheet.create({
   container: {
@@ -66,7 +70,7 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: "white",
-    padding: 20,
+    // padding: 15,
     borderRadius: 20,
   },
   tabs: {

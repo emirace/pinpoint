@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import {
   Divider,
@@ -12,6 +19,7 @@ import MultiSelect from "@/src/components/select/MultiSelect";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import HoursOfOperation from "@/src/components/partner/location/HoursOfOperation";
 import Select from "@/src/components/Select";
+import useDimensions from "@/src/hooks/useDimension";
 
 const categoriesOption = [
   { label: "Clothing", value: "clothing" },
@@ -21,29 +29,47 @@ const Location = () => {
   const { colors } = useTheme();
   const [email, setEmail] = useState("");
   const [category, setCategory] = useState<(string | number)[]>([]);
+  const { isMobile } = useDimensions();
   return (
     <View style={styles.container}>
-      <Text style={styles.breadcrum}>
-        <Text style={{ color: colors.primary, fontWeight: "500" }}>
-          Dashboard
-        </Text>
-        / Service
-      </Text>
-      <View style={styles.headerCont}>
-        <Text style={styles.heading}>Add Service</Text>
-        <View style={{ flexDirection: "row", gap: 20 }}>
-          <Button
-            variant="outlined"
-            containerStyle={{ width: 150, backgroundColor: "white" }}
-          >
-            Copy Service
-          </Button>
-          <Button containerStyle={{ width: 100 }}>Save</Button>
-        </View>
-      </View>
+      {Platform.OS === "web" && (
+        <>
+          <Text style={styles.breadcrum}>
+            <Text style={{ color: colors.primary, fontWeight: "500" }}>
+              Dashboard
+            </Text>
+            / Service
+          </Text>
+          <View style={styles.headerCont}>
+            <Text style={styles.heading}>Add Service</Text>
+            <View style={{ flexDirection: "row", gap: 20 }}>
+              <Button
+                variant="outlined"
+                containerStyle={{ width: 150, backgroundColor: "white" }}
+              >
+                Copy Service
+              </Button>
+              <Button containerStyle={{ width: 100 }}>Save</Button>
+            </View>
+          </View>
+        </>
+      )}
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.row}>
+        <View
+          style={[styles.row, { flexDirection: isMobile ? "column" : "row" }]}
+        >
           <View style={styles.leftCont}>
+            {Platform.OS !== "web" && (
+              <>
+                <Button
+                  variant="outlined"
+                  containerStyle={{ width: 150, backgroundColor: "white" }}
+                >
+                  Copy Product
+                </Button>
+                <Divider style={{ marginVertical: 20 }} />
+              </>
+            )}
             <Text style={styles.photoLabel}>Basic Details</Text>
             <Divider style={{ marginVertical: 20 }} />
             <View style={{ flexDirection: "row", gap: 10, height: 200 }}>
@@ -263,7 +289,18 @@ const Location = () => {
             >
               <Text style={styles.photoLabel}>Discoverability</Text>
               <Divider style={{ marginVertical: 20 }} />
-              <Checkbox.Item label="Available Online" status="checked" />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <Text>Available Online</Text>
+                <Checkbox.Android status="checked" />
+              </View>
 
               <TextInput
                 mode="outlined"
@@ -272,13 +309,49 @@ const Location = () => {
                 onChangeText={(text) => setEmail(text)}
                 style={styles.input}
               />
-              <Checkbox.Item label="Service Ships" status="checked" />
-              <Checkbox.Item label="Pick-Up Available" status="checked" />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <Text>Service Ships</Text>
+                <Checkbox.Android status="checked" />
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <Text>Pick-Up Available</Text>
+                <Checkbox.Android status="checked" />
+              </View>
               <Divider style={{ marginVertical: 20 }} />
-              <Checkbox.Item label="In-Shop Only" status="checked" />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <Text>In-Shop Only</Text>
+                <Checkbox.Android status="checked" />
+              </View>
             </View>
           </View>
         </View>
+        {Platform.OS !== "web" && (
+          <Button containerStyle={{ marginBottom: 15 }}>Save</Button>
+        )}
       </ScrollView>
     </View>
   );

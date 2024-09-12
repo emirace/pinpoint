@@ -137,7 +137,7 @@ const Menu = () => {
             {renderGridItem(
               <Ionicons name="headset-outline" size={24} color="#555" />,
               "Support",
-              () => router.push("/dashboard")
+              () => router.push("/support")
             )}
             {renderGridItem(
               <Ionicons name="document-text-outline" size={24} color="#555" />,
@@ -229,11 +229,11 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     // justifyContent: "space-between",
     marginBottom: 40,
-    gap: 18,
+    gap: 15,
   },
   gridItem: {
-    width: WIDTH * 0.2,
-    height: WIDTH * 0.2,
+    width: (WIDTH - 75) * 0.25,
+    height: (WIDTH - 75) * 0.25,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,

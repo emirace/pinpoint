@@ -65,6 +65,7 @@ const HoursOfOperation = () => {
                 onValueChange={(text) =>
                   handleTimeChange(index, "open", text as string)
                 }
+                placeholder="Select"
                 options={operatingHoursOptions}
                 containerStyle={styles.select}
               />
@@ -75,6 +76,7 @@ const HoursOfOperation = () => {
                   handleTimeChange(index, "close", text as string)
                 }
                 options={operatingHoursOptions}
+                placeholder="Select"
                 containerStyle={styles.select}
               />
             </View>
@@ -89,7 +91,7 @@ const HoursOfOperation = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    // padding: 20,
   },
   row: {
     marginBottom: 20,

@@ -1,6 +1,6 @@
-import { Modal, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Modal, ScrollView, StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
-import { Checkbox, Divider, useTheme } from "react-native-paper";
+import { Checkbox, Divider, TextInput, useTheme } from "react-native-paper";
 import Button from "@/src/components/Button";
 import { router } from "expo-router";
 import LeadsModal from "@/src/components/partner/leads/LeadModal";
@@ -47,49 +47,57 @@ const Location = () => {
   const { colors } = useTheme();
   return (
     <View style={styles.container}>
-      <Text style={styles.breadcrum}>
-        <Text style={{ color: colors.primary, fontWeight: "500" }}>
-          Dashboard
-        </Text>{" "}
-        / Location
-      </Text>
-      <View style={styles.headerCont}>
-        <Text style={styles.heading}>All Location</Text>
+      <View style={styles.content}>
         <Button
-          variant="outlined"
-          containerStyle={{ width: 150, backgroundColor: "white" }}
+          containerStyle={{ width: 150 }}
           onPress={() => router.push("/locations/setup")}
         >
           Add Location
         </Button>
-      </View>
-      <View
-        style={[
-          styles.tableHeader,
-          { backgroundColor: colors.elevation.level2 },
-        ]}
-      >
-        <Text style={styles.tableHeaderText}>Location Name</Text>
-        <Text style={styles.tableHeaderText}>Location Address</Text>
-        <Text style={styles.tableHeaderText}>Description</Text>
-        <Text style={styles.tableHeaderText}>Actions</Text>
-      </View>
-      <Divider />
+        <Divider style={{ marginVertical: 20 }} />
 
-      {/* Table Rows */}
-      <ScrollView style={styles.tableBody}>
-        {data.map((item) => (
-          <View style={styles.tableRow} key={item.id}>
-            <Text style={styles.tableCell}>{item.name}</Text>
-            <Text style={styles.tableCell}>{item.address}</Text>
-            <Text style={styles.tableCell}>{item.description}</Text>
-            <View style={styles.actionButtons}>
-              <Feather name="edit" size={20} color="gray" />
-              <Ionicons name="trash-outline" size={20} color="red" />
+        {/* Search Input */}
+        <TextInput
+          mode="outlined"
+          placeholder="Search here"
+          style={styles.searchInput}
+          left={<TextInput.Icon icon="magnify" />}
+          outlineStyle={{
+            borderColor: colors.outlineVariant,
+            borderRadius: 10,
+          }}
+        />
+
+        {/* Table Rows */}
+        <ScrollView style={styles.body}>
+          {data.map((item) => (
+            <View style={styles.card} key={item.id}>
+              <View style={styles.head}>
+                <View style={styles.row}>
+                  <Image
+                    source={require("../../../../../assets/images/location.png")}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                  <View style={{}}>
+                    <Text style={styles.headerText}>Boulevard</Text>
+                    <Text>Blvd</Text>
+                  </View>
+                </View>
+                <View style={styles.row}>
+                  <Feather name="edit" size={24} color="gray" />
+                  <Feather name="trash-2" size={24} color="red" />
+                </View>
+              </View>
+              <Text>
+                <Text style={{ fontWeight: "500" }}>Description:</Text> Lorem
+                ipsum dolor sit amet, cons adipird elit, sed do eiusmod tempor
+                incididunt ut labore et e.
+              </Text>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -100,56 +108,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
-    padding: 10,
   },
-  breadcrum: { marginBottom: 30 },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 8,
+  content: {
+    backgroundColor: "#fff",
+    flex: 1,
+    marginTop: 5,
+    padding: 15,
   },
-  headerCont: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
+  searchInput: {
+    height: 50,
+    borderRadius: 10,
+    marginBottom: 20,
   },
-
-  tableHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "#e0e0e0",
+  body: {
+    flex: 1,
+  },
+  image: {
+    width: 70,
     height: 50,
   },
-  tableHeaderText: {
-    flex: 1,
-    fontWeight: "bold",
+  card: {
+    borderWidth: 1,
+    borderColor: "#e1e1e1",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
   },
-  tableBody: {
-    flexGrow: 1,
-    // maxHeight: "100%",
-    backgroundColor: "white",
-    padding: 10,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
-  },
-  tableRow: {
+  head: {
     flexDirection: "row",
-    // justifyContent: "space-between",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
-  tableCell: {
-    flex: 1,
-  },
-  actionButtons: {
+  row: {
     flexDirection: "row",
-    justifyContent: "center",
     gap: 10,
-    flex: 1,
+  },
+  headerText: {
+    fontWeight: "500",
+    fontSize: 18,
+    marginBottom: 5,
   },
 });

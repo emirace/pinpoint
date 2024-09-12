@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import React from "react";
 import { Card, Checkbox, useTheme } from "react-native-paper";
@@ -15,15 +16,19 @@ const partnership = () => {
   const { isMobile } = useDimensions();
   return (
     <View style={styles.container}>
-      <Text style={styles.breadcrum}>
-        <Text style={{ color: colors.primary, fontWeight: "500" }}>
-          Dashboard
-        </Text>{" "}
-        / Partnership
-      </Text>
-      <View style={styles.headerCont}>
-        <Text style={styles.heading}> Partnership</Text>
-      </View>
+      {Platform.OS === "web" && (
+        <>
+          <Text style={styles.breadcrum}>
+            <Text style={{ color: colors.primary, fontWeight: "500" }}>
+              Dashboard
+            </Text>{" "}
+            / Partnership
+          </Text>
+          <View style={styles.headerCont}>
+            <Text style={styles.heading}> Partnership</Text>
+          </View>
+        </>
+      )}
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.subheading}>Manage Your Subscription</Text>
         <View
@@ -172,6 +177,10 @@ const partnership = () => {
             </Card>
           </View>
         </View>
+
+        {Platform.OS !== "web" && (
+          <Button containerStyle={{ marginVertical: 20 }}>Save</Button>
+        )}
       </ScrollView>
     </View>
   );
@@ -183,7 +192,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
-    padding: 10,
+    paddingTop: 5,
+    padding: Platform.OS === "web" ? 10 : 0,
   },
   breadcrum: { marginBottom: 30 },
   heading: {
@@ -200,7 +210,7 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: "white",
     padding: 20,
-    borderRadius: 20,
+    borderRadius: Platform.OS === "web" ? 20 : 0,
   },
   subheading: {
     fontSize: 18,

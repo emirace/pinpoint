@@ -18,33 +18,29 @@ const Dashboard: React.FC = () => {
   const { width: WIDTH } = useWindowDimensions();
   return (
     <ScrollView style={styles.container}>
+      <Text style={styles.heading}>Dashboard</Text>
+      <Text style={styles.subheading}>
+        Access to all your details on this page
+      </Text>
       <View
         style={{
-          backgroundColor: "white",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
           marginBottom: 12,
-          marginTop: 5,
-          padding: 15,
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 12,
-          }}
-        >
-          <Text style={styles.sectionHeading}>Stats</Text>
-          <Feather name="edit" size={20} />
-        </View>
-        <StatsSection />
+        <Text style={styles.sectionHeading}>Stats</Text>
+        <Feather name="edit" size={20} />
       </View>
+      <StatsSection />
       <View>
         <View
           style={[
             styles.row,
             {
-              flexDirection: "column",
+              flexDirection:
+                Platform.OS === "web" && WIDTH > 768 ? "row" : "column",
             },
           ]}
         >
@@ -71,6 +67,7 @@ const Dashboard: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
     backgroundColor: "#f5f5f5",
   },
   heading: {
