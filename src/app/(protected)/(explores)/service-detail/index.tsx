@@ -14,6 +14,8 @@ import { router } from "expo-router";
 import { Appbar, Menu, useTheme } from "react-native-paper";
 import Rating from "@/src/components/Rating";
 import Button from "@/src/components/Button";
+import MultiSelect from "@/src/components/select/MultiSelect";
+import { reportOption } from "@/src/components/social/ReelItem";
 
 const reviews = [
   {
@@ -62,7 +64,10 @@ const Detail = () => {
           mode="flat"
         >
           <TouchableOpacity
-            onPress={closeMenu}
+            onPress={() => {
+              router.push("/location");
+              closeMenu();
+            }}
             style={{
               flexDirection: "row",
               gap: 10,
@@ -73,27 +78,33 @@ const Detail = () => {
             <Ionicons name="person-circle-outline" size={20} />
             <Text>View Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={closeMenu}
-            style={{
-              flexDirection: "row",
-              gap: 10,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-            }}
-          >
-            <Ionicons name="flag-outline" size={20} />
-            <Text>Report Partner</Text>
-          </TouchableOpacity>
+
+          <MultiSelect
+            button={
+              <View
+                style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
+              >
+                <Ionicons name="flag-outline" size={20} />
+                <Text>Report Partner</Text>
+              </View>
+            }
+            options={reportOption}
+            onValuesChange={() => {}}
+            containerStyle={{ borderWidth: 0 }}
+            buttonText="Report"
+          />
         </Menu>
       </Appbar.Header>
       <ScrollView>
         <View style={styles.selectedItem}>
           <Image
-            source={require("../../../../assets/images/service.png")}
+            source={require("../../../../../assets/images/service.png")}
             style={styles.mainImage}
             resizeMode="cover"
           />
+        </View>
+        <View style={{ alignItems: "flex-end" }}>
+          <Rating rating={5} textStyle={{ color: "black" }} />
         </View>
         <View style={styles.info}>
           <View style={{}}>
@@ -152,7 +163,7 @@ const Detail = () => {
             { flexDirection: "row", gap: 5, alignItems: "center" },
           ]}
         >
-          <Text style={{}}>In Home Service</Text>
+          <Text style={{}}>In Home </Text>
           <Ionicons name="checkmark" size={20} />
         </View>
         <View style={styles.section}>
@@ -166,7 +177,7 @@ const Detail = () => {
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Ratinb & Reviewa (4.9/5)</Text>
+          <Text style={styles.sectionTitle}>Reviews</Text>
           {reviews.map((review) => (
             <View
               key={review.id}
@@ -209,7 +220,9 @@ const Detail = () => {
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <Button onPress={() => router.push("/inquire")}>Inquire</Button>
+        <Button onPress={() => router.push("/service-detail/inquire")}>
+          Inquire
+        </Button>
       </View>
     </View>
   );

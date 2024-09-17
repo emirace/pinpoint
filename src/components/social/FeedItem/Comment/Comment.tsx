@@ -11,7 +11,10 @@ import Reply from "./Reply";
 import { Comment as IComment } from "@/src/types/comment";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
-const Comment: React.FC<{ comment: IComment }> = ({ comment }) => {
+const Comment: React.FC<{
+  comment: IComment;
+  isReplying: (value: string) => void;
+}> = ({ comment, isReplying }) => {
   const [showReplies, setShowReplies] = useState(false);
   const [liked, setLiked] = useState(false);
 
@@ -26,7 +29,12 @@ const Comment: React.FC<{ comment: IComment }> = ({ comment }) => {
         <Text style={styles.content}>{comment.content}</Text>
         <View style={styles.footer}>
           <Text style={styles.time}>{comment.time}</Text>
-          <Text style={styles.time}>Reply</Text>
+          <Text
+            onPress={() => isReplying(comment.username)}
+            style={styles.time}
+          >
+            Reply
+          </Text>
         </View>
         <TouchableOpacity onPress={() => setShowReplies(!showReplies)}>
           {!showReplies && comment.replies.length > 0 && (

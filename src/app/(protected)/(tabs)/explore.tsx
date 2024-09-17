@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { Surface, useTheme } from "react-native-paper";
+import { Surface, TextInput, useTheme } from "react-native-paper";
 import Button from "@/src/components/Button";
 import BottomSheetComponent from "@/src/components/BottomSheetComponent";
 import Filter from "@/src/components/Filter";
@@ -24,6 +24,7 @@ import {
   services,
 } from "@/src/utils/data/explore";
 import { Product } from "@/src/types/product";
+import Rating from "@/src/components/Rating";
 
 const Discover = () => {
   const { colors } = useTheme();
@@ -72,18 +73,37 @@ const Discover = () => {
               />
             }
             selected={selectedItem === "Services"}
-            onPress={() => setSelectedItem("Services")}
+            onPress={() => {
+              setSelectedItem("Services");
+              setSelectedTypeValues([]);
+            }}
           />
           <ItemButton
             label="Products"
             icon={<Feather name="box" size={24} color={getColor("Products")} />}
             selected={selectedItem === "Products"}
-            onPress={() => setSelectedItem("Products")}
+            onPress={() => {
+              setSelectedItem("Products");
+              setSelectedTypeValues([]);
+            }}
           />
         </View>
+
+        <TextInput
+          mode="outlined"
+          placeholder="Search Categories"
+          left={<TextInput.Icon icon="magnify" />}
+          outlineStyle={{ borderRadius: 10, borderColor: "#e1e1e1e1" }}
+          style={{ height: 50, marginVertical: 20 }}
+        />
         <View style={styles.selectGroup}>
           <MultiSelect
             placeholder="Select type..."
+            modalTitle={
+              selectedItem === "Products"
+                ? "Product Categories"
+                : "Service Categories"
+            }
             selectedValues={selectedTypeValues}
             onValuesChange={(values) => setSelectedTypeValues(values)}
             options={options.map((option) => ({
@@ -94,6 +114,9 @@ const Discover = () => {
           />
           <MultiSelect
             placeholder="Select details..."
+            modalTitle={
+              (selectedTypeValues as unknown as string) + " Subcategories"
+            }
             selectedValues={selectedDetailValues}
             onValuesChange={(values) => setSelectedDetailValues(values)}
             options={selectedTypeOptions}
@@ -117,6 +140,9 @@ const Discover = () => {
         <Image source={item.image} style={styles.image} />
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.price}>{item.price}</Text>
+        <View style={{ marginBottom: 5 }}>
+          <Rating rating={5} textStyle={{ color: "black" }} />
+        </View>
         <Text
           style={{ flexDirection: "row", alignItems: "center", color: "#888" }}
         >
@@ -126,24 +152,33 @@ const Discover = () => {
           <TouchableOpacity
             onPress={() => handleSelect(item.id)}
             style={{
-              width: 20,
-              height: 20,
-              borderWidth: 2,
-              borderRadius: 20,
-              backgroundColor: isSelected.includes(item.id)
-                ? colors.primary
-                : "transparent",
+              width: 50,
+              height: 50,
               position: "absolute",
-              borderColor: isSelected ? colors.primary : "gray",
               top: 10,
               right: 10,
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: "flex-start",
+              alignItems: "flex-end",
             }}
           >
-            {isSelected.includes(item.id) && (
-              <Ionicons name="checkmark" color={"white"} size={14} />
-            )}
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                borderWidth: 2,
+                borderRadius: 20,
+                backgroundColor: isSelected.includes(item.id)
+                  ? colors.primary
+                  : "transparent",
+                borderColor: isSelected ? colors.primary : "gray",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {isSelected.includes(item.id) && (
+                <Ionicons name="checkmark" color={"white"} size={14} />
+              )}
+            </View>
           </TouchableOpacity>
         )}
       </TouchableOpacity>
@@ -268,7 +303,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   selectGroup: {
-    marginVertical: 30,
+    marginBottom: 30,
     gap: 10,
   },
   selectContainer: {

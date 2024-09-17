@@ -98,6 +98,40 @@ const Inquiry = () => {
             aliquip ex ea commodo consequat. Duis aute irure dolor in
             reprehenderit in voluptate velit esse cillum dolore eu
           </Text>
+
+          <Text
+            style={[
+              styles.sectionTitle,
+              { marginTop: 10, fontWeight: "bold", fontSize: 20 },
+            ]}
+          >
+            $1500.9
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <View
+            style={[{ flexDirection: "row", gap: 5, alignItems: "center" }]}
+          >
+            <Text style={{}}>Shipping Available</Text>
+            <Ionicons name="checkmark" size={20} />
+          </View>
+          <View
+            style={[{ flexDirection: "row", gap: 5, alignItems: "center" }]}
+          >
+            <Text style={{}}>Pickup</Text>
+            <Ionicons name="checkmark" size={20} />
+          </View>
+        </View>
+        <View style={styles.section}>
+          <View style={{ flexDirection: "row", marginBottom: 10 }}>
+            <Text style={{ flex: 1 }}>Gender:</Text>
+            <Text style={{ flex: 3 }}>Male</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ flex: 1 }}>Color:</Text>
+            <Text style={{ flex: 3 }}>White</Text>
+          </View>
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Retail</Text>

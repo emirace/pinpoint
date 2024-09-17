@@ -19,7 +19,7 @@ const Favourites = () => {
         style={{ borderBottomWidth: 1, borderBottomColor: "#f1f1f1" }}
       >
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Favourites" />
+        <Appbar.Content title="Favorites" />
       </Appbar.Header>
       <View style={{ padding: 15, flex: 1 }}>
         <View style={styles.buttonGroup}>

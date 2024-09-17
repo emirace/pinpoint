@@ -126,6 +126,7 @@ export default function App() {
               style={styles.customImageMarker}
               resizeMode="contain"
             />
+            <Text>Location name</Text>
           </Marker>
         ))}
 
@@ -153,7 +154,7 @@ export default function App() {
             </Button>
           }
           actionButtonStyle={{ flex: 1 }}
-          snapPoints={["50"]}
+          snapPoints={["60"]}
         />
         <BottomSheetComponent
           content={<List />}
@@ -184,6 +185,25 @@ export default function App() {
           <SelectedLocations />
         </BottomSheetView>
       </BottomSheetModal>
+
+      <View
+        style={[
+          styles.itemButton,
+          {
+            position: "absolute",
+            bottom: 10,
+            right: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            padding: 5,
+            borderRadius: 5,
+          },
+        ]}
+      >
+        <Ionicons name="locate-sharp" size={24} />
+        <Text>My Location</Text>
+      </View>
     </View>
   );
 }

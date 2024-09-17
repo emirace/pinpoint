@@ -75,12 +75,6 @@ const Login = () => {
             <Button containerStyle={{ marginTop: 25 }} variant="contained">
               Verify
             </Button>
-            <View style={[styles.remember, styles.signupContainer]}>
-              <Text>Don't have an account?</Text>
-              <Link href={"/register"} style={styles.signup}>
-                Sign up
-              </Link>
-            </View>
           </View>
         );
       default:

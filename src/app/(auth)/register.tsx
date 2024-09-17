@@ -16,9 +16,9 @@ import { Checkbox, useTheme } from "react-native-paper";
 import Select from "@/src/components/Select";
 
 const businessType = [
-  { label: "Retail", value: "retail" },
-  { label: "Service", value: "service" },
-  { label: "Retail & Services", value: "retail & service" },
+  { label: "I sell Products", value: "products" },
+  { label: "I sell Services", value: "services" },
+  { label: "i sell Products & Services", value: "products & services" },
 ];
 
 const Register = () => {
@@ -92,6 +92,7 @@ const Register = () => {
               />
             </View>
             <TextInput placeholder="Business Physical Address" />
+            <TextInput placeholder="Suite/Bldg" />
             <View style={styles.selectContainer}>
               <Select
                 containerStyle={{ flex: 1 }}
@@ -108,8 +109,8 @@ const Register = () => {
                 onValueChange={(value) => setCity(value)}
               />
             </View>
-            <TextInput placeholder="Email" />
             <TextInput placeholder="Zip Code" />
+            <TextInput placeholder="Email" />
             <Select
               placeholder="Business Type"
               options={businessType}
@@ -174,7 +175,10 @@ const Register = () => {
           As a Partner
         </Button>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
         {renderForm()}
       </ScrollView>
     </SafeAreaView>

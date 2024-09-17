@@ -133,9 +133,9 @@ const Chat = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ paddingHorizontal: 16, marginBottom: 20 }}>
+      {/* <View style={{ paddingHorizontal: 16, marginBottom: 20 }}>
         <Close />
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderTopWidth: 1,
     borderColor: "#ddd",
+    marginBottom: 30,
   },
   inputCont: {
     flex: 1,

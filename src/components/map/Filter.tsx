@@ -33,7 +33,9 @@ const Filter: React.FC = () => {
             paddingVertical: 15,
           }}
         >
-          <Text style={{ fontWeight: "500", marginBottom: 8 }}>Radius</Text>
+          <Text style={{ fontWeight: "500", marginBottom: 8 }}>
+            Radius (miles)
+          </Text>
           <MultiSlider
             values={[distance]}
             sliderLength={WIDTH - 30}
@@ -72,7 +74,24 @@ const Filter: React.FC = () => {
           <Text>Yori house, Rivers Street</Text>
         </View>
         <MultiSelect
-          placeholder="Select type..."
+          placeholder="Products or Services"
+          selectedValues={selectedTypeValues}
+          onValuesChange={(values) => setSelectedTypeValues(values)}
+          options={[
+            {
+              label: "Products",
+              value: "Products",
+            },
+            {
+              label: "Services",
+              value: "Services",
+            },
+          ]}
+          containerStyle={styles.selectContainer}
+        />
+
+        <MultiSelect
+          placeholder="Select Category"
           selectedValues={selectedTypeValues}
           onValuesChange={(values) => setSelectedTypeValues(values)}
           options={serviceOptions.map((option) => ({
@@ -89,7 +108,7 @@ const Filter: React.FC = () => {
           containerStyle={styles.selectContainer}
         />
       </ScrollView>
-      <Button>Show Result(1500)</Button>
+      <Button>Show Result - 13 Locations</Button>
     </View>
   );
 };

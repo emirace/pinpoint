@@ -10,6 +10,7 @@ import {
   Animated,
   useWindowDimensions,
 } from "react-native";
+import { data } from "./Onboarding";
 
 const Carousel = () => {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -17,38 +18,16 @@ const Carousel = () => {
   const animation = useRef(new Animated.Value(0)).current;
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  // List of images for the carousel
-  const images = [
-    {
-      id: 1,
-      image: require("../../../assets/images/slide1.png"),
-      title: "Discover Local Favorites.",
-      subtitle:
-        "Quickly find and shop from neeaby small businesses that offer Retail & Servicess",
-    },
-    {
-      id: 2,
-      image: require("../../../assets/images/slide2.png"),
-      title: "Find Unique Cafes.",
-      subtitle: "Explore charming cafes near your location.",
-    },
-    {
-      id: 3,
-      image: require("../../../assets/images/slide3.png"),
-      title: "Explore Bookstores.",
-      subtitle: "Discover bookstores with rare and exciting books.",
-    },
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) =>
-        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        prevIndex === data.length - 1 ? 0 : prevIndex + 1
       );
     }, 3000); // Change slide every 3 seconds
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [data.length]);
 
   useEffect(() => {
     if (scrollViewRef.current) {
@@ -75,7 +54,7 @@ const Carousel = () => {
         showsHorizontalScrollIndicator={false}
         scrollEnabled={false} // Disable manual scrolling
       >
-        {images.map((image, index) => (
+        {data.map((image, index) => (
           <View
             key={image.id}
             style={[
@@ -91,8 +70,8 @@ const Carousel = () => {
               style={[styles.gradient, { height: screenHeight * 0.4 }]}
             />
             <View style={styles.overlayText}>
-              <Text style={styles.discoverTitle}>{image.title}</Text>
-              <Text style={styles.discoverSubtitle}>{image.subtitle}</Text>
+              <Text style={styles.discoverTitle}>{image.header}</Text>
+              <Text style={styles.discoverSubtitle}>{image.description}</Text>
             </View>
           </View>
         ))}
@@ -100,7 +79,7 @@ const Carousel = () => {
 
       {/* Pagination Dots */}
       <View style={styles.paginationContainer}>
-        {images.map((_, index) => {
+        {data.map((_, index) => {
           // Animated width for active dot
           const width = animation.interpolate({
             inputRange: [index - 1, index, index + 1],

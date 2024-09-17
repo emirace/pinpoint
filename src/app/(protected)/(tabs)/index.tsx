@@ -91,7 +91,7 @@ const Social = () => {
               closeMenu();
               router.push("/addpost");
             }}
-            title="Post"
+            title="Add Post"
           />
           {/* <Menu.Item
             leadingIcon="book-open-page-variant"
@@ -104,7 +104,7 @@ const Social = () => {
               closeMenu();
               router.push("/camera");
             }}
-            title="Reel"
+            title="Add Story"
           />
         </Menu>
         <Appbar.Action icon="magnify" onPress={() => {}} />

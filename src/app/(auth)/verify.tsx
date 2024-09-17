@@ -109,12 +109,6 @@ const OTPVerification = () => {
       <Button loading={loading} onPress={() => login("username")}>
         Verify
       </Button>
-      <View style={[styles.remember, styles.signupContainer]}>
-        <Text>Don't have an account?</Text>
-        <Link href={"/register"} style={styles.signup}>
-          Sign up
-        </Link>
-      </View>
     </SafeAreaView>
   );
 };

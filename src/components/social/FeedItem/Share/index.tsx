@@ -5,12 +5,21 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  StyleProp,
+  ViewStyle,
 } from "react-native";
-import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import React, { ReactNode, useState } from "react";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { Menu } from "react-native-paper";
+import More from "./More";
+import Modal from "@/src/components/modals/modal";
 
-const Share = () => {
+interface Props {
+  buttonStyle?: StyleProp<ViewStyle>;
+  icon?: ReactNode;
+}
+
+const Share: React.FC<Props> = ({ buttonStyle, icon }) => {
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -21,8 +30,15 @@ const Share = () => {
       visible={visible}
       onDismiss={closeMenu}
       anchor={
-        <TouchableOpacity onPress={openMenu} style={styles.actionButton}>
-          <Ionicons name="paper-plane-outline" size={24} color="black" />
+        <TouchableOpacity
+          onPress={openMenu}
+          style={[styles.actionButton, buttonStyle]}
+        >
+          {icon ? (
+            icon
+          ) : (
+            <Ionicons name="paper-plane-outline" size={24} color="black" />
+          )}
         </TouchableOpacity>
       }
       anchorPosition="bottom"
@@ -39,7 +55,7 @@ const Share = () => {
         }}
       >
         <FlatList
-          data={[1, 2, 3, 4]}
+          data={[1, 2]}
           ListHeaderComponent={() => (
             <View style={{ alignItems: "center", marginRight: 18 }}>
               <View
@@ -60,11 +76,34 @@ const Share = () => {
           renderItem={({ item }) => (
             <View style={{ alignItems: "center", marginRight: 18 }}>
               <Image
-                source={require("../../../../assets/images/user1.png")}
+                source={require("../../../../../assets/images/user1.png")}
                 style={styles.avatar}
               />
               <Text style={{ fontSize: 12 }}>Username</Text>
             </View>
+          )}
+          ListFooterComponent={() => (
+            <Modal
+              button={
+                <View style={{ alignItems: "center", marginRight: 18 }}>
+                  <View
+                    style={[
+                      styles.avatar,
+                      {
+                        backgroundColor: "#e1e1e1",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      },
+                    ]}
+                  >
+                    <Entypo name="dots-three-horizontal" size={20} />
+                  </View>
+                  <Text style={{ fontSize: 12 }}>More</Text>
+                </View>
+              }
+            >
+              <More />
+            </Modal>
           )}
           keyExtractor={(item) => item.toString()}
           horizontal

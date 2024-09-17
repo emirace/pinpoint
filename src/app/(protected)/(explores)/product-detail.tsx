@@ -14,6 +14,8 @@ import { router } from "expo-router";
 import { Appbar, Menu, useTheme } from "react-native-paper";
 import Rating from "@/src/components/Rating";
 import Button from "@/src/components/Button";
+import MultiSelect from "@/src/components/select/MultiSelect";
+import { reportOption } from "@/src/components/social/ReelItem";
 
 const reviews = [
   {
@@ -65,7 +67,10 @@ const Detail = () => {
           mode="flat"
         >
           <TouchableOpacity
-            onPress={closeMenu}
+            onPress={() => {
+              router.push("/location");
+              closeMenu();
+            }}
             style={{
               flexDirection: "row",
               gap: 10,
@@ -76,18 +81,21 @@ const Detail = () => {
             <Ionicons name="person-circle-outline" size={20} />
             <Text>View Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={closeMenu}
-            style={{
-              flexDirection: "row",
-              gap: 10,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-            }}
-          >
-            <Ionicons name="flag-outline" size={20} />
-            <Text>Report Partner</Text>
-          </TouchableOpacity>
+
+          <MultiSelect
+            button={
+              <View
+                style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
+              >
+                <Ionicons name="flag-outline" size={20} />
+                <Text>Report Partner</Text>
+              </View>
+            }
+            options={reportOption}
+            onValuesChange={() => {}}
+            containerStyle={{ borderWidth: 0 }}
+            buttonText="Report"
+          />
         </Menu>
       </Appbar.Header>
       <ScrollView>
@@ -97,6 +105,9 @@ const Detail = () => {
             style={styles.mainImage}
             resizeMode="cover"
           />
+        </View>
+        <View style={{ alignItems: "flex-end" }}>
+          <Rating rating={5} textStyle={{ color: "black" }} />
         </View>
         <View style={styles.info}>
           <View style={{}}>
@@ -135,15 +146,19 @@ const Detail = () => {
             $1500.9
           </Text>
         </View>
-
-        <View
-          style={[
-            styles.section,
-            { flexDirection: "row", gap: 5, alignItems: "center" },
-          ]}
-        >
-          <Text style={{}}>Buy Online Shopping</Text>
-          <Ionicons name="checkmark" size={20} />
+        <View style={styles.section}>
+          <View
+            style={[{ flexDirection: "row", gap: 5, alignItems: "center" }]}
+          >
+            <Text style={{}}>Shipping Available</Text>
+            <Ionicons name="checkmark" size={20} />
+          </View>
+          <View
+            style={[{ flexDirection: "row", gap: 5, alignItems: "center" }]}
+          >
+            <Text style={{}}>Pickup</Text>
+            <Ionicons name="checkmark" size={20} />
+          </View>
         </View>
         <View style={styles.section}>
           <View style={{ flexDirection: "row", marginBottom: 10 }}>
@@ -156,7 +171,7 @@ const Detail = () => {
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Rating & Reviewa (4.9/5)</Text>
+          <Text style={styles.sectionTitle}>Reviews</Text>
           {reviews.map((review) => (
             <View
               key={review.id}
@@ -229,24 +244,31 @@ const Detail = () => {
                 <Ionicons name="send" size={24} color={colors.primary} />
               </TouchableOpacity>
             </View>
-            <View
-              style={{
-                borderWidth: 1,
-                borderRadius: 20,
-                alignSelf: "flex-start",
-                padding: 5,
-                marginVertical: 10,
-                borderColor: "#e1e1e1",
-              }}
-            >
-              <Text
+            {!message && (
+              <View
                 style={{
-                  fontSize: 12,
+                  borderWidth: 1,
+                  borderRadius: 20,
+                  alignSelf: "flex-start",
+                  padding: 5,
+                  marginVertical: 10,
+                  borderColor: "#e1e1e1",
                 }}
               >
-                I would like to discuss more about this Product
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontSize: 12,
+                  }}
+                  onPress={() =>
+                    setMessage(
+                      "I would like to discuss more about this Product"
+                    )
+                  }
+                >
+                  I would like to discuss more about this Product
+                </Text>
+              </View>
+            )}
           </>
         )}
       </View>

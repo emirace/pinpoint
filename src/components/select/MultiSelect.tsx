@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import {
   Modal,
   View,
@@ -24,12 +24,14 @@ type MultiSelectProps = {
   selectedValues?: (string | number)[];
   onValuesChange: (values: (string | number)[]) => void;
   options: Option[];
+  button?: ReactNode;
   containerStyle?: StyleProp<ViewStyle>;
   inputStyle?: StyleProp<TextStyle>;
   optionStyle?: StyleProp<TextStyle>;
   modalStyle?: StyleProp<ViewStyle>;
   modalText?: string;
   buttonText?: string;
+  modalTitle?: string;
 };
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -37,12 +39,14 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   selectedValues = [],
   onValuesChange,
   options,
+  button,
   containerStyle,
   inputStyle,
   optionStyle,
   modalStyle,
   modalText,
   buttonText,
+  modalTitle,
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [localSelectedValues, setLocalSelectedValues] =
@@ -73,10 +77,16 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         style={[styles.container, containerStyle]}
         onPress={() => setIsModalVisible(true)}
       >
-        <Text style={[styles.input, inputStyle]}>
-          {selectedLabel || placeholder}
-        </Text>
-        <Ionicons name="chevron-down" size={24} color="#888" />
+        {button ? (
+          button
+        ) : (
+          <>
+            <Text style={[styles.input, inputStyle]}>
+              {selectedLabel || placeholder}
+            </Text>
+            <Ionicons name="chevron-down" size={24} color="#888" />
+          </>
+        )}
       </TouchableOpacity>
 
       <Modal
@@ -91,7 +101,20 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
           onPressOut={() => setIsModalVisible(false)}
         >
           <View style={[styles.modalContent, modalStyle]}>
-            <View style={{ marginBottom: 20, alignItems: "flex-end" }}>
+            <View
+              style={{
+                marginBottom: 20,
+                alignItems: "flex-end",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View />
+              {modalTitle && (
+                <Text style={{ fontWeight: "500", fontSize: 24 }}>
+                  {modalTitle}
+                </Text>
+              )}
               <AntDesign
                 name="closecircleo"
                 size={24}

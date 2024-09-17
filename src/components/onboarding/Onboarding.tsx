@@ -29,13 +29,13 @@ interface OnboardingItem {
   description: string;
 }
 
-const data: OnboardingItem[] = [
+export const data: OnboardingItem[] = [
   {
     id: "1",
     image: require("../../../assets/images/slide1.png"),
     header: "Discover Local Favorites",
     description:
-      "Quickly find and shop from nearby small businesses that offer Retail & Services.",
+      "Quickly find and shop from nearby small businesses that offer Products & Services.",
   },
   {
     id: "2",
@@ -49,7 +49,7 @@ const data: OnboardingItem[] = [
     image: require("../../../assets/images/slide3.png"),
     header: "Shop Through Leads",
     description:
-      "Generate a Lead to purchase Retail Items or Nearby Services. Inform us of your preferences, and we will match you with what you are looking for!",
+      "Submit leads to purchase Products Service from small businesses local and abroad. Communicate with available businesses to make purchasees or schedule your needed Service today!",
   },
 ];
 

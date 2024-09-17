@@ -22,6 +22,8 @@ const Filter: React.FC = () => {
   const [isOnlineShopping, setIsOnlineShopping] = useState(true);
   const [selectedGenders, setSelectedGenders] = useState<string[]>(["Male"]);
   const [selectedColors, setSelectedColors] = useState<string[]>(["White"]);
+  const [showGender, setShowGender] = useState(true);
+  const [showColor, setShowColor] = useState(true);
 
   const toggleGender = (gender: string) => {
     setSelectedGenders((prev) =>
@@ -76,7 +78,7 @@ const Filter: React.FC = () => {
           }}
         >
           <Text style={{ fontWeight: "500", marginBottom: 8 }}>
-            Location Distance
+            Location Distance (miles)
           </Text>
           <MultiSlider
             values={[distance]}
@@ -121,7 +123,7 @@ const Filter: React.FC = () => {
           }}
         >
           <Text style={{ fontWeight: "500", marginBottom: 8 }}>
-            Price Range
+            Price Range ($)
           </Text>
           <MultiSlider
             values={priceRange}
@@ -202,44 +204,50 @@ const Filter: React.FC = () => {
               justifyContent: "space-between",
               alignItems: "center",
             }}
+            onPress={() => setShowGender(!showGender)}
           >
-            <Text style={{ fontWeight: "500" }}>Gender</Text>
+            <Text style={{ fontWeight: "500" }}>
+              Gender{" "}
+              {selectedGenders.length > 0 && `(${selectedGenders.length})`}
+            </Text>
             <MaterialIcons name="keyboard-arrow-down" size={24} color="gray" />
           </TouchableOpacity>
-          <View
-            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 8 }}
-          >
-            {["Male", "Female", "Gender Neutral"].map((gender) => (
-              <TouchableOpacity
-                key={gender}
-                style={{
-                  backgroundColor: selectedGenders.includes(gender)
-                    ? "#e5e7eb"
-                    : "white",
-                  borderRadius: 5,
-                  paddingHorizontal: 12,
-                  paddingVertical: 4,
-                  borderWidth: 1,
-                  borderColor: "#e1e1e1",
-                  margin: 4,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-                onPress={() => toggleGender(gender)}
-              >
-                <Text
+          {showGender && (
+            <View
+              style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 8 }}
+            >
+              {["Male", "Female", "Gender Neutral"].map((gender) => (
+                <TouchableOpacity
+                  key={gender}
                   style={{
-                    color: "black",
+                    backgroundColor: selectedGenders.includes(gender)
+                      ? "#e5e7eb"
+                      : "white",
+                    borderRadius: 5,
+                    paddingHorizontal: 12,
+                    paddingVertical: 4,
+                    borderWidth: 1,
+                    borderColor: "#e1e1e1",
+                    margin: 4,
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
+                  onPress={() => toggleGender(gender)}
                 >
-                  {gender}
-                </Text>
-                {selectedGenders.includes(gender) && (
-                  <Ionicons name="close" size={18} />
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
+                  <Text
+                    style={{
+                      color: "black",
+                    }}
+                  >
+                    {gender}
+                  </Text>
+                  {selectedGenders.includes(gender) && (
+                    <Ionicons name="close" size={18} />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* Colour */}
@@ -256,47 +264,53 @@ const Filter: React.FC = () => {
               justifyContent: "space-between",
               alignItems: "center",
             }}
+            onPress={() => setShowColor(!showColor)}
           >
-            <Text style={{ fontWeight: "500" }}>Colour</Text>
+            <Text style={{ fontWeight: "500" }}>
+              Colour
+              {selectedColors.length > 0 && `(${selectedColors.length})`}
+            </Text>
             <MaterialIcons name="keyboard-arrow-down" size={24} color="gray" />
           </TouchableOpacity>
-          <View
-            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 8 }}
-          >
-            {["White", "Black", "Red", "Green"].map((color) => (
-              <TouchableOpacity
-                key={color}
-                style={{
-                  backgroundColor: selectedColors.includes(color)
-                    ? "#e5e7eb"
-                    : "white",
-                  borderRadius: 5,
-                  paddingHorizontal: 12,
-                  paddingVertical: 4,
-                  borderWidth: 1,
-                  borderColor: "#e1e1e1",
-                  margin: 4,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-                onPress={() => toggleColor(color)}
-              >
-                <Text
+          {showColor && (
+            <View
+              style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 8 }}
+            >
+              {["White", "Black", "Red", "Green"].map((color) => (
+                <TouchableOpacity
+                  key={color}
                   style={{
-                    color: "black",
+                    backgroundColor: selectedColors.includes(color)
+                      ? "#e5e7eb"
+                      : "white",
+                    borderRadius: 5,
+                    paddingHorizontal: 12,
+                    paddingVertical: 4,
+                    borderWidth: 1,
+                    borderColor: "#e1e1e1",
+                    margin: 4,
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
+                  onPress={() => toggleColor(color)}
                 >
-                  {color}
-                </Text>
-                {selectedColors.includes(color) && (
-                  <Ionicons name="close" size={18} />
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
+                  <Text
+                    style={{
+                      color: "black",
+                    }}
+                  >
+                    {color}
+                  </Text>
+                  {selectedColors.includes(color) && (
+                    <Ionicons name="close" size={18} />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
       </ScrollView>
-      <Button>Show Result(1500)</Button>
+      <Button>Show Result(1500) Products</Button>
     </View>
   );
 };

@@ -26,15 +26,12 @@ const Badges = () => {
     return (
       <View
         style={{
-          justifyContent: "center",
+          flexDirection: "row",
           alignItems: "center",
           borderWidth: 1,
           borderColor: "#e1e1e1",
           borderRadius: 8,
           padding: 10,
-          width: WIDTH / 2 - 22.5,
-          height: WIDTH / 2 - 22.5,
-          marginRight: 15,
         }}
       >
         <MaterialCommunityIcons
@@ -42,20 +39,22 @@ const Badges = () => {
           size={60}
           color={item.earned ? "#CD7F32" : "#e1e1e1"}
         />
-        <Text style={{ fontSize: 18, marginTop: 10, fontWeight: "500" }}>
-          Tier {item.id}
-        </Text>
-        <Text
-          style={{
-            color: "gray",
-            textAlign: "center",
-            fontSize: 18,
-            marginTop: 5,
-          }}
-        >
-          Check - In {item.id} time
-          {!item.earned ? <Text> to earn the badge</Text> : null}
-        </Text>
+        <View>
+          <Text style={{ fontSize: 18, marginTop: 10, fontWeight: "500" }}>
+            Tier {item.id}
+          </Text>
+          <Text
+            style={{
+              color: "gray",
+              textAlign: "center",
+              fontSize: 18,
+              marginTop: 5,
+            }}
+          >
+            Check - In {item.id} time
+            {!item.earned ? <Text> to earn the badge</Text> : null}
+          </Text>
+        </View>
       </View>
     );
   };
@@ -77,7 +76,7 @@ const Badges = () => {
           data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          numColumns={2}
+          // numColumns={2}
           contentContainerStyle={{ gap: 15 }}
         />
       </View>

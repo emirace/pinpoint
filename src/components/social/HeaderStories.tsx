@@ -82,7 +82,7 @@ const HeaderStories = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Stories</Text>
+      <Text style={styles.title}>Local Stories</Text>
       <FlatList
         data={storiesData}
         renderItem={renderItem}

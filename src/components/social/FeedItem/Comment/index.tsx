@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, ReactNode } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  StyleProp,
+  ViewStyle,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Comment as IComment } from "@/src/types/comment";
@@ -65,8 +67,13 @@ const comments: IComment[] = [
   },
 ];
 
-const CommentModal: React.FC = () => {
+interface Props {
+  buttonStyle?: StyleProp<ViewStyle>;
+  icon?: ReactNode;
+}
+const CommentModal: React.FC<Props> = ({ buttonStyle, icon }) => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const [isReplying, setIsReplying] = useState<string | null>(null);
 
   const openSheet = () => {
     if (bottomSheetRef) {
@@ -75,8 +82,15 @@ const CommentModal: React.FC = () => {
   };
   return (
     <>
-      <TouchableOpacity style={styles.actionButton} onPress={openSheet}>
-        <Ionicons name="chatbubble-outline" size={24} color="black" />
+      <TouchableOpacity
+        style={[styles.actionButton, buttonStyle]}
+        onPress={openSheet}
+      >
+        {icon ? (
+          icon
+        ) : (
+          <Ionicons name="chatbubble-outline" size={24} color="black" />
+        )}
       </TouchableOpacity>
 
       <BottomSheetModal
@@ -96,24 +110,48 @@ const CommentModal: React.FC = () => {
           <Text style={styles.headerText}>23 Comments</Text>
           <BottomSheetFlatList
             data={comments}
-            renderItem={({ item }) => <Comment comment={item} />}
+            renderItem={({ item }) => (
+              <Comment comment={item} isReplying={setIsReplying} />
+            )}
             keyExtractor={(item) => item.id}
             style={{ paddingHorizontal: 16 }}
           />
-          <View style={styles.inputContainer}>
-            <Image
-              source={require("../../../../../assets/images/user1.png")}
-              style={styles.avatar}
-            />
-            <View style={styles.inputCont}>
-              <TextInput
-                style={styles.input}
-                placeholder="Add your comment..."
-                placeholderTextColor={"gray"}
+          <View
+            style={{
+              paddingHorizontal: 16,
+              borderTopWidth: 1,
+              borderColor: "#ddd",
+              paddingVertical: 8,
+            }}
+          >
+            {isReplying ? (
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                <Text>
+                  Replying to{" "}
+                  <Text style={{ fontWeight: "600" }}>{isReplying}</Text>
+                </Text>
+                <Ionicons
+                  name="close"
+                  size={18}
+                  onPress={() => setIsReplying(null)}
+                />
+              </View>
+            ) : null}
+            <View style={styles.inputContainer}>
+              <Image
+                source={require("../../../../../assets/images/user1.png")}
+                style={styles.avatar}
               />
-              <TouchableOpacity style={styles.sendButton}>
-                <Ionicons name="send" size={24} color="gray" />
-              </TouchableOpacity>
+              <View style={styles.inputCont}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Add your comment..."
+                  placeholderTextColor={"gray"}
+                />
+                <TouchableOpacity style={styles.sendButton}>
+                  <Ionicons name="send" size={24} color="gray" />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </BottomSheetView>
@@ -139,10 +177,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
-    paddingHorizontal: 16,
-    borderTopWidth: 1,
-    borderColor: "#ddd",
+    paddingVertical: 8,
   },
   avatar: {
     width: 40,

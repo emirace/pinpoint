@@ -86,7 +86,7 @@ const Badges = () => {
             <Text style={{ fontSize: 12, marginTop: 10 }}>Coupon ID</Text>
             <Text style={styles.price}>{item.couponId}</Text>
           </View>
-          <Text style={{ fontSize: 25 }}>{item.percentage}</Text>
+          {/* <Text style={{ fontSize: 25 }}>{item.percentage}</Text> */}
         </View>
         <Text style={{ fontSize: 12 }}>Exp: {item.exp}</Text>
       </TouchableOpacity>

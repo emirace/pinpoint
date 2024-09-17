@@ -18,9 +18,9 @@ import { useState } from "react";
 import { useAuth } from "@/src/context/Auth";
 
 const businessType = [
-  { label: "Retail", value: "retail" },
-  { label: "Service", value: "service" },
-  { label: "Retail & Services", value: "retail & service" },
+  { label: "I sell Products", value: "products" },
+  { label: "I sell Services", value: "services" },
+  { label: "i sell Products & Services", value: "products & services" },
 ];
 
 const Login = () => {
@@ -96,17 +96,24 @@ const Login = () => {
             onChangeText={(text) => setEmail(text)}
             style={styles.input}
           />
+          <TextInput
+            mode="outlined"
+            label="Suite/Bldg"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+          />
           <View style={styles.row}>
             <Select
               placeholder="State"
-              options={businessType}
+              options={[]}
               selectedValue={city}
               onValueChange={(value) => setCity(value)}
               containerStyle={styles.selectContainerStyle}
-            />{" "}
+            />
             <Select
               placeholder="City"
-              options={businessType}
+              options={[]}
               selectedValue={city}
               onValueChange={(value) => setCity(value)}
               containerStyle={styles.selectContainerStyle}
@@ -122,7 +129,7 @@ const Login = () => {
             />
             <Select
               placeholder="EIN/SSN"
-              options={businessType}
+              options={[]}
               selectedValue={city}
               onValueChange={(value) => setCity(value)}
               containerStyle={styles.selectContainerStyle}

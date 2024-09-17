@@ -14,6 +14,8 @@ import { Menu } from "react-native-paper";
 import { router } from "expo-router";
 import CommentModal from "./Comment";
 import Share from "./Share";
+import MultiSelect from "../../select/MultiSelect";
+import { reportOption } from "../ReelItem";
 
 interface Feed {
   id: string;
@@ -60,13 +62,20 @@ const FeedItem: React.FC<Props> = ({ item }) => {
       anchorPosition="bottom"
       mode="flat"
     >
-      <TouchableOpacity
-        onPress={closeMenu}
-        style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
-      >
-        <Ionicons name="flag-outline" size={20} />
-        <Text>Report Partner</Text>
-      </TouchableOpacity>
+      <MultiSelect
+        button={
+          <View
+            style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
+          >
+            <Ionicons name="flag-outline" size={20} />
+            <Text>Report Partner</Text>
+          </View>
+        }
+        options={reportOption}
+        onValuesChange={() => {}}
+        containerStyle={{ borderWidth: 0 }}
+        buttonText="Report"
+      />
     </Menu>
   );
 

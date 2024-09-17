@@ -45,23 +45,23 @@ const Inquire = () => {
         </View>
         <TextInput placeholder="Address" inputStyle={styles.textContainer} />
         <TextInput
-          placeholder="Requested Date"
+          placeholder="Service Request Date"
           inputStyle={styles.textContainer}
+        />
+
+        <TextInput
+          inputStyle={styles.textinput}
+          placeholder="Please describe some more details about the service you are requesting"
+          multiline={true}
+          numberOfLines={4}
         />
 
         <TouchableOpacity style={styles.uploadSection}>
           <Ionicons name="cloud-upload-outline" size={30} />
           <Text style={{ fontSize: 18, marginVertical: 5 }}>
-            Upload Photo/VIDEO
+            Upload a Photo or Video
           </Text>
         </TouchableOpacity>
-
-        <TextInput
-          inputStyle={styles.textinput}
-          placeholder="Please describe more about the service you are requesting"
-          multiline={true}
-          numberOfLines={4}
-        />
         <Text style={styles.text}>Location Name</Text>
 
         <View
@@ -79,7 +79,9 @@ const Inquire = () => {
           </Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Button>Submit</Button>
+          <Button onPress={() => router.replace("/service-detail/success")}>
+            Submit
+          </Button>
           <Text
             style={{
               textAlign: "center",
