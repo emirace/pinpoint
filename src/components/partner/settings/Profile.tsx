@@ -52,13 +52,15 @@ const Profile = () => {
         onChangeText={(text) => setEmail(text)}
         style={styles.input}
       />
-      <Select
-        placeholder="Business Type"
-        options={businessType}
-        selectedValue={""}
-        onValueChange={(value) => {}}
-        containerStyle={styles.selectContainerStyle}
-      />
+      <View style={{ flexDirection: "row" }}>
+        <Select
+          placeholder="Business Type"
+          options={businessType}
+          selectedValue={""}
+          onValueChange={(value) => {}}
+          containerStyle={styles.selectContainerStyle}
+        />
+      </View>
       <TextInput
         mode="outlined"
         label="Password"

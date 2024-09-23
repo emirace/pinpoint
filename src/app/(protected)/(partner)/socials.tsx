@@ -102,7 +102,7 @@ const Socials = () => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text style={styles.subHeading}>NearBy Users</Text>
+              <Text style={styles.subHeading}>Nearby Users</Text>
               <Text style={[{ color: colors.primary, fontWeight: "500" }]}>
                 See More
               </Text>
@@ -118,7 +118,7 @@ const Socials = () => {
                 marginTop: 50,
               }}
             >
-              <Text style={styles.subHeading}>NearBy Partners</Text>
+              <Text style={styles.subHeading}>Nearby Partners</Text>
               <Text style={[{ color: colors.primary, fontWeight: "500" }]}>
                 See More
               </Text>

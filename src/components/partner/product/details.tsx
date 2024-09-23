@@ -28,7 +28,7 @@ const Details = () => {
       <Text style={{ fontWeight: "500" }}> Location Name 2</Text>
       <Divider style={{ marginVertical: 20 }} />
       <Text style={styles.deatail}> Rating</Text>
-      <Text style={styles.textGray}>Total Review</Text>
+      <Text style={styles.textGray}>Total Reviews</Text>
       <Text style={{ fontWeight: "500" }}>10</Text>
       <Text style={[styles.textGray, { marginTop: 20 }]}>Rating(5/5)</Text>
       <Rating show={false} rating={5} />

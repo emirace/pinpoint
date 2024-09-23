@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
   select: {
     height: 40,
     backgroundColor: "white",
+    flex: 1,
   },
 });
 

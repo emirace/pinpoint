@@ -167,12 +167,12 @@ const Coupons = () => {
                       </Text>
                       <Text style={styles.price}>{item.couponId}</Text>
                     </View>
-                    <Text style={{ fontSize: 25 }}>{item.percentage}</Text>
+                    <Text style={{ fontSize: 20 }}>{item.percentage}</Text>
                   </View>
                   <Text style={{ fontSize: 12 }}>Exp: {item.exp}</Text>
                   <Ionicons
                     name="trash-outline"
-                    size={24}
+                    size={18}
                     color="red"
                     style={styles.delete}
                   />
@@ -231,12 +231,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   name: {
-    fontSize: 18,
+    // fontSize: 18,
     marginBottom: 4,
     fontWeight: "500",
   },
   price: {
-    fontSize: 18,
+    // fontSize: 18,
     marginBottom: 8,
   },
   delete: {

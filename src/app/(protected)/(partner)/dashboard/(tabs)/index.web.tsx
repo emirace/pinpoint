@@ -19,9 +19,9 @@ const Dashboard: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.heading}>Dashboard</Text>
-      <Text style={styles.subheading}>
+      {/* <Text style={styles.subheading}>
         Access to all your details on this page
-      </Text>
+      </Text> */}
       <View
         style={{
           flexDirection: "row",

@@ -45,7 +45,7 @@ const Location = () => {
         </>
       )}
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.photoLabel}>Add a photo to your Location</Text>
+        <Text style={styles.photoLabel}>Add a photo of your Location</Text>
         <View
           style={[styles.row, { flexDirection: isMobile ? "column" : "row" }]}
         >
@@ -128,7 +128,7 @@ const Location = () => {
             <MultiSelect
               onValuesChange={(value) => setCategory(value)}
               options={categoriesOption}
-              placeholder="Location Category"
+              placeholder="Location Categories"
             />
             <Divider style={{ marginVertical: 20 }} />
             <Text style={styles.photoLabel}>Menu</Text>
@@ -161,7 +161,7 @@ const Location = () => {
                   <Ionicons name="trash-outline" size={20} color="red" />
                 </View>
               ))}
-              <View
+              {/* <View
                 style={{
                   justifyContent: "flex-start",
                   alignItems: "flex-start",
@@ -170,13 +170,13 @@ const Location = () => {
                 <PaperButton mode="text" icon={"plus"}>
                   Add Menu
                 </PaperButton>
-              </View>
+              </View> */}
             </View>
             <Divider style={{ marginVertical: 20 }} />
             <Text style={styles.photoLabel}>Hours of operation</Text>
             <HoursOfOperation />
             <Divider style={{ marginVertical: 20 }} />
-            <Text style={styles.photoLabel}>Add Pool</Text>
+            <Text style={styles.photoLabel}>Add Poll</Text>
             <TextInput
               mode="outlined"
               label="Question"
@@ -212,7 +212,7 @@ const Location = () => {
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
-            <View
+            {/* <View
               style={{
                 justifyContent: "flex-end",
                 alignItems: "flex-end",
@@ -221,7 +221,7 @@ const Location = () => {
               <PaperButton mode="text" icon={"plus"}>
                 Save Poll
               </PaperButton>
-            </View>
+            </View> */}
           </View>
         </View>
         <Button containerStyle={{}}>Save</Button>

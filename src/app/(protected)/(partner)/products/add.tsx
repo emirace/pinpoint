@@ -204,12 +204,14 @@ const Location = () => {
                   options={categoriesOption}
                   placeholder="Option Category"
                   containerStyle={{ flex: 1 }}
+                  inputStyle={{ fontSize: 13 }}
                 />
                 <MultiSelect
                   onValuesChange={(value) => setCategory(value)}
                   options={categoriesOption}
                   placeholder="Option Name"
                   containerStyle={{ flex: 1 }}
+                  inputStyle={{ fontSize: 13 }}
                 />
               </View>
               <View
@@ -286,7 +288,7 @@ const Location = () => {
                   gap: 10,
                 }}
               >
-                <Text>In-Shop Only</Text>
+                <Text>In Shop Only</Text>
                 <Checkbox.Android status="checked" />
               </View>
             </View>

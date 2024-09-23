@@ -34,11 +34,12 @@ export default function Layout() {
         },
         headerTintColor: "#000",
         drawerType: "slide",
+        headerShown: true,
         header: ({ navigation, route, options }) => {
-          return (
+          return options.headerShown ? (
             <Appbar.Header mode="small" style={{ backgroundColor: "white" }}>
               {/* Left: Logo */}
-              {route.name === "dashboard" || route.name === "socials" ? (
+              {route.name === "socials" ? (
                 <>
                   <Appbar.Action
                     icon="menu"
@@ -83,7 +84,7 @@ export default function Layout() {
                         closeMenu();
                         router.push("/camera");
                       }}
-                      title="Create Reel"
+                      title="Create Story"
                     />
                     <Menu.Item
                       leadingIcon="cube-outline"
@@ -123,10 +124,11 @@ export default function Layout() {
                     }}
                     style={{ alignItems: "center" }}
                   />
+                  <Appbar.Action icon="" />
                 </>
               )}
             </Appbar.Header>
-          );
+          ) : null;
         },
       }}
     >
@@ -138,12 +140,14 @@ export default function Layout() {
           drawerIcon: ({ color }) => (
             <Feather name="home" size={24} color={color} />
           ),
+          headerShown: false,
         }}
       />
       <Drawer.Screen
         name="leads"
         options={{
           drawerLabel: "Leads",
+          headerShown: false,
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="clipboard-edit-outline"
@@ -157,6 +161,7 @@ export default function Layout() {
         name="locations"
         options={{
           drawerLabel: "Locations",
+          headerShown: false,
           drawerIcon: ({ color }) => (
             <Ionicons name="location-outline" size={24} color={color} />
           ),
@@ -166,6 +171,7 @@ export default function Layout() {
         name="products"
         options={{
           drawerLabel: "Products",
+          headerShown: false,
           drawerIcon: ({ color }) => (
             <Ionicons name="bag-handle-outline" size={24} color={color} />
           ),
@@ -175,6 +181,7 @@ export default function Layout() {
         name="services"
         options={{
           drawerLabel: "Services",
+          headerShown: false,
           drawerIcon: ({ color }) => (
             <FontAwesome5 name="user" size={24} color={color} />
           ),
@@ -219,12 +226,12 @@ export default function Layout() {
       <Drawer.Screen
         name="socials"
         options={{
-          drawerLabel: "Pinpoint Socials",
+          drawerLabel: "Pinpoint Social",
           drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="share-variant"
-              size={24}
-              color={color}
+            <Image
+              source={require("../../../../assets/images/logo1.png")}
+              style={[{ height: 24, width: 24 }]}
+              resizeMode="contain"
             />
           ),
         }}
@@ -242,6 +249,7 @@ export default function Layout() {
         name="settings"
         options={{
           drawerLabel: "Settings",
+          headerShown: false,
           drawerIcon: ({ color }) => (
             <Ionicons name="settings-outline" size={24} color={color} />
           ),

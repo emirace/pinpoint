@@ -65,7 +65,7 @@ const Location = () => {
                   variant="outlined"
                   containerStyle={{ width: 150, backgroundColor: "white" }}
                 >
-                  Copy Product
+                  Copy Service
                 </Button>
                 <Divider style={{ marginVertical: 20 }} />
               </>
@@ -113,12 +113,11 @@ const Location = () => {
               numberOfLines={3}
               maxLength={100}
             />
-            <TextInput
-              mode="outlined"
-              label="Estimate Duration"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              style={styles.input}
+            <Select
+              placeholder="Estimate Duration"
+              options={[]}
+              onValueChange={() => {}}
+              containerStyle={styles.select}
             />
             <View
               style={{
@@ -260,12 +259,14 @@ const Location = () => {
                   options={categoriesOption}
                   placeholder="Option Category"
                   containerStyle={{ flex: 1 }}
+                  inputStyle={{ fontSize: 13 }}
                 />
                 <MultiSelect
                   onValuesChange={(value) => setCategory(value)}
                   options={categoriesOption}
                   placeholder="Option Name"
                   containerStyle={{ flex: 1 }}
+                  inputStyle={{ fontSize: 13 }}
                 />
               </View>
               <View

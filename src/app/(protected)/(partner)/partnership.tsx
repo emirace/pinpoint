@@ -181,6 +181,7 @@ const partnership = () => {
         {Platform.OS !== "web" && (
           <Button containerStyle={{ marginVertical: 20 }}>Save</Button>
         )}
+        <View style={{ height: 30 }} />
       </ScrollView>
     </View>
   );

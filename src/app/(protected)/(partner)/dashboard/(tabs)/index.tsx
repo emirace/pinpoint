@@ -3,8 +3,10 @@ import CompletedLead from "@/src/components/partner/dashboard/CompletedLead";
 import LeadPool from "@/src/components/partner/dashboard/LeadPool";
 import PendingLeadsCard from "@/src/components/partner/dashboard/PendinLeadCard";
 import StatsSection from "@/src/components/partner/dashboard/StatSection";
+import MultiSelect from "@/src/components/select/MultiSelect";
 import { Feather } from "@expo/vector-icons";
-import React from "react";
+import { router } from "expo-router";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -13,7 +15,6 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Text } from "react-native-paper";
-
 const Dashboard: React.FC = () => {
   const { width: WIDTH } = useWindowDimensions();
   return (
@@ -35,7 +36,12 @@ const Dashboard: React.FC = () => {
           }}
         >
           <Text style={styles.sectionHeading}>Stats</Text>
-          <Feather name="edit" size={20} />
+          <MultiSelect
+            button={<Feather name="edit" size={20} />}
+            onValuesChange={() => {}}
+            options={[]}
+            containerStyle={{ borderWidth: 0, paddingVertical: 0 }}
+          />
         </View>
         <StatsSection />
       </View>

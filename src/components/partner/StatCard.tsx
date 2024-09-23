@@ -24,7 +24,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
         {
           width:
             Platform.OS === "web" && width > 768
-              ? (width - 280) * 0.167
+              ? (width - 280) * 0.16
               : (width - 50) * 0.5,
         },
       ]}
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   iconContainer: {
-    marginRight: 10,
     height: 40,
     width: 40,
     justifyContent: "center",
@@ -71,6 +70,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     height: 70,
+    flex: 1,
   },
   title: {
     fontSize: 14,

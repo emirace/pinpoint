@@ -3,8 +3,15 @@ import Button from "@/src/components/Button";
 import Rating from "@/src/components/Rating";
 import Select from "@/src/components/Select";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import {
   Card,
   Text,
@@ -23,7 +30,7 @@ const type = [
 
 const LeadsMobile: React.FC = () => {
   const { colors } = useTheme();
-  const [selected, setSelected] = useState("Product");
+  const [selected, setSelected] = useState("Products");
   const [selectedLeadType, setSelectedLeadType] = useState<string | number>(
     "active"
   );
@@ -94,7 +101,7 @@ const LeadsMobile: React.FC = () => {
         {/* Search Input */}
         <TextInput
           mode="outlined"
-          placeholder="Search here"
+          placeholder="Search"
           style={styles.searchInput}
           left={<TextInput.Icon icon="magnify" />}
         />
@@ -103,7 +110,11 @@ const LeadsMobile: React.FC = () => {
         <View style={[styles.scrollView, styles.listContainer]}>
           {leads.map((lead, index) =>
             selected === "Products" ? (
-              <View key={index} style={[styles.leadCard, styles.mobileCard]}>
+              <TouchableOpacity
+                onPress={() => router.push("/products/id")}
+                key={index}
+                style={[styles.leadCard, styles.mobileCard]}
+              >
                 <View style={styles.cardContent}>
                   <Text
                     style={[
@@ -160,7 +171,7 @@ const LeadsMobile: React.FC = () => {
                     </View>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             ) : (
               <View key={index} style={[styles.leadCard, styles.mobileCard]}>
                 <View style={styles.cardContent}>
@@ -175,19 +186,25 @@ const LeadsMobile: React.FC = () => {
                   <View style={{ padding: 10, gap: 15 }}>
                     <View style={{ flexDirection: "row" }}>
                       <Text style={styles.title}>Variants: </Text>
-                      <Text style={{ flex: 2 }}>Male, White</Text>
+                      <Text style={{ flex: 2, paddingLeft: 20 }}>
+                        Male, White
+                      </Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
                       <Text style={styles.title}>Customer Name: </Text>
-                      <Text style={{ flex: 2 }}>Customer Name</Text>
+                      <Text style={{ flex: 2, paddingLeft: 20 }}>
+                        Customer Name
+                      </Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
                       <Text style={styles.title}>Purchase Date:</Text>
-                      <Text style={{ flex: 2 }}>MM/DD/YY</Text>
+                      <Text style={{ flex: 2, paddingLeft: 20 }}>MM/DD/YY</Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
                       <Text style={styles.title}>Description:</Text>
-                      <Text style={{ flex: 2 }}>Lorem iudgh jif ess hg...</Text>
+                      <Text style={{ flex: 2, paddingLeft: 20 }}>
+                        Lorem iudgh jif ess hg...
+                      </Text>
                     </View>
                     <View
                       style={{

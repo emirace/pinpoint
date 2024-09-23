@@ -2,6 +2,8 @@
 import React from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import { Card, Avatar, List, Text } from "react-native-paper";
+import Modal from "../../modals/modal";
+import LeadsModal from "../leads/LeadModal";
 
 const leads = [
   {
@@ -49,19 +51,25 @@ const PendingLeadsCard: React.FC = () => {
           contentContainerStyle={{ flex: 1 }}
         >
           {leads.map((lead) => (
-            <List.Item
+            <Modal
               key={lead.id}
-              title={lead.name}
-              description={`${lead.service}`}
-              left={() => (
-                <Avatar.Image
-                  size={40}
-                  source={{ uri: "https://via.placeholder.com/40" }}
+              button={
+                <List.Item
+                  title={lead.name}
+                  description={`${lead.service}`}
+                  left={() => (
+                    <Avatar.Image
+                      size={40}
+                      source={{ uri: "https://via.placeholder.com/40" }}
+                    />
+                  )}
+                  right={() => <Text style={styles.time}>{lead.time}</Text>}
+                  style={styles.listItem}
                 />
-              )}
-              right={() => <Text style={styles.time}>{lead.time}</Text>}
-              style={styles.listItem}
-            />
+              }
+            >
+              <LeadsModal />
+            </Modal>
           ))}
         </ScrollView>
       </Card.Content>

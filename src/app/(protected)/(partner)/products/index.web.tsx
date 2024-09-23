@@ -21,7 +21,7 @@ const Location = () => {
         / Product
       </Text>
       <View style={styles.headerCont}>
-        <Text style={styles.heading}>All Product</Text>
+        <Text style={styles.heading}>Products</Text>
         <Button
           containerStyle={{ width: 150 }}
           onPress={() => router.push("/products/add")}

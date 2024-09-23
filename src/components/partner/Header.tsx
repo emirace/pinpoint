@@ -83,7 +83,7 @@ const Header = () => {
             onPress={() => {
               closeMenu();
             }}
-            title="Create Reel"
+            title="Create Story"
           />
           <Menu.Item
             leadingIcon="cube-outline"
@@ -97,7 +97,7 @@ const Header = () => {
             leadingIcon="account-outline"
             onPress={() => {
               closeMenu();
-              router.push("/camera");
+              router.push("/services/add");
             }}
             title="Add Service"
           />
@@ -105,6 +105,7 @@ const Header = () => {
             leadingIcon="map-marker-outline"
             onPress={() => {
               closeMenu();
+              router.push("/locations/setup");
             }}
             title="Add Location"
           />
@@ -112,8 +113,14 @@ const Header = () => {
 
         {Platform.OS === "web" && width > 768 ? (
           <>
-            <Appbar.Action icon="bell-outline" onPress={() => {}} />
-            <Appbar.Action icon="email-outline" onPress={() => {}} />
+            <Appbar.Action
+              icon="bell-outline"
+              onPress={() => router.push("/dashboard/notification")}
+            />
+            <Appbar.Action
+              icon="email-outline"
+              onPress={() => router.push("/dashboard/message")}
+            />
             <Appbar.Action
               icon="shield-outline"
               onPress={() => {}}

@@ -25,7 +25,7 @@ import { useTheme } from "react-native-paper";
 export const navList: {
   name: string;
   icon: string;
-  iconType: any;
+  iconType?: any;
   path: Href<string>;
 }[] = [
   {
@@ -77,7 +77,7 @@ export const navList: {
     path: "/polls",
   },
   {
-    name: "PinPooint Social",
+    name: "PinPoint Social",
     icon: "location-outline",
     iconType: Ionicons,
     path: "/socials",
@@ -148,11 +148,19 @@ const Sidebar = () => {
                   isActive ? styles.activeItem : null, // Apply active styles
                 ]}
               >
-                <item.iconType
-                  name={item.icon}
-                  size={20}
-                  color={isActive ? "white" : colors.primary}
-                />
+                {item.name !== "PinPoint Social" ? (
+                  <item.iconType
+                    name={item.icon}
+                    size={20}
+                    color={isActive ? "white" : colors.primary}
+                  />
+                ) : (
+                  <Image
+                    source={require("../../../assets/images/logo1.png")}
+                    style={[{ height: 24, width: 24 }]}
+                    resizeMode="contain"
+                  />
+                )}
                 {!isCollapsed && (
                   <Text
                     style={[

@@ -1,6 +1,8 @@
 import React from "react";
-import { ScrollView, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import StatsCard from "../StatCard";
+import useDimensions from "@/src/hooks/useDimension";
+import { Ionicons } from "@expo/vector-icons";
 
 const statsData = [
   {
@@ -31,6 +33,7 @@ const statsData = [
 ];
 
 const StatsSection: React.FC = () => {
+  const { isMobile, width } = useDimensions();
   return (
     <View style={{ marginBottom: 20 }}>
       <View style={styles.gridContainer}>
@@ -43,6 +46,22 @@ const StatsSection: React.FC = () => {
             iconColor={stat.iconColor}
           />
         ))}
+        <View
+          style={{
+            width: !isMobile ? (width - 280) * 0.1 : (width - 50) * 0.5,
+            borderColor: "#e1e1e1",
+            borderWidth: 1,
+            borderRadius: 8,
+            padding: 10,
+            paddingVertical: 15,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Ionicons name="add-circle-outline" size={20} />
+          <Text>Add Data</Text>
+        </View>
       </View>
     </View>
   );

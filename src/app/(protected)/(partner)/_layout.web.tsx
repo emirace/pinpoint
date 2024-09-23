@@ -1,3 +1,4 @@
+import Footer from "@/src/components/partner/Footer";
 import Header from "@/src/components/partner/Header";
 import Sidebar from "@/src/components/partner/Sidebar";
 import { Stack } from "expo-router";
@@ -22,6 +23,7 @@ export default function Layout() {
           <Stack.Screen name="polls" />
           <Stack.Screen name="settings" />
         </Stack>
+        <Footer />
       </View>
     </View>
   );

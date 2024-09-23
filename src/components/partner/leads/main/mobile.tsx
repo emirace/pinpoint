@@ -1,16 +1,15 @@
 // LeadsMobile.tsx
 import Select from "@/src/components/Select";
+import { router } from "expo-router";
 import React, { useState } from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import {
-  Card,
-  Text,
-  TextInput,
-  Button,
-  Appbar,
-  Menu,
-  useTheme,
-} from "react-native-paper";
+  View,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
+import { Text, TextInput, useTheme } from "react-native-paper";
 
 const type = [
   { label: "Active Leads", value: "active" },
@@ -24,8 +23,6 @@ const LeadsMobile: React.FC = () => {
   const [selectedLeadType, setSelectedLeadType] = useState<string | number>(
     "active"
   );
-  const [menuVisible, setMenuVisible] = useState(false);
-  const windowWidth = Dimensions.get("window").width;
 
   // Sample data for leads
   const leads = Array(5).fill({
@@ -64,7 +61,8 @@ const LeadsMobile: React.FC = () => {
         {/* Leads List */}
         <View style={[styles.scrollView, styles.listContainer]}>
           {leads.map((lead, index) => (
-            <View
+            <TouchableOpacity
+              onPress={() => router.push("/leads/id")}
               key={index}
               style={[
                 styles.leadCard,
@@ -114,7 +112,7 @@ const LeadsMobile: React.FC = () => {
                   </View>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </View>

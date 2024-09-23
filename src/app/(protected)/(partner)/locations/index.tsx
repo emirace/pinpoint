@@ -59,7 +59,7 @@ const Location = () => {
         {/* Search Input */}
         <TextInput
           mode="outlined"
-          placeholder="Search here"
+          placeholder="Search"
           style={styles.searchInput}
           left={<TextInput.Icon icon="magnify" />}
           outlineStyle={{
