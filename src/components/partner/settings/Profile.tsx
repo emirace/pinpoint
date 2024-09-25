@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { Button, TextInput } from "react-native-paper";
 import Select from "../../Select";
@@ -14,7 +14,7 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   return (
-    <View>
+    <ScrollView>
       <TextInput
         mode="outlined"
         label="Business Legal Name"
@@ -76,7 +76,7 @@ const Profile = () => {
         }
       />
       <Button>Change Password</Button>
-    </View>
+    </ScrollView>
   );
 };
 

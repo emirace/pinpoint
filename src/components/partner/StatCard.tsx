@@ -55,9 +55,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     borderLeftWidth: 5,
-    gap: 15,
+    gap: 10,
     justifyContent: "space-between",
     paddingVertical: 0,
+    paddingHorizontal: 0,
+    paddingLeft: 10,
   },
   iconContainer: {
     height: 40,
@@ -79,6 +81,7 @@ const styles = StyleSheet.create({
   count: {
     fontSize: 30,
     fontWeight: "medium",
+    flexWrap: "nowrap",
   },
 });
 

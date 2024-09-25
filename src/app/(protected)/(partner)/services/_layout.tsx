@@ -7,6 +7,7 @@ export default function Layout() {
   return (
     <Stack
       screenOptions={{
+        headerShown: !isMobile ? false : true,
         header: ({ options, route }) => (
           <Appbar.Header style={{ backgroundColor: "#fff" }}>
             {router.canGoBack() && isMobile && (

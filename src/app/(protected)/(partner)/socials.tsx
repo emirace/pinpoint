@@ -74,14 +74,13 @@ const Socials = () => {
   const { height, isMobile } = useDimensions();
   return (
     <View style={styles.container}>
-      {Platform.OS === "web" && (
+      {!isMobile && (
         <View style={styles.row}>
           <Image
             source={require("../../../../assets/images/logo2.png")}
             style={styles.logo}
             resizeMode="contain"
           />
-          <View style={{ flex: 2 }} />
         </View>
       )}
       <View style={[styles.row, { height: height }]}>

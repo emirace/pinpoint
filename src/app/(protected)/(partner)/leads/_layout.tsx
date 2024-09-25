@@ -1,6 +1,5 @@
 import useDimensions from "@/src/hooks/useDimension";
 import { Stack, router } from "expo-router";
-import { Platform } from "react-native";
 import { Appbar } from "react-native-paper";
 
 export default function Layout() {
@@ -8,7 +7,7 @@ export default function Layout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: Platform.OS === "web" ? false : true,
+        headerShown: !isMobile ? false : true,
         header: ({ options }) => (
           <Appbar.Header style={{ backgroundColor: "#fff" }}>
             {router.canGoBack() && isMobile && (

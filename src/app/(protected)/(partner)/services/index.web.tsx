@@ -58,6 +58,7 @@ const Location = () => {
           <ScrollView style={styles.tableBody}>
             {services.map((item) => (
               <Modal
+                key={item.id}
                 button={
                   <View style={styles.tableRow}>
                     <Text style={styles.tableCell}>{item.name}</Text>
