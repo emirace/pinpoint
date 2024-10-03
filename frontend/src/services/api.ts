@@ -4,7 +4,8 @@ import { getData } from "../utils/storage";
 // Create an Axios instance
 const axiosInstance = axios.create({
   // baseURL: import.meta.env.VITE_API_URL, // Use the environment variable for the base URL
-  baseURL: "http://172.20.10.4:5000/api", // Use the environment variable for the base URL
+  // baseURL: "http://172.20.10.4:5000/api", // Use the environment variable for the base URL
+  baseURL: "https://pinpoint-72yf.onrender.com/api", // Use the environment variable for the base URL
   // timeout: 10000, // Set a timeout for requests (optional)
 });
 

@@ -7,7 +7,6 @@ export const createComment = async (postId: string, content: string) => {
       postId,
       content,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error creating comment:", error);
@@ -19,7 +18,6 @@ export const createComment = async (postId: string, content: string) => {
 export const getPostComments = async (postId: string) => {
   try {
     const response = await axiosInstance.get(`/comments/${postId}`);
-    console.log(response.data);
     return response.data.comments;
   } catch (error) {
     console.error("Error fetching post comments:", error);

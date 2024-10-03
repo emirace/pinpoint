@@ -10,7 +10,23 @@ export interface StoryData {
 // Create a new story
 export const createStory = async (storyData: StoryData) => {
   try {
-    const response = await axiosInstance.post(`/stories`, storyData);
+    const formData = new FormData();
+    console.log(storyData);
+    // Append all the location data fields
+    formData.append("location", storyData.location);
+    formData.append("content", storyData.content);
+    formData.append("mediaType", storyData.mediaType);
+    storyData.media.forEach((image, index) => {
+      //@ts-ignore
+      formData.append("media", {
+        uri: image,
+        name:
+          storyData.mediaType === "image"
+            ? `image_${index}.jpg`
+            : `video_${index}.mp4`,
+      });
+    });
+    const response = await axiosInstance.post(`/stories`, formData);
     return response.data;
   } catch (error) {
     console.error("Error creating story:", error);
@@ -22,6 +38,7 @@ export const createStory = async (storyData: StoryData) => {
 export const getAllStoriesGroupedByUser = async () => {
   try {
     const response = await axiosInstance.get(`/stories`);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching stories:", error);

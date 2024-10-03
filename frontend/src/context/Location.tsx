@@ -68,8 +68,8 @@ export const LocationProvider = ({ children }: LocationProviderProps) => {
     locationData: LocationData
   ): Promise<void> => {
     try {
-      const newLocation = await createLocation(locationData);
-      setLocations((prevLocations) => [...prevLocations, newLocation]);
+      await createLocation(locationData);
+      loadUserLocations();
     } catch (error) {
       throw (error as Error).message;
     }

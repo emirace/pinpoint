@@ -79,7 +79,6 @@ export const createLocation = async (locationData: LocationData) => {
 export const getUserAllLocations = async () => {
   try {
     const response = await axiosInstance.get("/locations/user");
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error getting user locations:", error);

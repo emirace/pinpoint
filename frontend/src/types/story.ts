@@ -1,14 +1,18 @@
-import { User } from "./user";
+import { Location } from "./location";
 
 export interface IStory {
-  _id: string;
-  user: User;
-  location?: Location;
-  media: string;
-  mediaType: "image" | "video";
-  caption?: string;
-  views: string[];
-  isArchived: boolean;
-  isDeleted: boolean;
-  createdAt: Date;
+  _id: string; //user id
+  stories: {
+    _id: string;
+    location?: Location;
+    media: string;
+    mediaType: "image" | "video";
+    caption?: string;
+    views: string[];
+    createdAt: Date;
+  }[];
+  user: {
+    username: string;
+    avatarUrl: string;
+  };
 }

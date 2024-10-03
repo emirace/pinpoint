@@ -2,35 +2,10 @@ import React, { useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Video } from "expo-av";
 import ReelItem from "@/src/components/social/ReelItem";
-
-const videos = [
-  {
-    id: "1",
-    uri: require("../../../../assets/videos/feed4.mp4"),
-    user: {
-      name: "John Doe",
-      profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
-    },
-  },
-  {
-    id: "2",
-    uri: require("../../../../assets/videos/feed3.mp4"),
-    user: {
-      name: "Jane Smith",
-      profilePic: "https://randomuser.me/api/portraits/women/2.jpg",
-    },
-  },
-  {
-    id: "3",
-    uri: require("../../../../assets/videos/feed2.mp4"),
-    user: {
-      name: "Alice Johnson",
-      profilePic: "https://randomuser.me/api/portraits/women/3.jpg",
-    },
-  },
-];
+import { useStory } from "@/src/context/Story";
 
 const Reel = () => {
+  const { getSortedStoryMedia } = useStory();
   const videoRefs = useRef<Video[]>([]);
   const [isPlaying, setIsPlaying] = useState(true);
   const [showControls, setShowControls] = useState(true);
@@ -68,8 +43,8 @@ const Reel = () => {
 
   return (
     <FlatList
-      data={videos}
-      keyExtractor={(item) => item.id}
+      data={getSortedStoryMedia("66fb6135020ae25804306aa9")}
+      keyExtractor={(item) => item._id}
       renderItem={({ item, index }) => (
         <ReelItem
           item={item}

@@ -15,6 +15,7 @@ import { Menu } from "react-native-paper";
 import MultiSelect from "../select/MultiSelect";
 import CommentModal from "./FeedItem/Comment";
 import Share from "./FeedItem/Share";
+import { Location } from "@/src/types/location";
 
 export const reportOption = [
   { label: "Nodity or Sexual Activity", value: "Nodity or Sexual Activity" },
@@ -39,7 +40,15 @@ export const reportOption = [
 const { height } = Dimensions.get("screen");
 
 interface VideoItemProps {
-  item: any;
+  item: {
+    _id: string;
+    location?: Location;
+    media: string;
+    mediaType: "image" | "video";
+    caption?: string;
+    views: string[];
+    createdAt: Date;
+  };
   index: number;
   videoRefs: React.RefObject<Video[]>;
   isPlaying: boolean;
@@ -83,7 +92,7 @@ const ReelItem: React.FC<VideoItemProps> = ({
             videoRefs.current![index] = ref!;
           }}
           style={styles.video}
-          source={item.uri}
+          source={{ uri: item.media }}
           resizeMode={ResizeMode.COVER}
           isLooping
           shouldPlay={false}
@@ -110,12 +119,12 @@ const ReelItem: React.FC<VideoItemProps> = ({
       <View style={[styles.userInfo]}>
         <View style={{ flexDirection: "row" }}>
           <Image
-            source={{ uri: item.user.profilePic }}
+            source={{ uri: item.location?.images[0] }}
             style={styles.userAvatar}
           />
           <View style={styles.userDetails}>
-            <Text style={[styles.username]}>{item.user.name}</Text>
-            <Text style={styles.location}>Location will be here</Text>
+            <Text style={[styles.username]}>{item.location?.locationName}</Text>
+            <Text style={styles.location}>{item.location?.address}</Text>
           </View>
         </View>
         <Text style={{ color: "white", marginTop: 15 }}>
@@ -165,6 +174,7 @@ const ReelItem: React.FC<VideoItemProps> = ({
         <CommentModal
           buttonStyle={[styles.iconButton, { marginRight: 0 }]}
           icon={<Ionicons name="chatbubble-outline" size={30} color="white" />}
+          postId={item._id}
         />
         <Share
           buttonStyle={[styles.iconButton, { marginRight: 0 }]}

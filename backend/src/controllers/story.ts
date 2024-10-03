@@ -9,8 +9,8 @@ export const createStory = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { media, mediaType, caption, location } = req.body;
-
+    const { mediaType, caption, location } = req.body;
+    console.log(req.body);
     // Assuming you are using some kind of authentication middleware to set req.user
     const userId = req.user?._id;
 
@@ -18,7 +18,7 @@ export const createStory = async (
       res.status(401).json({ message: "User not authenticated" });
       return;
     }
-
+    console.log(req.files);
     const mediaUploadPromises: Promise<any>[] = [];
     if (req.files && Array.isArray(req.files)) {
       for (const file of req.files) {
@@ -30,12 +30,13 @@ export const createStory = async (
     }
 
     const mediaUploadResults = await Promise.all(mediaUploadPromises);
+    console.log(mediaUploadResults);
 
     // Create a new story
     const newStory = new Story({
       user: userId,
       location,
-      media: mediaUploadResults.map((image) => image.url),
+      media: mediaUploadResults[0].url,
       mediaType,
       caption,
     });
@@ -64,8 +65,9 @@ export const getAllStoriesGroupedByUser = async (
       isDeleted: false,
       createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }, // Stories within 24 hours
     })
-      .populate("user", "username avatarUrl") // Populate user details
-      .sort({ createdAt: -1 }); // Sort by newest stories
+      .populate("user", "username avatarUrl")
+      .populate("location", "images locationName address");
+    // .sort({ createdAt: -1 });
 
     // Group stories by user
     const groupedStories = stories.reduce((acc: any, story: any) => {
@@ -73,10 +75,10 @@ export const getAllStoriesGroupedByUser = async (
 
       if (!acc[userId]) {
         acc[userId] = {
+          _id: userId,
           user: {
-            _id: userId,
             username: story.user.username,
-            profilePicture: story.user.profilePicture,
+            avatarUrl: story.user.avatarUrl,
           },
           stories: [],
         };

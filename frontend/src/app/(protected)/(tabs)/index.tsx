@@ -9,7 +9,6 @@ import { usePost } from "@/src/context/Post";
 const Social = () => {
   const [visible, setVisible] = React.useState(false);
   const { posts } = usePost();
-  console.log(posts);
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);

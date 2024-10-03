@@ -42,7 +42,7 @@ export const createLocation = async (req: CustomRequest, res: Response) => {
           );
         }
       }
-      return field; // Return as-is if not a string
+      return field;
     };
 
     // Parse any fields that might be JSON stringified
