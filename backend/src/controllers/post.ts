@@ -8,7 +8,7 @@ import Comment from "../models/comment";
 
 export const createPost = async (req: CustomRequest, res: Response) => {
   const { content, location } = req.body;
-  const partnerId = req.user!._id;
+  const userId = req.user!._id;
 
   // Handle media files
   const mediaUploadPromises: Promise<any>[] = [];
@@ -24,7 +24,7 @@ export const createPost = async (req: CustomRequest, res: Response) => {
   try {
     const mediaUploadResults = await Promise.all(mediaUploadPromises);
     const newPost = new Post({
-      partnerId,
+      userId,
       location,
       content,
       media: mediaUploadResults,
@@ -42,9 +42,8 @@ export const createPost = async (req: CustomRequest, res: Response) => {
 
 export const getAllPost = async (req: CustomRequest, res: Response) => {
   try {
-    const re = await Comment.find();
     const posts = await Post.find()
-      .populate("location")
+      .populate("location userId")
       .sort({ createdAt: -1 });
     res.status(200).json(posts);
     return;
@@ -78,7 +77,7 @@ export const getPostById = async (req: CustomRequest, res: Response) => {
 export const updatePost = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
   const { content, existingMedia } = req.body;
-  const partnerId = req.user!._id;
+  const userId = req.user!._id;
 
   try {
     const post = await Post.findById(id);
@@ -88,7 +87,7 @@ export const updatePost = async (req: CustomRequest, res: Response) => {
     }
 
     // Ensure only the owner of the post can update it
-    if (post.partnerId.toString() !== partnerId.toString()) {
+    if (post.userId.toString() !== userId.toString()) {
       res.status(403).json({ message: "Unauthorized to update this post" });
       return;
     }
@@ -148,7 +147,7 @@ export const updatePost = async (req: CustomRequest, res: Response) => {
 // Delete a post (only owner can delete)
 export const deletePost = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
-  const partnerId = req.user!._id;
+  const userId = req.user!._id;
 
   try {
     const post = await Post.findById(id);
@@ -158,7 +157,7 @@ export const deletePost = async (req: CustomRequest, res: Response) => {
     }
 
     // Ensure only the owner of the post can delete it
-    if (post.partnerId.toString() !== partnerId.toString()) {
+    if (post.userId.toString() !== userId.toString()) {
       res.status(403).json({ message: "Unauthorized to delete this post" });
       return;
     }
@@ -184,7 +183,7 @@ export const deletePost = async (req: CustomRequest, res: Response) => {
   }
 };
 
-// Like a post
+// Like or Unlink a post
 export const likePost = async (req: CustomRequest, res: Response) => {
   const { id } = req.params;
   const userId = req.user!._id;
@@ -196,19 +195,22 @@ export const likePost = async (req: CustomRequest, res: Response) => {
       return;
     }
 
-    // Add user ID to the likes array if they haven't liked the post yet
-    if (!post.likes.includes(userId as unknown as ObjectId)) {
-      post.likes.push(userId as unknown as ObjectId);
+    // Check if the user has already liked the post
+    if (post.likes.includes(userId as unknown as ObjectId)) {
+      // If user has already liked, remove their ID from the likes array (unlike)
+      post.likes = post.likes.filter(
+        (like) => like.toString() !== userId.toString()
+      );
+      await post.save();
+      res.status(200).json({ message: "Post unliked successfully", post });
     } else {
-      res.status(400).json({ message: "You already liked this post" });
-      return;
+      // If user hasn't liked, add their ID to the likes array (like)
+      post.likes.push(userId as unknown as ObjectId);
+      await post.save();
+      res.status(200).json({ message: "Post liked successfully", post });
     }
-
-    await post.save();
-    res.status(200).json({ message: "Post liked successfully", post });
-    return;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };

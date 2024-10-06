@@ -2,7 +2,7 @@ import { Schema, Document, model } from "mongoose";
 
 interface IStory extends Document {
   user: Schema.Types.ObjectId;
-  location: Schema.Types.ObjectId;
+  location?: Schema.Types.ObjectId;
   media: string;
   mediaType: "image" | "video";
   caption?: string;

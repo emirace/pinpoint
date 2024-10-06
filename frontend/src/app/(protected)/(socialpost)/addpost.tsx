@@ -20,12 +20,15 @@ import * as ImagePicker from "expo-image-picker";
 import { usePost } from "@/src/context/Post";
 import { useLocation } from "@/src/context/Location";
 import { ResizeMode, Video } from "expo-av";
+import { useUser } from "@/src/context/User";
+import { UserRole } from "@/src/types/user";
 
 const WIDTH = Dimensions.get("screen").width;
 const HEIGHT = Dimensions.get("screen").height;
 
 const AddPost = () => {
   const { createNewPost } = usePost();
+  const { user } = useUser();
   const { loadUserLocations, locations } = useLocation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
@@ -46,8 +49,10 @@ const AddPost = () => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        setLoading(true);
-        await loadUserLocations();
+        if (user?.role === UserRole.PARTNER) {
+          setLoading(true);
+          await loadUserLocations();
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -98,10 +103,8 @@ const AddPost = () => {
     try {
       setCreatingPost(true);
       await createNewPost(postData);
-      alert("Post created successfully!");
       router.back();
     } catch (error) {
-      alert("Failed to create post.");
       console.log(error);
     } finally {
       setCreatingPost(false);
@@ -165,19 +168,23 @@ const AddPost = () => {
               </View>
             </View>
           )}
-          <Text style={{ fontSize: 18, marginVertical: 5 }}>
-            Select Location
-          </Text>
-          <Select
-            options={locations.map((location) => ({
-              label: location.locationName,
-              value: location._id,
-            }))}
-            selectedValue={selectedLocation}
-            onValueChange={(value) => setSelectedLocation(value as string)}
-            placeholder="Location Name"
-            containerStyle={{ marginBottom: 15 }}
-          />
+          {user?.role === "partner" && (
+            <>
+              <Text style={{ fontSize: 18, marginVertical: 5 }}>
+                Select Location
+              </Text>
+              <Select
+                options={locations.map((location) => ({
+                  label: location.locationName,
+                  value: location._id,
+                }))}
+                selectedValue={selectedLocation}
+                onValueChange={(value) => setSelectedLocation(value as string)}
+                placeholder="Location Name"
+                containerStyle={{ marginBottom: 15 }}
+              />
+            </>
+          )}
           <Text style={{ fontSize: 18, marginVertical: 5 }}>Description</Text>
           <TextInput
             inputStyle={styles.textinput}

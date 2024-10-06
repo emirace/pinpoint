@@ -10,7 +10,6 @@ export const createStory = async (
 ): Promise<void> => {
   try {
     const { mediaType, caption, location } = req.body;
-    console.log(req.body);
     // Assuming you are using some kind of authentication middleware to set req.user
     const userId = req.user?._id;
 
@@ -18,7 +17,6 @@ export const createStory = async (
       res.status(401).json({ message: "User not authenticated" });
       return;
     }
-    console.log(req.files);
     const mediaUploadPromises: Promise<any>[] = [];
     if (req.files && Array.isArray(req.files)) {
       for (const file of req.files) {

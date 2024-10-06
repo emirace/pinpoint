@@ -10,7 +10,6 @@ import {
   ViewStyle,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Comment as IComment } from "@/src/types/comment";
 import Comment from "./Comment";
 import {
   BottomSheetModal,
@@ -18,80 +17,46 @@ import {
   BottomSheetView,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
-import {
-  createComment,
-  getPostComments,
-  replyToComment,
-} from "@/src/services/comment";
 import { useUser } from "@/src/context/User";
+import { Comment as IComment } from "@/src/types/comment";
 
 interface Props {
+  handleSendComment: (value: string) => Promise<void>;
+  handleSendReply: (value: string, commentId: string) => Promise<void>;
+  comments: IComment[];
   buttonStyle?: StyleProp<ViewStyle>;
   icon?: ReactNode;
-  postId: string;
 }
-const CommentModal: React.FC<Props> = ({ buttonStyle, icon, postId }) => {
+const CommentModal: React.FC<Props> = ({
+  buttonStyle,
+  icon,
+  comments,
+  handleSendComment,
+  handleSendReply,
+}) => {
   const { user } = useUser();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const [isReplying, setIsReplying] = useState<IComment | null>(null);
-  const [comments, setComments] = useState<IComment[]>([]);
   const [content, setContent] = useState("");
-  const [laoding, setLaoding] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchComments = async () => {
-    try {
-      if (!postId) return;
-      setLaoding(true);
-      const res = await getPostComments(postId);
-      setComments(res);
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setLaoding(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchComments();
-  }, [postId]);
-
-  const handleSendComment = async () => {
-    if (!content || !postId) return;
-    try {
-      const res = await createComment(postId, content);
-      setComments([...comments, { ...res, replies: [] }]);
-      setContent("");
-    } catch (error: any) {
-      setError(error.message);
-    }
-  };
-
-  const handleSendReply = async () => {
-    if (!isReplying || !content) return;
-    try {
-      const res = await replyToComment(isReplying._id, content);
-
-      setComments((prev) => {
-        const index = prev.findIndex(
-          (comment) => comment._id === isReplying._id
-        );
-        if (index !== -1) {
-          prev[index].replies.push({ ...res, replies: [] });
-          return prev;
-        }
-        return prev;
-      });
-      setContent("");
-      setIsReplying(null);
-    } catch (error: any) {
-      setError(error.message);
-    }
-  };
+  const [isReplying, setIsReplying] = useState<IComment | null>(null);
 
   const openSheet = () => {
     if (bottomSheetRef) {
       bottomSheetRef.current?.present();
+    }
+  };
+
+  const sendCommet = async () => {
+    if (content.trim() !== "") {
+      await handleSendComment(content);
+      setContent("");
+    }
+  };
+
+  const sendReply = async () => {
+    if (content.trim() !== "") {
+      await handleSendReply(content, isReplying!._id);
+      setContent("");
+      setIsReplying(null);
     }
   };
 
@@ -166,7 +131,7 @@ const CommentModal: React.FC<Props> = ({ buttonStyle, icon, postId }) => {
                 />
                 <TouchableOpacity
                   style={styles.sendButton}
-                  onPress={isReplying ? handleSendReply : handleSendComment}
+                  onPress={isReplying ? sendReply : sendCommet}
                 >
                   <Ionicons name="send" size={24} color="gray" />
                 </TouchableOpacity>

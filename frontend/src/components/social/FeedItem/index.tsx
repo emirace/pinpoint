@@ -7,7 +7,7 @@ import {
   Image,
   Platform,
 } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { ResizeMode, Video } from "expo-av";
 import { Menu } from "react-native-paper";
@@ -20,6 +20,12 @@ import { Post } from "@/src/types/post";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePost } from "@/src/context/Post";
 import { useUser } from "@/src/context/User";
+import {
+  createComment,
+  getPostComments,
+  replyToComment,
+} from "@/src/services/comment";
+import { Comment as IComment } from "@/src/types/comment";
 
 interface Props {
   item: Post;
@@ -31,6 +37,53 @@ const FeedItem: React.FC<Props> = ({ item }) => {
   const video = useRef<Video>(null);
   const [status, setStatus] = useState<any>({});
   const [visible, setVisible] = useState(false);
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [laoding, setLaoding] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchComments = async () => {
+    try {
+      if (!item._id) return;
+      setLaoding(true);
+      const res = await getPostComments(item._id);
+      setComments(res);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLaoding(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [item._id]);
+
+  const handleSendComment = async (content: string) => {
+    if (!content || !item._id) return;
+    try {
+      const res = await createComment(item._id, content);
+      setComments([...comments, { ...res, replies: [] }]);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
+
+  const handleSendReply = async (content: string, commentId: string) => {
+    if (!content) return;
+    try {
+      const res = await replyToComment(commentId, content);
+      setComments((prev) => {
+        const index = prev.findIndex((comment) => comment._id === commentId);
+        if (index !== -1) {
+          prev[index].replies.push({ ...res, replies: [] });
+          return prev;
+        }
+        return prev;
+      });
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
 
   const openMenu = () => setVisible(true);
 
@@ -49,33 +102,55 @@ const FeedItem: React.FC<Props> = ({ item }) => {
     await likeExistingPost(item._id);
   };
 
-  const renderOption = () => (
-    <Menu
-      visible={visible}
-      onDismiss={closeMenu}
-      anchor={
-        <TouchableOpacity onPress={openMenu}>
-          <Ionicons name="ellipsis-horizontal" size={25} color="#e1e1e1" />
-        </TouchableOpacity>
-      }
-      anchorPosition="bottom"
-      mode="flat"
-    >
-      <MultiSelect
-        button={
-          <View
-            style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
-          >
-            <Ionicons name="flag-outline" size={20} />
-            <Text>Report Partner</Text>
-          </View>
-        }
-        options={reportOption}
-        onValuesChange={() => {}}
-        containerStyle={{ borderWidth: 0 }}
-        buttonText="Report"
+  const renderOption = (item: Post) => (
+    <View style={styles.userInfo}>
+      <Image
+        source={{
+          uri: item.location
+            ? item?.location?.images[0]
+            : item.userId.avatarUrl,
+        }}
+        style={styles.userAvatar}
       />
-    </Menu>
+      <View style={styles.userDetails}>
+        <Text
+          onPress={() => (item.location ? router.push("/location") : null)}
+          style={styles.username}
+        >
+          {item.location ? item?.location?.locationName : item.userId.username}
+        </Text>
+        {item.location ? (
+          <Text style={styles.location}>{item?.location?.address}</Text>
+        ) : null}
+      </View>
+
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={
+          <TouchableOpacity onPress={openMenu}>
+            <Ionicons name="ellipsis-horizontal" size={25} color="#e1e1e1" />
+          </TouchableOpacity>
+        }
+        anchorPosition="bottom"
+        mode="flat"
+      >
+        <MultiSelect
+          button={
+            <View
+              style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
+            >
+              <Ionicons name="flag-outline" size={20} />
+              <Text>Report Partner</Text>
+            </View>
+          }
+          options={reportOption}
+          onValuesChange={() => {}}
+          containerStyle={{ borderWidth: 0 }}
+          buttonText="Report"
+        />
+      </Menu>
+    </View>
   );
 
   return (
@@ -115,22 +190,7 @@ const FeedItem: React.FC<Props> = ({ item }) => {
             <View
               style={{ position: "absolute", top: 15, left: 20, right: 20 }}
             >
-              <View style={styles.userInfo}>
-                <Image
-                  source={{ uri: item.location.images[0] }}
-                  style={styles.userAvatar}
-                />
-                <View style={styles.userDetails}>
-                  <Text
-                    onPress={() => router.push("/location")}
-                    style={styles.username}
-                  >
-                    {item.location.locationName}
-                  </Text>
-                  <Text style={styles.location}>{item.location.address}</Text>
-                </View>
-                {renderOption()}
-              </View>
+              {renderOption(item)}
             </View>
           </View>
         </>
@@ -146,40 +206,10 @@ const FeedItem: React.FC<Props> = ({ item }) => {
             colors={["rgba(0,0,0,0.8)", "transparent"]}
             style={styles.background}
           />
-          <View style={styles.userInfo}>
-            <Image
-              source={{ uri: item.location.images[0] }}
-              style={styles.userAvatar}
-            />
-            <View style={styles.userDetails}>
-              <Text
-                onPress={() => router.push("/location")}
-                style={styles.username}
-              >
-                {item.location.locationName}
-              </Text>
-              <Text style={styles.location}>{item.location.address}</Text>
-            </View>
-            {renderOption()}
-          </View>
+          {renderOption(item)}
         </ImageBackground>
       ) : (
-        <View style={[styles.userInfo]}>
-          <Image
-            source={{ uri: item.location.images[0] }}
-            style={styles.userAvatar}
-          />
-          <View style={styles.userDetails}>
-            <Text
-              onPress={() => router.push("/location")}
-              style={[styles.username, { color: "black" }]}
-            >
-              {item.location.locationName}
-            </Text>
-            <Text style={styles.location}>{item.location.address}</Text>
-          </View>
-          {renderOption()}
-        </View>
+        renderOption(item)
       )}
 
       {/* Optional Description */}
@@ -196,11 +226,15 @@ const FeedItem: React.FC<Props> = ({ item }) => {
             color={user && item.likes.includes(user?._id) ? "red" : "black"}
           />
         </TouchableOpacity>
-        <CommentModal postId={item._id} />
+        <CommentModal
+          handleSendComment={handleSendComment}
+          handleSendReply={handleSendReply}
+          comments={comments}
+        />
         <Share />
       </View>
       <Text style={styles.stats}>
-        {item.likes.length} Likes · {item.comments.length} Comments
+        {item.likes.length} Likes · {comments.length} Comments
       </Text>
     </View>
   );

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User, { UserRole } from "../models/user";
 import { body, validationResult } from "express-validator";
 import { Request, Response } from "express";
+import { sendEmail } from "../utils/auth";
 
 // Register a new user
 export const register = async (req: Request, res: Response) => {
@@ -53,11 +54,6 @@ export const register = async (req: Request, res: Response) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    // const verificationCode = generateVerificationCode();
-    const verificationCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-    const verificationCodeExpires = new Date(Date.now() + 3600000);
 
     const user = new User({
       firstName,
@@ -68,8 +64,6 @@ export const register = async (req: Request, res: Response) => {
       role,
       city,
       state,
-      verificationCode,
-      verificationCodeExpires,
       ...otherFields,
     });
 
@@ -106,22 +100,17 @@ export const verifyEmail = async (req: Request, res: Response) => {
     }
 
     // Validate the verification code
-    // if (user.verificationCode !== verificationCode) {
-    //   res.status(400).json({ message: "Invalid verification code." });
-    //   return;
-    // }
+    if (user.verificationCode !== verificationCode) {
+      res.status(400).json({ message: "Invalid verification code." });
+      return;
+    }
 
     // // Check if the verification code is expired
-    // if (
-    //   user.verificationCodeExpires &&
-    //   new Date() > user.verificationCodeExpires
-    // ) {
-    //   res.status(400).json({ message: "Verification code has expired." });
-    //   return;
-    // }
-
-    if (verificationCode !== "123456") {
-      res.status(400).json({ message: "Invalid verification code." });
+    if (
+      user.verificationCodeExpires &&
+      new Date() > user.verificationCodeExpires
+    ) {
+      res.status(400).json({ message: "Verification code has expired." });
       return;
     }
 
@@ -199,11 +188,11 @@ export const sendVerificationCode = async (req: Request, res: Response) => {
     await user.save();
 
     // Send the verification code via email
-    // await sendEmail({
-    //   to: user.email,
-    //   subject: "Your Verification Code",
-    //   text: `Your verification code is ${verificationCode}. This code will expire in 15 minutes.`,
-    // });
+    await sendEmail({
+      to: user.email,
+      subject: "Your Verification Code",
+      text: `Your verification code is ${verificationCode}. This code will expire in 15 minutes.`,
+    });
 
     res.status(200).json({ message: "Verification code sent to your email" });
   } catch (error) {
@@ -239,11 +228,11 @@ export const requestForgotPasswordCode = async (
     await user.save();
 
     // Send the verification code via email
-    // await sendEmail({
-    //   to: user.email,
-    //   subject: "Your Password Reset Code",
-    //   text: `Your password reset code is ${verificationCode}. This code will expire in 15 minutes.`,
-    // });
+    await sendEmail({
+      to: user.email,
+      subject: "Your Password Reset Code",
+      text: `Your password reset code is ${verificationCode}. This code will expire in 15 minutes.`,
+    });
 
     res.status(200).json({ message: "Password reset code sent to your email" });
   } catch (error) {

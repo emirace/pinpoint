@@ -13,6 +13,7 @@ import { Entypo, Ionicons } from "@expo/vector-icons";
 import { Menu } from "react-native-paper";
 import More from "./More";
 import Modal from "@/src/components/modals/modal";
+// import * as Clipboard from "expo-clipboard";
 
 interface Props {
   buttonStyle?: StyleProp<ViewStyle>;
@@ -21,10 +22,17 @@ interface Props {
 
 const Share: React.FC<Props> = ({ buttonStyle, icon }) => {
   const [visible, setVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
+
+  const copyToClipboard = async () => {
+    // await Clipboard.setStringAsync("http://pinpoint.com");
+    setCopied(true);
+  };
+
   return (
     <Menu
       visible={visible}
@@ -55,9 +63,12 @@ const Share: React.FC<Props> = ({ buttonStyle, icon }) => {
         }}
       >
         <FlatList
-          data={[1, 2]}
+          data={[] as string[]}
           ListHeaderComponent={() => (
-            <View style={{ alignItems: "center", marginRight: 18 }}>
+            <TouchableOpacity
+              onPress={() => copyToClipboard}
+              style={{ alignItems: "center", marginRight: 18 }}
+            >
               <View
                 style={[
                   styles.avatar,
@@ -70,8 +81,10 @@ const Share: React.FC<Props> = ({ buttonStyle, icon }) => {
               >
                 <Ionicons name="link-outline" size={20} />
               </View>
-              <Text style={{ fontSize: 12 }}>Copy Link</Text>
-            </View>
+              <Text style={{ fontSize: 12 }}>
+                {!copied ? "Copy Link" : "Copied"}
+              </Text>
+            </TouchableOpacity>
           )}
           renderItem={({ item }) => (
             <View style={{ alignItems: "center", marginRight: 18 }}>

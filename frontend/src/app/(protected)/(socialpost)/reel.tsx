@@ -8,7 +8,7 @@ const Reel = () => {
   const { getSortedStoryMedia } = useStory();
   const videoRefs = useRef<Video[]>([]);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [showControls, setShowControls] = useState(true);
+  const [showControls, setShowControls] = useState(false);
 
   const togglePlayPause = (videoRef: Video) => {
     if (isPlaying) {
@@ -47,6 +47,7 @@ const Reel = () => {
       keyExtractor={(item) => item._id}
       renderItem={({ item, index }) => (
         <ReelItem
+          key={item._id}
           item={item}
           index={index}
           videoRefs={videoRefs}

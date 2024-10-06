@@ -4,14 +4,16 @@ import axiosInstance from "./api";
 export interface PostData {
   content: string;
   media?: { url: string; name: string }[];
-  location: string;
+  location?: string;
 }
 
 // Create a new post (Only partners)
 export const createPost = async (data: PostData) => {
   const formData = new FormData();
   formData.append("content", data.content);
-  formData.append("location", data.location);
+  if (data?.location) {
+    formData.append("location", data?.location);
+  }
 
   if (data.media) {
     for (let i = 0; i < data.media.length; i++) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -16,6 +16,13 @@ import MultiSelect from "../select/MultiSelect";
 import CommentModal from "./FeedItem/Comment";
 import Share from "./FeedItem/Share";
 import { Location } from "@/src/types/location";
+import { Comment as IComment } from "@/src/types/comment";
+import {
+  createComment,
+  getPostComments,
+  replyToComment,
+} from "@/src/services/comment";
+import { SortedStory } from "@/src/context/Story";
 
 export const reportOption = [
   { label: "Nodity or Sexual Activity", value: "Nodity or Sexual Activity" },
@@ -40,15 +47,7 @@ export const reportOption = [
 const { height } = Dimensions.get("screen");
 
 interface VideoItemProps {
-  item: {
-    _id: string;
-    location?: Location;
-    media: string;
-    mediaType: "image" | "video";
-    caption?: string;
-    views: string[];
-    createdAt: Date;
-  };
+  item: SortedStory;
   index: number;
   videoRefs: React.RefObject<Video[]>;
   isPlaying: boolean;
@@ -68,6 +67,53 @@ const ReelItem: React.FC<VideoItemProps> = ({
   const [visible, setVisible] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [laoding, setLaoding] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchComments = async () => {
+    try {
+      if (!item._id) return;
+      setLaoding(true);
+      const res = await getPostComments(item._id);
+      setComments(res);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLaoding(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [item._id]);
+
+  const handleSendComment = async (content: string) => {
+    if (!content || !item._id) return;
+    try {
+      const res = await createComment(item._id, content);
+      setComments([...comments, { ...res, replies: [] }]);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
+
+  const handleSendReply = async (content: string, commentId: string) => {
+    if (!content) return;
+    try {
+      const res = await replyToComment(commentId, content);
+      setComments((prev) => {
+        const index = prev.findIndex((comment) => comment._id === commentId);
+        if (index !== -1) {
+          prev[index].replies.push({ ...res, replies: [] });
+          return prev;
+        }
+        return prev;
+      });
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
 
   const openMenu = () => setVisible(true);
 
@@ -75,40 +121,44 @@ const ReelItem: React.FC<VideoItemProps> = ({
 
   return (
     <View style={styles.videoContainer}>
-      <TouchableOpacity
-        style={styles.playPauseButton}
-        onPress={() => togglePlayPause(videoRefs.current![index])}
-        activeOpacity={1}
-      >
-        {loading && (
-          <ActivityIndicator
-            size="large"
-            color="#ffffff"
-            style={styles.loadingIndicator}
+      {item.mediaType === "video" ? (
+        <TouchableOpacity
+          style={styles.playPauseButton}
+          onPress={() => togglePlayPause(videoRefs.current![index])}
+          activeOpacity={1}
+        >
+          {loading && (
+            <ActivityIndicator
+              size="large"
+              color="#ffffff"
+              style={styles.loadingIndicator}
+            />
+          )}
+          <Video
+            ref={(ref) => {
+              videoRefs.current![index] = ref!;
+            }}
+            style={styles.video}
+            source={{ uri: item.media }}
+            resizeMode={ResizeMode.COVER}
+            isLooping
+            shouldPlay={false}
+            onLoadStart={() => setLoading(true)} // Start loading indicator
+            onLoad={() => setLoading(false)} // Stop loading indicator when the video is ready
           />
-        )}
-        <Video
-          ref={(ref) => {
-            videoRefs.current![index] = ref!;
-          }}
-          style={styles.video}
-          source={{ uri: item.media }}
-          resizeMode={ResizeMode.COVER}
-          isLooping
-          shouldPlay={false}
-          onLoadStart={() => setLoading(true)} // Start loading indicator
-          onLoad={() => setLoading(false)} // Stop loading indicator when the video is ready
-        />
 
-        {showControls && !loading && (
-          <Ionicons
-            name={isPlaying ? "pause" : "play"}
-            size={70}
-            color="white"
-            style={styles.playPauseIcon}
-          />
-        )}
-      </TouchableOpacity>
+          {showControls && !loading && (
+            <Ionicons
+              name={isPlaying ? "pause" : "play"}
+              size={70}
+              color="white"
+              style={styles.playPauseIcon}
+            />
+          )}
+        </TouchableOpacity>
+      ) : (
+        <Image source={{ uri: item.media }} style={styles.video} />
+      )}
 
       <LinearGradient
         colors={["transparent", "rgba(0, 0, 0, 0.5)", "rgba(0, 0, 0, 0.8)"]}
@@ -119,18 +169,26 @@ const ReelItem: React.FC<VideoItemProps> = ({
       <View style={[styles.userInfo]}>
         <View style={{ flexDirection: "row" }}>
           <Image
-            source={{ uri: item.location?.images[0] }}
+            source={{
+              uri: item.location ? item.location?.images[0] : item.avatarUrl,
+            }}
             style={styles.userAvatar}
           />
           <View style={styles.userDetails}>
-            <Text style={[styles.username]}>{item.location?.locationName}</Text>
-            <Text style={styles.location}>{item.location?.address}</Text>
+            <Text style={[styles.username]}>
+              {item.location ? item.location?.locationName : item.username}
+            </Text>
+            {item.location ? (
+              <Text style={styles.location}>{item.location?.address}</Text>
+            ) : null}
           </View>
         </View>
-        <Text style={{ color: "white", marginTop: 15 }}>
-          <Text style={{ color: "#07d64c", fontWeight: "bold" }}>Open</Text>{" "}
-          till 5:00pm
-        </Text>
+        {item.location ? (
+          <Text style={{ color: "white", marginTop: 15 }}>
+            <Text style={{ color: "#07d64c", fontWeight: "bold" }}>Open</Text>
+            till 5:00pm
+          </Text>
+        ) : null}
       </View>
 
       {/* Action Icons */}
@@ -174,7 +232,9 @@ const ReelItem: React.FC<VideoItemProps> = ({
         <CommentModal
           buttonStyle={[styles.iconButton, { marginRight: 0 }]}
           icon={<Ionicons name="chatbubble-outline" size={30} color="white" />}
-          postId={item._id}
+          comments={comments}
+          handleSendComment={handleSendComment}
+          handleSendReply={handleSendReply}
         />
         <Share
           buttonStyle={[styles.iconButton, { marginRight: 0 }]}

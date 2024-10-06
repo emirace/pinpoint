@@ -11,8 +11,8 @@ interface Media {
 }
 
 interface PostDocument extends Document {
-  partnerId: Schema.Types.ObjectId;
-  location: Schema.Types.ObjectId;
+  userId: Schema.Types.ObjectId;
+  location?: Schema.Types.ObjectId;
   content?: string; // Text content of the post
   media?: Media[]; // Array of media files (image or video)
   likes: Schema.Types.ObjectId[]; // Users who liked the post
@@ -32,8 +32,8 @@ const MediaSchema = new Schema<Media>(
 // Post Schema
 const PostSchema = new Schema<PostDocument>(
   {
-    partnerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    location: { type: Schema.Types.ObjectId, ref: "Location", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    location: { type: Schema.Types.ObjectId, ref: "Location" },
     content: { type: String },
     media: [MediaSchema],
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],

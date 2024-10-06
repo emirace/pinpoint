@@ -1,5 +1,5 @@
-import { Comment } from "./comment";
 import { Location } from "./location";
+import { User } from "./user";
 
 export enum MediaType {
   IMAGE = "image",
@@ -13,8 +13,8 @@ interface Media {
 
 export interface Post {
   _id: string;
-  partnerId: string;
-  location: Location;
+  userId: User;
+  location?: Location;
   content?: string;
   media?: Media[];
   likes: string[];

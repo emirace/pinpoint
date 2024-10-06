@@ -7,6 +7,8 @@ import {
   Image,
   Animated,
   Easing,
+  FlatList,
+  Modal,
 } from "react-native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,10 +17,13 @@ import { router } from "expo-router";
 import { ResizeMode, Video } from "expo-av";
 import { useStory } from "@/src/context/Story";
 import { useLocation } from "@/src/context/Location";
+import { useUser } from "@/src/context/User";
+import { UserRole } from "@/src/types/user";
 
 const Picture = () => {
   const { addStory } = useStory();
   const { locations } = useLocation();
+  const { user } = useUser();
   const [isRecording, setIsRecording] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const rotateValue = useRef(new Animated.Value(0)).current;
@@ -28,6 +33,8 @@ const Picture = () => {
   const [image, setImage] = useState<string | null>(null);
   const [video, setVideo] = useState<string | null>(null);
   const [capturing, setCapturing] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [location, setLocation] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -72,6 +79,10 @@ const Picture = () => {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
+  const onClose = () => {
+    setVisible(false);
+  };
+
   const handleRecord = async () => {
     try {
       if (isRecording) {
@@ -101,7 +112,9 @@ const Picture = () => {
     if (cameraRef.current) {
       try {
         setCapturing(true);
-        const photo = await cameraRef.current.takePictureAsync();
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.5,
+        });
         if (!photo) return;
         console.log(photo.uri);
         setImage(photo.uri);
@@ -123,25 +136,36 @@ const Picture = () => {
     }
   };
 
+  const handleSelect = (item: string) => {
+    setLocation(item);
+    setVisible(false);
+  };
+
   const handleUpload = async () => {
-    console.log(locations);
-    if (locations.length < 1) return;
-    if (video) {
-      addStory({
-        content: "",
-        media: [video],
-        mediaType: "video",
-        location: locations[0]._id,
-      });
-    } else if (image) {
-      addStory({
-        content: "",
-        media: [image],
-        mediaType: "image",
-        location: locations[0]._id,
-      });
+    try {
+      if (user && user.role === UserRole.PARTNER && !location) {
+        setVisible(true);
+        return;
+      }
+      if (video) {
+        addStory({
+          content: "",
+          media: [video],
+          mediaType: "video",
+          location: location as string,
+        });
+      } else if (image) {
+        addStory({
+          content: "",
+          media: [image],
+          mediaType: "image",
+          location: location as string,
+        });
+      }
+      router.back();
+    } catch (error) {
+      console.log(error);
     }
-    router.back();
   };
 
   return (
@@ -265,6 +289,45 @@ const Picture = () => {
           )}
         </View>
       )}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={visible}
+        onRequestClose={onClose}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Ionicons
+              name="close"
+              size={24}
+              onPress={() => setVisible(false)}
+              style={{ position: "absolute", top: 4, right: 4 }}
+            />
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+                textAlign: "center",
+                marginBottom: 5,
+              }}
+            >
+              Select Location
+            </Text>
+            <FlatList
+              data={locations}
+              keyExtractor={(item) => item._id.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.option}
+                  onPress={() => handleSelect(item._id)}
+                >
+                  <Text style={[styles.optionText]}>{item.locationName}</Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -325,5 +388,33 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: "red",
     position: "absolute",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+  },
+  modalView: {
+    width: 300,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    // alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  option: {
+    paddingVertical: 12,
+  },
+  optionText: {
+    fontSize: 16,
+    color: "#333",
   },
 });

@@ -14,6 +14,17 @@ import { IStory } from "../types/story";
 import { useUser } from "./User";
 import { Location } from "../types/location";
 
+export interface SortedStory {
+  _id: string;
+  location?: Location;
+  media: string;
+  mediaType: "image" | "video";
+  caption?: string;
+  views: string[];
+  createdAt: Date;
+  username: string;
+  avatarUrl: string;
+}
 // Define the shape of the context data
 interface StoryContextType {
   stories: IStory[];
@@ -22,15 +33,7 @@ interface StoryContextType {
   error: string | null;
   fetchStories: () => Promise<void>;
   addStory: (storyData: StoryData) => Promise<void>;
-  getSortedStoryMedia: (userId: string) => {
-    _id: string;
-    location?: Location;
-    media: string;
-    mediaType: "image" | "video";
-    caption?: string;
-    views: string[];
-    createdAt: Date;
-  }[];
+  getSortedStoryMedia: (userId: string) => SortedStory[];
 }
 
 // Create the Story Context
@@ -47,6 +50,7 @@ export const StoryProvider = ({ children }: { children: ReactNode }) => {
   const fetchStories = async () => {
     try {
       const data = await getAllStoriesGroupedByUser();
+      console.log(data);
       const sortedStory = sortStoriesByRecentAndNotViewed(data);
       setStories(sortedStory);
     } catch (err) {
@@ -114,49 +118,39 @@ export const StoryProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const getSortedStoryMedia = (
-    userId: string
-  ): {
-    _id: string;
-    location?: Location;
-    media: string;
-    mediaType: "image" | "video";
-    caption?: string;
-    views: string[];
-    createdAt: Date;
-  }[] => {
-    const notViewedStories: {
-      _id: string;
-      location?: Location;
-      media: string;
-      mediaType: "image" | "video";
-      caption?: string;
-      views: string[];
-      createdAt: Date;
-    }[] = [];
+  const getSortedStoryMedia = (userId: string): SortedStory[] => {
+    const notViewedStories: SortedStory[] = [];
 
-    const viewedStories: {
-      _id: string;
-      location?: Location;
-      media: string;
-      mediaType: "image" | "video";
-      caption?: string;
-      views: string[];
-      createdAt: Date;
-    }[] = [];
+    const viewedStories: SortedStory[] = [];
 
     stories.forEach((story) => {
       story.stories.forEach((individualStory) => {
         if (individualStory.views.includes(user!._id)) {
-          viewedStories.push(individualStory);
+          viewedStories.push({
+            ...individualStory,
+            username: story.user.username,
+            avatarUrl: story.user.avatarUrl,
+          });
         } else {
-          notViewedStories.push(individualStory);
+          notViewedStories.push({
+            ...individualStory,
+            username: story.user.username,
+            avatarUrl: story.user.avatarUrl,
+          });
         }
       });
     });
 
     const userNotViewedStories =
       stories
+        .map((story) => ({
+          ...story,
+          stories: story.stories.map((s) => ({
+            ...s,
+            username: story.user.username,
+            avatarUrl: story.user.avatarUrl,
+          })),
+        }))
         .find((story) => story._id === userId)
         ?.stories.filter((story) => !story.views.includes(user!._id)) || [];
 

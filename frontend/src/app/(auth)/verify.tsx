@@ -9,13 +9,14 @@ import {
   Platform,
   StatusBar,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Button from "@/src/components/Button";
-import { useTheme } from "react-native-paper";
+import { ActivityIndicator, useTheme } from "react-native-paper";
 import { useAuth } from "@/src/context/Auth";
 import { useUser } from "@/src/context/User";
 import { router } from "expo-router";
 import VerifyModal from "@/src/components/auth/VerifyModal";
+import { sendVerificationCodeSerrvice } from "@/src/services/auth";
 
 const OTPVerification = () => {
   const { colors } = useTheme();
@@ -25,6 +26,7 @@ const OTPVerification = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [sendingMail, setSendingMail] = useState(false);
 
   const inputRefs = useRef<TextInput[]>([]);
 
@@ -54,9 +56,26 @@ const OTPVerification = () => {
     }
   };
 
-  const handleResend = () => {
+  useEffect(() => {
+    try {
+      if (!user?.email) return;
+      sendVerificationCodeSerrvice(user?.email);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  }, [user?.email]);
+
+  const handleResend = async () => {
     // Simulate OTP resend
-    console.log("OTP resent.");
+    if (!user?.email) return;
+    try {
+      setSendingMail(true);
+      await sendVerificationCodeSerrvice(user?.email);
+      console.log("OTP resent.");
+    } catch (error) {
+    } finally {
+      setSendingMail(false);
+    }
   };
 
   const handleChangeText = (text: string, index: number) => {
@@ -110,11 +129,15 @@ const OTPVerification = () => {
         ))}
       </View>
       <View style={styles.resendContainer}>
-        <TouchableOpacity onPress={handleResend} style={styles.resendButton}>
-          <Text style={[styles.resendText, { color: colors.primary }]}>
-            Resend Code
-          </Text>
-        </TouchableOpacity>
+        {sendingMail ? (
+          <ActivityIndicator />
+        ) : (
+          <TouchableOpacity onPress={handleResend} style={styles.resendButton}>
+            <Text style={[styles.resendText, { color: colors.primary }]}>
+              Resend Code
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
       <Button loading={loading} onPress={handleVerify}>

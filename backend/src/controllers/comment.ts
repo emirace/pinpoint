@@ -60,9 +60,10 @@ export const getPostComments = async (req: CustomRequest, res: Response) => {
     //   res.status(404).json({ message: "No comments found for this post" });
     //   return;
     // }
-
+    console.log(comments.length);
     // Organize comments into parent and replies
     const organizedComments = comments.reduce((acc: any, comment: any) => {
+      comment.parentCommentId;
       if (!comment.parentCommentId) {
         // It's a parent comment
         acc.push({

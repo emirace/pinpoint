@@ -1,7 +1,7 @@
 import axiosInstance from "./api";
 
 export interface StoryData {
-  location: string;
+  location?: string;
   content: string;
   media: string[];
   mediaType: "image" | "video";
@@ -13,7 +13,9 @@ export const createStory = async (storyData: StoryData) => {
     const formData = new FormData();
     console.log(storyData);
     // Append all the location data fields
-    formData.append("location", storyData.location);
+    if (storyData.location) {
+      formData.append("location", storyData.location);
+    }
     formData.append("content", storyData.content);
     formData.append("mediaType", storyData.mediaType);
     storyData.media.forEach((image, index) => {

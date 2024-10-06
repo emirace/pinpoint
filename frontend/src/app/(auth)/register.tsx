@@ -18,6 +18,7 @@ import { UserRole } from "@/src/types/user";
 import { useAuth } from "@/src/context/Auth";
 import { RegistrationData } from "@/src/types/auth";
 import RegistrationSuccessModal from "@/src/components/auth/RegisterModal";
+import { states } from "@/src/utils/country";
 
 const businessType = [
   { label: "I sell Products", value: "products" },
@@ -127,6 +128,10 @@ const Register = () => {
     }
   };
 
+  const cities = formData.state
+    ? states.find((state) => state.name === formData.state)?.cities
+    : [];
+
   const renderForm = () => {
     switch (currentTab) {
       case "User":
@@ -154,7 +159,10 @@ const Register = () => {
               <Select
                 containerStyle={{ flex: 1 }}
                 placeholder="State"
-                options={[{ label: "Kentucky", value: "kentucky" }]}
+                options={states.map((state) => ({
+                  label: `${state.name}(${state.abbreviation})`,
+                  value: state.name,
+                }))}
                 selectedValue={formData.state}
                 onValueChange={(value) =>
                   handleInputChange("state", value as string)
@@ -164,7 +172,11 @@ const Register = () => {
               <Select
                 containerStyle={{ flex: 1 }}
                 placeholder="City"
-                options={[{ label: "Louisville", value: "louisville" }]}
+                options={
+                  cities
+                    ? cities.map((city) => ({ label: city, value: city }))
+                    : []
+                }
                 selectedValue={formData.city}
                 onValueChange={(value) =>
                   handleInputChange("city", value as string)
@@ -281,7 +293,10 @@ const Register = () => {
               <Select
                 containerStyle={{ flex: 1 }}
                 placeholder="State"
-                options={[{ label: "Kentucky", value: "kentucky" }]}
+                options={states.map((state) => ({
+                  label: `${state.name}(${state.abbreviation})`,
+                  value: state.name,
+                }))}
                 selectedValue={formData.state}
                 onValueChange={(value) =>
                   handleInputChange("state", value as string)
@@ -291,7 +306,11 @@ const Register = () => {
               <Select
                 containerStyle={{ flex: 1 }}
                 placeholder="City"
-                options={[{ label: "Louisville", value: "louisville" }]}
+                options={
+                  cities
+                    ? cities.map((city) => ({ label: city, value: city }))
+                    : []
+                }
                 selectedValue={formData.city}
                 onValueChange={(value) =>
                   handleInputChange("city", value as string)
