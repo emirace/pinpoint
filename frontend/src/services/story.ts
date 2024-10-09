@@ -31,19 +31,49 @@ export const createStory = async (storyData: StoryData) => {
     const response = await axiosInstance.post(`/stories`, formData);
     return response.data;
   } catch (error) {
-    console.error("Error creating story:", error);
+    console.log("Error creating story:", error);
     throw error;
   }
 };
 
-// Get all stories grouped by user
 export const getAllStoriesGroupedByUser = async () => {
   try {
     const response = await axiosInstance.get(`/stories`);
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching stories:", error);
+    throw error;
+  }
+};
+
+export const likeStoryService = async (id: string) => {
+  try {
+    const response = await axiosInstance.post(`/stories/${id}/like`);
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching stories:", error);
+    console.log("Error like stories:", error);
     throw error;
+  }
+};
+
+export const unlikeStoryService = async (id: string) => {
+  try {
+    const response = await axiosInstance.post(`/stories/${id}/unlike`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log("Error unlike stories:", error);
+    throw error;
+  }
+};
+
+export const viewStoryService = async (id: string) => {
+  try {
+    const response = await axiosInstance.post(`/stories/${id}/view`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log("Error viewing stories:", error);
   }
 };

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CustomRequest } from "../middleware/auth";
 import Story from "../models/story";
 import { uploadMediaToS3 } from "../utils/media";
+import { ObjectId } from "mongoose";
 
 // Create a new story
 export const createStory = async (
@@ -89,6 +90,8 @@ export const getAllStoriesGroupedByUser = async (
         caption: story.caption,
         createdAt: story.createdAt,
         views: story.views,
+        likes: story.likes,
+        location: story.location,
       });
 
       return acc;
@@ -100,5 +103,90 @@ export const getAllStoriesGroupedByUser = async (
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+export const viewStory = async (req: CustomRequest, res: Response) => {
+  try {
+    const storyId = req.params.storyId;
+    const userId = req.user?._id;
+
+    const story = await Story.findById(storyId);
+
+    if (!story) {
+      res.status(404).json({ message: "Story not found" });
+      return;
+    }
+
+    if (story.views.includes(userId as unknown as ObjectId)) {
+      res.status(400).json({ message: "You have already viewed this story" });
+      return;
+    }
+
+    // Add user to views
+    story.views.push(userId as unknown as ObjectId);
+    await story.save();
+
+    res.status(200).json({ message: "Story viewed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Like a story
+export const likeStory = async (req: CustomRequest, res: Response) => {
+  try {
+    const storyId = req.params.storyId;
+    const userId = req.user?._id;
+
+    const story = await Story.findById(storyId);
+
+    if (!story) {
+      res.status(404).json({ message: "Story not found" });
+      return;
+    }
+
+    if (story.likes.includes(userId as unknown as ObjectId)) {
+      res.status(400).json({ message: "You have already liked this story" });
+      return;
+    }
+
+    // Add user to likes
+    story.likes.push(userId as unknown as ObjectId);
+    await story.save();
+
+    res.status(200).json({ message: "Story liked successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// unLike a story
+export const unlikeStory = async (req: CustomRequest, res: Response) => {
+  try {
+    const storyId = req.params.storyId;
+    const userId = req.user!._id;
+
+    const story = await Story.findById(storyId);
+
+    if (!story) {
+      res.status(404).json({ message: "Story not found" });
+      return;
+    }
+
+    if (!story.likes.includes(userId as unknown as ObjectId)) {
+      res.status(400).json({ message: "You have not like this story" });
+      return;
+    }
+
+    // Add user to likes
+    story.likes = story.likes.filter(
+      (id) => id.toString() !== userId.toString()
+    );
+    await story.save();
+
+    res.status(200).json({ message: "Story unliked successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
   }
 };

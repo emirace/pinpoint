@@ -82,3 +82,41 @@ export const validateCreatePost = [
       "Invalid media type. Allowed types are 'image', 'video', 'text'"
     ),
 ];
+
+export const productValidation = [
+  check("name")
+    .notEmpty()
+    .withMessage("Product name is required")
+    .isLength({ max: 100 })
+    .withMessage("Product name cannot exceed 100 characters"),
+  check("description")
+    .notEmpty()
+    .withMessage("Product description is required")
+    .isLength({ max: 500 })
+    .withMessage("Description cannot exceed 500 characters"),
+  check("price")
+    .isFloat({ min: 0 })
+    .withMessage("Price must be a positive number"),
+  check("images")
+    .isArray({ min: 1 })
+    .withMessage("At least one image is required"),
+  check("location")
+    .isArray({ min: 1 })
+    .withMessage("At least one locationmain category is required"),
+  check("mainCategory")
+    .isArray({ min: 1 })
+    .withMessage("At least one main category is required"),
+  check("category")
+    .isArray({ min: 1 })
+    .withMessage("At least one category is required"),
+  check("availableOnline")
+    .isBoolean()
+    .withMessage("Available Online must be a boolean value"),
+  check("ships").isBoolean().withMessage("Ships must be a boolean value"),
+  check("pickupAvailable")
+    .isBoolean()
+    .withMessage("Pickup Available must be a boolean value"),
+  check("inShopOnly")
+    .isBoolean()
+    .withMessage("In Shop Only must be a boolean value"),
+];

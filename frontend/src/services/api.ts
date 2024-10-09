@@ -1,11 +1,15 @@
 import axios from "axios";
 import { getData } from "../utils/storage";
 
+export const baseURL = "http://192.168.0.131:5000/api";
+export const imageURL = "http://192.168.0.131:5000/api/images/";
+// baseURL: process.env.EXPO_PUBLIC_API_URL,
+// baseURL: "http://172.20.10.4:5000/api",
+// baseURL: "https://pinpoint-72yf.onrender.com/api",
+
 // Create an Axios instance
 const axiosInstance = axios.create({
-  // baseURL: import.meta.env.VITE_API_URL, // Use the environment variable for the base URL
-  // baseURL: "http://172.20.10.4:5000/api", // Use the environment variable for the base URL
-  baseURL: "https://pinpoint-72yf.onrender.com/api", // Use the environment variable for the base URL
+  baseURL,
   // timeout: 10000, // Set a timeout for requests (optional)
 });
 

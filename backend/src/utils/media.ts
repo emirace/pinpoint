@@ -3,6 +3,7 @@ import {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
+  GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
@@ -24,24 +25,20 @@ export const uploadMediaToS3 = async (
   filePath: string,
   fileName: string,
   mediaType: string
-) => {
+): Promise<{ url: string; type: string }> => {
   const fileStream = fs.createReadStream(filePath);
   const key = `${uuidv4()}_${fileName}`;
   const uploadParams = {
     Bucket: bucket,
     Key: key,
     Body: fileStream,
-    ContentType: mediaType === "image" ? "image/jpeg" : "video/mp4", // Adjust based on your media type
+    ContentType: mediaType === "image" ? "image/jpeg" : "video/mp4",
   };
 
   try {
-    const data = await s3Client.send(new PutObjectCommand(uploadParams));
+    await s3Client.send(new PutObjectCommand(uploadParams));
 
-    // Construct the public URL of the uploaded file
-    const s3Url = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
-    console.log(s3Url);
-
-    return { url: s3Url, type: mediaType }; // Return the S3 URL to access the uploaded file
+    return { url: key, type: mediaType };
   } catch (err) {
     console.error("Error uploading file to S3:", err);
     throw new Error("Could not upload file to S3");
@@ -53,20 +50,40 @@ export const uploadMediaToS3 = async (
 
 export const deleteMediaFromS3 = async (url: string) => {
   try {
-    // Parse the S3 URL to extract the bucket and key
-    const parsedUrl = new URL(url);
-    const bucketName = parsedUrl.host.split(".")[0];
-    const key = decodeURIComponent(parsedUrl.pathname.substring(1));
-
     const deleteParams = {
-      Bucket: bucketName,
-      Key: key,
+      Bucket: bucket,
+      Key: url,
     };
 
     await s3Client.send(new DeleteObjectCommand(deleteParams));
-    console.log(`Successfully deleted ${key} from S3 bucket: ${bucketName}`);
+    console.log(`Successfully deleted ${url} from S3 bucket: ${bucket}`);
   } catch (error: any) {
     console.error(`Error deleting media from S3: `, error);
     throw new Error(`Could not delete media from S3: ${error.message}`);
+  }
+};
+
+export const downloadMediaFromS3 = async (key: string) => {
+  try {
+    const params = {
+      Bucket: bucket,
+      Key: key as string,
+    };
+
+    const command = new GetObjectCommand(params);
+    const response = await s3Client.send(command);
+    if (!response.Body) {
+      throw new Error(`Image not found`);
+    }
+    const str = await response.Body.transformToByteArray();
+
+    const bodyBuffer = Buffer.from(str);
+
+    return {
+      contentType: response.ContentType,
+      bodyBuffer,
+    };
+  } catch (error: any) {
+    throw new Error(`Could not download media from S3: ${error.message}`);
   }
 };

@@ -23,6 +23,9 @@ import {
   replyToComment,
 } from "@/src/services/comment";
 import { SortedStory } from "@/src/context/Story";
+import { imageURL } from "@/src/services/api";
+import { likeStoryService, unlikeStoryService } from "@/src/services/story";
+import { useUser } from "@/src/context/User";
 
 export const reportOption = [
   { label: "Nodity or Sexual Activity", value: "Nodity or Sexual Activity" },
@@ -49,10 +52,10 @@ const { height } = Dimensions.get("screen");
 interface VideoItemProps {
   item: SortedStory;
   index: number;
-  videoRefs: React.RefObject<Video[]>;
+  videoRefs: React.RefObject<(Video | Image)[]>;
   isPlaying: boolean;
   showControls: boolean;
-  togglePlayPause: (videoRef: Video) => void;
+  togglePlayPause: (videoRef: Video | Image) => void;
 }
 
 const ReelItem: React.FC<VideoItemProps> = ({
@@ -63,9 +66,11 @@ const ReelItem: React.FC<VideoItemProps> = ({
   showControls,
   togglePlayPause,
 }) => {
+  const { user } = useUser();
+  console.log(item);
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(item.likes.includes(user!._id));
   const [isFollowing, setIsFollowing] = useState(false);
   const [comments, setComments] = useState<IComment[]>([]);
   const [laoding, setLaoding] = useState(true);
@@ -90,6 +95,7 @@ const ReelItem: React.FC<VideoItemProps> = ({
 
   const handleSendComment = async (content: string) => {
     if (!content || !item._id) return;
+    console.log(item);
     try {
       const res = await createComment(item._id, content);
       setComments([...comments, { ...res, replies: [] }]);
@@ -119,6 +125,20 @@ const ReelItem: React.FC<VideoItemProps> = ({
 
   const closeMenu = () => setVisible(false);
 
+  const handleLike = async () => {
+    try {
+      if (!isLiked) {
+        await likeStoryService(item._id);
+      } else {
+        await unlikeStoryService(item._id);
+      }
+
+      setIsLiked(!isLiked);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
+
   return (
     <View style={styles.videoContainer}>
       {item.mediaType === "video" ? (
@@ -139,7 +159,7 @@ const ReelItem: React.FC<VideoItemProps> = ({
               videoRefs.current![index] = ref!;
             }}
             style={styles.video}
-            source={{ uri: item.media }}
+            source={{ uri: imageURL + item.media }}
             resizeMode={ResizeMode.COVER}
             isLooping
             shouldPlay={false}
@@ -157,7 +177,13 @@ const ReelItem: React.FC<VideoItemProps> = ({
           )}
         </TouchableOpacity>
       ) : (
-        <Image source={{ uri: item.media }} style={styles.video} />
+        <Image
+          ref={(ref) => {
+            videoRefs.current![index] = ref!;
+          }}
+          source={{ uri: imageURL + item.media }}
+          style={styles.video}
+        />
       )}
 
       <LinearGradient
@@ -167,7 +193,7 @@ const ReelItem: React.FC<VideoItemProps> = ({
 
       {/* User Info */}
       <View style={[styles.userInfo]}>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image
             source={{
               uri: item.location ? item.location?.images[0] : item.avatarUrl,
@@ -185,7 +211,7 @@ const ReelItem: React.FC<VideoItemProps> = ({
         </View>
         {item.location ? (
           <Text style={{ color: "white", marginTop: 15 }}>
-            <Text style={{ color: "#07d64c", fontWeight: "bold" }}>Open</Text>
+            <Text style={{ color: "#07d64c", fontWeight: "bold" }}>Open </Text>
             till 5:00pm
           </Text>
         ) : null}
@@ -219,10 +245,7 @@ const ReelItem: React.FC<VideoItemProps> = ({
             buttonText="Report"
           />
         </Menu>
-        <TouchableOpacity
-          onPress={() => setIsLiked(!isLiked)}
-          style={styles.iconButton}
-        >
+        <TouchableOpacity onPress={handleLike} style={styles.iconButton}>
           <Ionicons
             name={isLiked ? "heart" : "heart-outline"}
             size={30}

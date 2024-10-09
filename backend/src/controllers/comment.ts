@@ -11,11 +11,11 @@ export const createComment = async (req: CustomRequest, res: Response) => {
 
   try {
     // Check if the post exists
-    const postExists = await Post.findById(postId);
-    if (!postExists) {
-      res.status(404).json({ message: "Post not found" });
-      return;
-    }
+    // const postExists = await Post.findById(postId);
+    // if (!postExists) {
+    //   res.status(404).json({ message: "Post not found" });
+    //   return;
+    // }
 
     // Create a new comment
     const newComment = new Comment({
@@ -35,8 +35,8 @@ export const createComment = async (req: CustomRequest, res: Response) => {
     );
 
     // Update the post (if needed) and save it
-    postExists.comments.push(savedComment._id as unknown as ObjectId);
-    await postExists.save();
+    // postExists.comments.push(savedComment._id as unknown as ObjectId);
+    // await postExists.save();
 
     // Return the populated comment in the response
     res.status(201).json(populatedComment);

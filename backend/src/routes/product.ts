@@ -1,14 +1,16 @@
 import { Router } from "express";
-import { auth } from "../middleware/auth";
 import {
-  createStory,
-  getAllStoriesGroupedByUser,
-  likeStory,
-  unlikeStory,
-  viewStory,
-} from "../controllers/story";
+  createProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+} from "../controllers/product";
+import { productValidation } from "../utils/validations";
+import { auth } from "../middleware/auth";
 import multer from "multer";
 import path from "path";
+
+const router = Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -26,12 +28,18 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // Limit file size to 5MB
 });
 
-const router = Router();
+router.get("/", getAllProducts);
 
-router.get("/", getAllStoriesGroupedByUser);
-router.post("/", auth(), upload.array("media"), createStory);
-router.post("/:storyId/view", auth(), viewStory);
-router.post("/:storyId/like", auth(), likeStory);
-router.post("/:storyId/unlike", auth(), unlikeStory);
+router.get("/:id", getProductById);
+
+router.post(
+  "/",
+  auth(),
+  productValidation,
+  upload.array("media"),
+  createProduct
+);
+
+router.put("/:id", auth(), productValidation, updateProduct);
 
 export default router;

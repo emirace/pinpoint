@@ -9,6 +9,7 @@ export interface IStory {
     mediaType: "image" | "video";
     caption?: string;
     views: string[];
+    likes: string[];
     createdAt: Date;
   }[];
   user: {

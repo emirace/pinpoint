@@ -26,6 +26,7 @@ import {
   replyToComment,
 } from "@/src/services/comment";
 import { Comment as IComment } from "@/src/types/comment";
+import { imageURL } from "@/src/services/api";
 
 interface Props {
   item: Post;
@@ -106,16 +107,20 @@ const FeedItem: React.FC<Props> = ({ item }) => {
     <View style={styles.userInfo}>
       <Image
         source={{
-          uri: item.location
-            ? item?.location?.images[0]
-            : item.userId.avatarUrl,
+          uri:
+            imageURL + item.location
+              ? item?.location?.images[0]
+              : item.userId.avatarUrl,
         }}
         style={styles.userAvatar}
       />
       <View style={styles.userDetails}>
         <Text
           onPress={() => (item.location ? router.push("/location") : null)}
-          style={styles.username}
+          style={[
+            styles.username,
+            item.media && item.media?.length < 1 && { color: "black" },
+          ]}
         >
           {item.location ? item?.location?.locationName : item.userId.username}
         </Text>
@@ -129,7 +134,11 @@ const FeedItem: React.FC<Props> = ({ item }) => {
         onDismiss={closeMenu}
         anchor={
           <TouchableOpacity onPress={openMenu}>
-            <Ionicons name="ellipsis-horizontal" size={25} color="#e1e1e1" />
+            <Ionicons
+              name="ellipsis-horizontal"
+              size={25}
+              color={item.media && item.media?.length < 1 ? "black" : "#e1e1e1"}
+            />
           </TouchableOpacity>
         }
         anchorPosition="bottom"
@@ -161,7 +170,7 @@ const FeedItem: React.FC<Props> = ({ item }) => {
         <>
           <Video
             ref={video}
-            source={{ uri: item.media[0].url }}
+            source={{ uri: imageURL + item.media[0].url }}
             style={styles.mediaBackground}
             isLooping
             // shouldPlay
@@ -198,7 +207,7 @@ const FeedItem: React.FC<Props> = ({ item }) => {
         item?.media?.length > 0 &&
         item?.media[0].type === "image" ? (
         <ImageBackground
-          source={{ uri: item.media[0].url }}
+          source={{ uri: imageURL + item.media[0].url }}
           resizeMode="cover"
           style={styles.mediaBackground}
         >
@@ -285,7 +294,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   location: {
-    color: "#d3cccc",
+    color: "#b5afaf",
   },
   description: {
     marginVertical: 10,

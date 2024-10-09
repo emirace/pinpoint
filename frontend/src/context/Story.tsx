@@ -9,6 +9,7 @@ import {
   getAllStoriesGroupedByUser,
   createStory,
   StoryData,
+  viewStoryService,
 } from "../services/story";
 import { IStory } from "../types/story";
 import { useUser } from "./User";
@@ -21,6 +22,7 @@ export interface SortedStory {
   mediaType: "image" | "video";
   caption?: string;
   views: string[];
+  likes: string[];
   createdAt: Date;
   username: string;
   avatarUrl: string;
@@ -34,6 +36,7 @@ interface StoryContextType {
   fetchStories: () => Promise<void>;
   addStory: (storyData: StoryData) => Promise<void>;
   getSortedStoryMedia: (userId: string) => SortedStory[];
+  viewStory: (id: string) => void;
 }
 
 // Create the Story Context
@@ -50,7 +53,6 @@ export const StoryProvider = ({ children }: { children: ReactNode }) => {
   const fetchStories = async () => {
     try {
       const data = await getAllStoriesGroupedByUser();
-      console.log(data);
       const sortedStory = sortStoriesByRecentAndNotViewed(data);
       setStories(sortedStory);
     } catch (err) {
@@ -120,41 +122,47 @@ export const StoryProvider = ({ children }: { children: ReactNode }) => {
 
   const getSortedStoryMedia = (userId: string): SortedStory[] => {
     const notViewedStories: SortedStory[] = [];
-
     const viewedStories: SortedStory[] = [];
+    const userNotViewedStories: SortedStory[] = [];
 
+    // Iterate once through all stories to build the required arrays
     stories.forEach((story) => {
+      const { username, avatarUrl } = story.user;
+
       story.stories.forEach((individualStory) => {
-        if (individualStory.views.includes(user!._id)) {
+        const isViewed = individualStory.views.includes(user!._id);
+        const isUserStory = story._id === userId;
+
+        // If it's the user's story and hasn't been viewed
+        if (isUserStory && !isViewed) {
+          userNotViewedStories.push({
+            ...individualStory,
+            username,
+            avatarUrl,
+          });
+        } else if (isViewed) {
           viewedStories.push({
             ...individualStory,
-            username: story.user.username,
-            avatarUrl: story.user.avatarUrl,
+            username,
+            avatarUrl,
           });
         } else {
           notViewedStories.push({
             ...individualStory,
-            username: story.user.username,
-            avatarUrl: story.user.avatarUrl,
+            username,
+            avatarUrl,
           });
         }
       });
     });
 
-    const userNotViewedStories =
-      stories
-        .map((story) => ({
-          ...story,
-          stories: story.stories.map((s) => ({
-            ...s,
-            username: story.user.username,
-            avatarUrl: story.user.avatarUrl,
-          })),
-        }))
-        .find((story) => story._id === userId)
-        ?.stories.filter((story) => !story.views.includes(user!._id)) || [];
-
+    console.log(userNotViewedStories);
     return [...userNotViewedStories, ...notViewedStories, ...viewedStories];
+  };
+
+  const viewStory = async (id: string) => {
+    await viewStoryService(id);
+    // fetchStories();
   };
 
   return (
@@ -167,6 +175,7 @@ export const StoryProvider = ({ children }: { children: ReactNode }) => {
         fetchStories,
         addStory,
         getSortedStoryMedia,
+        viewStory,
       }}
     >
       {children}

@@ -14,6 +14,7 @@ import { IStory } from "@/src/types/story";
 import { ActivityIndicator } from "react-native-paper";
 import { Image } from "expo-image";
 import { ResizeMode, Video } from "expo-av";
+import { imageURL } from "@/src/services/api";
 
 const HeaderStories = () => {
   const { stories, uploading } = useStory();
@@ -26,10 +27,13 @@ const HeaderStories = () => {
         style={styles.storyItem}
       >
         {lastStory.mediaType === "image" ? (
-          <Image source={{ uri: lastStory.media }} style={styles.storyImage} />
+          <Image
+            source={{ uri: imageURL + lastStory.media }}
+            style={styles.storyImage}
+          />
         ) : (
           <Video
-            source={{ uri: lastStory.media }}
+            source={{ uri: imageURL + lastStory.media }}
             style={styles.storyImage}
             resizeMode={ResizeMode.COVER}
           />

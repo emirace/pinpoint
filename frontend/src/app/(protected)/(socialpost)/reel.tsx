@@ -1,16 +1,18 @@
-import React, { useRef, useState } from "react";
-import { FlatList } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, Image } from "react-native";
 import { Video } from "expo-av";
 import ReelItem from "@/src/components/social/ReelItem";
 import { useStory } from "@/src/context/Story";
+import { viewStoryService } from "@/src/services/story";
 
 const Reel = () => {
-  const { getSortedStoryMedia } = useStory();
-  const videoRefs = useRef<Video[]>([]);
+  const { getSortedStoryMedia, fetchStories } = useStory();
+  const videoRefs = useRef<(Video | Image)[]>([]);
   const [isPlaying, setIsPlaying] = useState(true);
   const [showControls, setShowControls] = useState(false);
 
-  const togglePlayPause = (videoRef: Video) => {
+  const togglePlayPause = (videoRef: Video | Image) => {
+    if (videoRef instanceof Image) return;
     if (isPlaying) {
       videoRef.pauseAsync();
     } else {
@@ -24,14 +26,34 @@ const Reel = () => {
     }, 2000); // Hide controls after 2 seconds
   };
 
+  useEffect(() => {
+    return () => {
+      fetchStories();
+    };
+  }, []);
+
   const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
-    videoRefs.current.forEach((video, index) => {
-      if (video) {
-        if (viewableItems.find((item: any) => item.index === index)) {
-          video.playAsync();
-          setIsPlaying(true);
-        } else {
-          video.pauseAsync();
+    videoRefs.current.forEach((media, index) => {
+      if (media) {
+        const isViewable = viewableItems.some(
+          (item: any) => item.index === index
+        );
+
+        if ("playAsync" in media && "pauseAsync" in media) {
+          if (isViewable) {
+            media.playAsync();
+            setIsPlaying(true);
+          } else {
+            media.pauseAsync();
+          }
+        }
+
+        const viewableItem = viewableItems.find(
+          (item: any) => item.index === index
+        );
+        if (viewableItem && isViewable) {
+          const itemId = viewableItem.item._id;
+          viewStoryService(itemId);
         }
       }
     });
