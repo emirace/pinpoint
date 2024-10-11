@@ -1,15 +1,15 @@
 import { Router } from "express";
 import {
-  createProduct,
-  deleteProduct,
-  getAllProducts,
-  getProductById,
+  createService,
+  deleteService,
+  getAllServices,
+  getServiceById,
   submitReview,
-  updateProduct,
-} from "../controllers/product";
+  updateService,
+} from "../controllers/service";
 import {
-  productReviewValidation,
-  productValidation,
+  serviceReviewValidation,
+  serviceValidation,
 } from "../utils/validations";
 import { auth } from "../middleware/auth";
 import multer from "multer";
@@ -33,22 +33,22 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // Limit file size to 5MB
 });
 
-router.get("/", getAllProducts);
+router.get("/", getAllServices);
 
-router.get("/:id", getProductById);
+router.get("/:id", getServiceById);
 
 router.post(
   "/",
   auth(),
-  // productValidation,
+  // serviceValidation,
   upload.array("media"),
-  createProduct
+  createService
 );
 
-router.post("/:id/review", auth(), productReviewValidation, submitReview);
+router.post("/:id/review", auth(), serviceReviewValidation, submitReview);
 
-router.put("/:id", auth(), productValidation, updateProduct);
+router.put("/:id", auth(), serviceValidation, updateService);
 
-router.delete("/:id", auth(), deleteProduct);
+router.delete("/:id", auth(), deleteService);
 
 export default router;

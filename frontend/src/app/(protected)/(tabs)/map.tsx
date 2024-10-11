@@ -140,7 +140,7 @@ export default function App() {
       </MapView>
       <View style={styles.header}>
         <BottomSheetComponent
-          content={<Filter />}
+          content={(close) => <Filter />}
           button={
             <Button
               disabled
@@ -157,7 +157,7 @@ export default function App() {
           snapPoints={["60"]}
         />
         <BottomSheetComponent
-          content={<List />}
+          content={(close) => <List />}
           button={
             <Button
               disabled

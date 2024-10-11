@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-interface ProductOption {
+interface ServiceOption {
   optionCategory: string;
   optionName: string;
 }
@@ -11,26 +11,32 @@ interface IReivew {
   rating: number;
 }
 
-interface IProduct extends Document {
+interface IPriceRange {
+  from: number;
+  to: number;
+}
+
+interface IService extends Document {
   user: Schema.Types.ObjectId;
   name: string;
   description: string;
-  price: number;
+  priceType: "flat" | "range";
+  priceRange?: IPriceRange;
+  price?: number;
   images: string[];
+  duration: string;
   location: Schema.Types.ObjectId[];
   mainCategory: string[];
   category: string[];
   subCategory?: string[];
-  options?: ProductOption[];
+  options?: ServiceOption[];
   reviews?: IReivew[];
   rating: number;
-  availableOnline: boolean;
-  productUrl?: string;
-  ships: boolean;
-  pickupAvailable: boolean;
-  inShopOnly: boolean;
+  homeService: boolean;
+  serviceRadius?: string;
 }
 
+// Schema for ServiceOption
 const ProductOptionSchema: Schema = new Schema({
   optionCategory: { type: String, required: true },
   optionName: { type: String, required: true },
@@ -41,11 +47,19 @@ const ReviewSchema: Schema<IReivew> = new Schema({
   rating: { type: Number, required: true },
 });
 
-const ProductSchema: Schema<IProduct> = new Schema(
+const PriceRangeSchema: Schema<IPriceRange> = new Schema({
+  from: { type: Number },
+  to: { type: Number },
+});
+
+// Service Schema
+const serviceSchema: Schema<IService> = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
-    price: { type: Number, required: true },
+    duration: { type: String, required: true },
+    price: { type: Number },
+    priceRange: PriceRangeSchema,
     images: { type: [String], required: true },
     location: [{ type: Schema.Types.ObjectId, ref: "Location" }],
     user: { type: Schema.Types.ObjectId, ref: "User" },
@@ -55,18 +69,16 @@ const ProductSchema: Schema<IProduct> = new Schema(
     options: { type: [ProductOptionSchema] },
     reviews: { type: [ReviewSchema] },
     rating: { type: Number, default: 0 },
-    availableOnline: { type: Boolean, default: false },
-    productUrl: { type: String },
-    ships: { type: Boolean, default: false },
-    pickupAvailable: { type: Boolean, default: false },
-    inShopOnly: { type: Boolean, default: false },
+    homeService: { type: Boolean, default: false },
+    serviceRadius: { type: String },
   },
   { timestamps: true }
 );
 
-const Product: Model<IProduct> = mongoose.model<IProduct>(
-  "Product",
-  ProductSchema
+// Create the Service model
+const Service: Model<IService> = mongoose.model<IService>(
+  "Service",
+  serviceSchema
 );
 
-export default Product;
+export default Service;

@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
-import Product from "../models/product";
+import Service from "../models/service";
 import { CustomRequest } from "../middleware/auth";
 import { deleteMediaFromS3, uploadMediaToS3 } from "../utils/media";
 import { ObjectId } from "mongoose";
 
-// Create Product Controller
-export const createProduct = async (req: CustomRequest, res: Response) => {
+// Create Service Controller
+export const createService = async (req: CustomRequest, res: Response) => {
   const userId = req.user?._id;
   // Check for validation errors
   const errors = validationResult(req);
@@ -16,9 +16,47 @@ export const createProduct = async (req: CustomRequest, res: Response) => {
       message: "Validation errors",
       errors: errors.array(),
     });
-    // return;
+    return;
   }
+  const parseJSONField = (field: any, fieldName: string) => {
+    if (typeof field === "string") {
+      try {
+        const parsedField = JSON.parse(field);
+        if (typeof parsedField === "object" || Array.isArray(parsedField)) {
+          return parsedField;
+        } else {
+          throw new Error();
+        }
+      } catch (error) {
+        throw new Error(
+          `Invalid format for ${fieldName}. Expected a valid JSON object or array.`
+        );
+      }
+    }
+    return field;
+  };
+
   try {
+    const {
+      name,
+      description,
+      duration,
+      price,
+      priceRange,
+      priceType,
+      location,
+      mainCategory,
+      category,
+      subCategory,
+      options,
+      homeService,
+      serviceRadius,
+    } = req.body;
+
+    console.log(priceRange);
+
+    const priceRangeJson = parseJSONField(priceRange, "priceRange");
+
     const imageUploadPromises: Promise<any>[] = [];
     if (req.files && Array.isArray(req.files)) {
       for (const file of req.files) {
@@ -32,27 +70,14 @@ export const createProduct = async (req: CustomRequest, res: Response) => {
     const imageUploadResults = await Promise.all(imageUploadPromises);
     console.log(imageUploadResults);
 
-    const {
-      name,
-      description,
-      price,
-      location,
-      mainCategory,
-      category,
-      subCategory,
-      options,
-      availableOnline,
-      productUrl,
-      ships,
-      pickupAvailable,
-      inShopOnly,
-    } = req.body;
-
-    // Create a new Product instance
-    const newProduct = new Product({
+    // Create a new Service instance
+    const newService = new Service({
       user: userId,
       name,
       description,
+      duration,
+      priceType,
+      priceRange: priceRangeJson,
       price,
       images: imageUploadResults.map((image) => image.url),
       location,
@@ -60,38 +85,36 @@ export const createProduct = async (req: CustomRequest, res: Response) => {
       category,
       subCategory,
       options,
-      availableOnline,
-      productUrl,
-      ships,
-      pickupAvailable,
-      inShopOnly,
+      homeService,
+      serviceRadius,
     });
 
-    // Save the product to the database
-    const savedProduct = await newProduct.save();
+    // Save the service to the database
+    const savedService = await newService.save();
 
-    // Respond with the saved product
+    // Respond with the saved service
     res.status(201).json({
-      message: "Product created successfully",
-      product: savedProduct,
+      message: "Service created successfully",
+      service: savedService,
     });
   } catch (error: any) {
-    console.error("Error creating product:", error);
+    console.error("Error creating service:", error);
     res.status(500).json({
-      message: "Server error while creating product",
+      message: "Server error while creating service",
       error: error.message,
     });
   }
 };
 
-// Update Product Controller
-export const updateProduct = async (req: CustomRequest, res: Response) => {
+// Update Service Controller
+export const updateService = async (req: CustomRequest, res: Response) => {
   const userId = req.user?._id;
-  const productId = req.params.id;
+  const serviceId = req.params.id;
 
   const {
     name,
     description,
+    duration,
     price,
     location,
     mainCategory,
@@ -99,11 +122,8 @@ export const updateProduct = async (req: CustomRequest, res: Response) => {
     existingImages,
     subCategory,
     options,
-    availableOnline,
-    productUrl,
-    ships,
-    pickupAvailable,
-    inShopOnly,
+    homeService,
+    serviceRadius,
   } = req.body;
 
   // Check for validation errors
@@ -117,25 +137,25 @@ export const updateProduct = async (req: CustomRequest, res: Response) => {
   }
 
   try {
-    // Find the product by ID
-    const product = await Product.findById(productId);
-    if (!product) {
+    // Find the service by ID
+    const service = await Service.findById(serviceId);
+    if (!service) {
       res.status(404).json({
-        message: "Product not found",
+        message: "Service not found",
       });
       return;
     }
 
-    // Check if the user is the owner of the product
-    if (product.user.toString() !== userId) {
+    // Check if the user is the owner of the service
+    if (service.user.toString() !== userId) {
       res.status(403).json({
-        message: "You are not authorized to update this product",
+        message: "You are not authorized to update this service",
       });
       return;
     }
 
     // Handle media update
-    const currentImage = product.images || [];
+    const currentImage = service.images || [];
     const newImageUrls = existingImages || [];
 
     // Identify media to delete
@@ -164,47 +184,43 @@ export const updateProduct = async (req: CustomRequest, res: Response) => {
     const imageUploadResults = await Promise.all(imageUploadPromises);
     const uploadedImages = imageUploadResults.map((media) => media.url);
 
-    // Update product fields
-    product.name = name || product.name;
-    product.description = description || product.description;
-    product.price = price || product.price;
+    // Update service fields
+    service.name = name || service.name;
+    service.description = description || service.description;
+    service.duration = duration || service.duration;
+    service.price = price || service.price;
     if (uploadedImages.length > 0) {
-      product.images = [...newImageUrls, ...uploadedImages];
+      service.images = [...newImageUrls, ...uploadedImages];
     } else {
-      product.images = newImageUrls;
+      service.images = newImageUrls;
     }
-    product.location = location || product.location;
-    product.mainCategory = mainCategory || product.mainCategory;
-    product.category = category || product.category;
-    product.subCategory = subCategory || product.subCategory;
-    product.options = options || product.options;
-    product.availableOnline =
-      availableOnline !== undefined ? availableOnline : product.availableOnline;
-    product.productUrl = productUrl || product.productUrl;
-    product.ships = ships !== undefined ? ships : product.ships;
-    product.pickupAvailable =
-      pickupAvailable !== undefined ? pickupAvailable : product.pickupAvailable;
-    product.inShopOnly =
-      inShopOnly !== undefined ? inShopOnly : product.inShopOnly;
+    service.location = location || service.location;
+    service.mainCategory = mainCategory || service.mainCategory;
+    service.category = category || service.category;
+    service.subCategory = subCategory || service.subCategory;
+    service.options = options || service.options;
+    service.homeService =
+      homeService !== undefined ? homeService : service.homeService;
+    service.serviceRadius = serviceRadius || service.serviceRadius;
 
-    // Save the updated product
-    const updatedProduct = await product.save();
+    // Save the updated service
+    const updatedService = await service.save();
 
-    // Respond with the updated product
+    // Respond with the updated service
     res.status(200).json({
-      message: "Product updated successfully",
-      product: updatedProduct,
+      message: "Service updated successfully",
+      service: updatedService,
     });
   } catch (error: any) {
-    console.error("Error updating product:", error);
+    console.error("Error updating service:", error);
     res.status(500).json({
-      message: "Server error while updating product",
+      message: "Server error while updating service",
       error: error.message,
     });
   }
 };
 
-export const getAllProducts = async (req: Request, res: Response) => {
+export const getAllServices = async (req: Request, res: Response) => {
   try {
     const {
       page = 1,
@@ -214,8 +230,6 @@ export const getAllProducts = async (req: Request, res: Response) => {
       subCategory = [],
       minPrice,
       maxPrice,
-      inShopOnly,
-      availableOnline,
       options,
     } = req.query;
 
@@ -247,8 +261,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       query.subCategory = { $in: subCategory }; // Matches any of the subcategories
     }
 
-    if (inShopOnly) query.inShopOnly = inShopOnly === "true";
-    if (availableOnline) query.availableOnline = availableOnline === "true";
+    // if (inShopOnly) query.inShopOnly = inShopOnly === "true";
 
     if (options) {
       const optionFilters = JSON.parse(options as string);
@@ -262,67 +275,57 @@ export const getAllProducts = async (req: Request, res: Response) => {
       if (maxPrice) query.price.$lte = Number(maxPrice); // Maximum price filter
     }
 
-    // Get total number of products that match the query
-    const totalProducts = await Product.countDocuments(query);
-
-    // Fetch paginated results with filtering, sorting, and population
-    const products = await Product.find(query)
+    const services = await Service.find(query)
       .populate("location")
-      .populate("user", "username")
-      .skip((pageNumber - 1) * pageSize) // Skip for pagination
-      .limit(pageSize) // Limit for pagination
-      .sort({ createdAt: -1 }); // Sort by most recent products
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
-      message: "Products retrieved successfully",
-      products,
-      pagination: {
-        totalProducts,
-        currentPage: pageNumber,
-        totalPages: Math.ceil(totalProducts / pageSize),
-        pageSize,
-      },
+      message: "Services retrieved successfully",
+      services,
     });
   } catch (error: any) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching services:", error);
     res.status(500).json({
-      message: "Server error while fetching products",
+      success: false,
+      message: "Server error while fetching services",
       error: error.message,
     });
   }
 };
 
-// Get Product by ID Controller
-export const getProductById = async (req: Request, res: Response) => {
-  const productId = req.params.id;
+// Get Service by ID Controller
+export const getServiceById = async (req: Request, res: Response) => {
+  const serviceId = req.params.id;
 
   try {
-    const product = await Product.findById(productId)
+    const service = await Service.findById(serviceId)
       .populate("location")
       .populate("user", "username");
 
-    if (!product) {
+    if (!service) {
       res.status(404).json({
-        message: "Product not found",
+        message: "Service not found",
       });
       return;
     }
 
     res.status(200).json({
-      message: "Product retrieved successfully",
-      product,
+      message: "Service retrieved successfully",
+      service,
     });
   } catch (error: any) {
-    console.error("Error fetching product:", error);
+    console.error("Error fetching service:", error);
     res.status(500).json({
-      message: "Server error while fetching product",
+      message: "Server error while fetching service",
       error: error.message,
     });
   }
 };
 
 export const submitReview = async (req: CustomRequest, res: Response) => {
-  const productId = req.params.id;
+  const serviceId = req.params.id;
   const userId = req.user!._id;
 
   const errors = validationResult(req);
@@ -337,12 +340,12 @@ export const submitReview = async (req: CustomRequest, res: Response) => {
   const { rating, content } = req.body;
 
   try {
-    const product = await Product.findById(productId);
+    const service = await Service.findById(serviceId);
 
-    if (!product) {
+    if (!service) {
       res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Service not found",
       });
       return;
     }
@@ -353,21 +356,21 @@ export const submitReview = async (req: CustomRequest, res: Response) => {
       rating,
     };
 
-    product.reviews?.push(newReview);
+    service.reviews?.push(newReview);
 
     // Recalculate the average rating
-    const totalRatings = product.reviews!.reduce(
+    const totalRatings = service.reviews!.reduce(
       (acc, review) => acc + review.rating,
       0
     );
-    product.rating = totalRatings / product.reviews!.length;
+    service.rating = totalRatings / service.reviews!.length;
 
-    // Save the updated product
-    await product.save();
+    // Save the updated service
+    await service.save();
 
     res.status(201).json({
       message: "Review submitted successfully",
-      product,
+      service,
     });
   } catch (error: any) {
     console.error("Error submitting review:", error);
@@ -378,54 +381,46 @@ export const submitReview = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const deleteProduct = async (req: CustomRequest, res: Response) => {
-  const productId = req.params.id;
+export const deleteService = async (req: CustomRequest, res: Response) => {
+  const serviceId = req.params.id;
   const userId = req.user!._id;
 
   try {
-    // Find the product by ID
-    const product = await Product.findById(productId);
+    // Find the service by ID
+    const service = await Service.findById(serviceId);
 
-    if (!product) {
+    if (!service) {
       res.status(404).json({
-        message: "Product not found",
+        message: "Service not found",
       });
       return;
     }
 
-    // Check if the authenticated user is the owner of the product
-    if (product.user.toString() !== userId.toString()) {
+    // Check if the authenticated user is the owner of the service
+    if (service.user.toString() !== userId.toString()) {
       res.status(403).json({
-        message: "You are not authorized to delete this product",
+        message: "You are not authorized to delete this service",
       });
       return;
     }
 
-    // Check if the authenticated user is the owner of the product
-    if (product.user.toString() !== userId.toString()) {
-      res.status(403).json({
-        message: "You are not authorized to delete this product",
-      });
-      return;
-    }
-
-    if (product.images && product.images.length > 0) {
+    if (service.images && service.images.length > 0) {
       await Promise.all(
-        product.images.map(async (image) => {
+        service.images.map(async (image) => {
           await deleteMediaFromS3(image); // Function to delete the file from S3
         })
       );
     }
 
-    await product.deleteOne();
+    await service.deleteOne();
 
     res.status(200).json({
-      message: "Product deleted successfully",
+      message: "Service deleted successfully",
     });
   } catch (error: any) {
-    console.error("Error deleting product:", error);
+    console.error("Error deleting service:", error);
     res.status(500).json({
-      message: "Server error while deleting product",
+      message: "Server error while deleting service",
       error: error.message,
     });
   }

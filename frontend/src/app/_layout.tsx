@@ -19,6 +19,8 @@ import { UserProvider } from "../context/User";
 import { PostProvider } from "../context/Post";
 import { LocationProvider } from "../context/Location";
 import { StoryProvider } from "../context/Story";
+import { ProductProvider } from "../context/Product";
+import { ServiceProvider } from "../context/Service";
 
 const { LightTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -48,26 +50,30 @@ export default function Root() {
         <PostProvider>
           <LocationProvider>
             <StoryProvider>
-              <PaperProvider theme={CombinedDefaultTheme}>
-                <ThemeProvider value={CombinedDefaultTheme}>
-                  <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    style={{ flex: 1 }}
-                  >
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                      <BottomSheetModalProvider>
-                        <StatusBar style="dark" />
-                        <Stack screenOptions={{ headerShown: false }}>
-                          <Stack.Screen name="(protected)" />
-                          <Stack.Screen name="(auth)" />
-                          <Stack.Screen name="terms" />
-                          <Stack.Screen name="privacy" />
-                        </Stack>
-                      </BottomSheetModalProvider>
-                    </GestureHandlerRootView>
-                  </KeyboardAvoidingView>
-                </ThemeProvider>
-              </PaperProvider>
+              <ProductProvider>
+                <ServiceProvider>
+                  <PaperProvider theme={CombinedDefaultTheme}>
+                    <ThemeProvider value={CombinedDefaultTheme}>
+                      <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : "height"}
+                        style={{ flex: 1 }}
+                      >
+                        <GestureHandlerRootView style={{ flex: 1 }}>
+                          <BottomSheetModalProvider>
+                            <StatusBar style="dark" />
+                            <Stack screenOptions={{ headerShown: false }}>
+                              <Stack.Screen name="(protected)" />
+                              <Stack.Screen name="(auth)" />
+                              <Stack.Screen name="terms" />
+                              <Stack.Screen name="privacy" />
+                            </Stack>
+                          </BottomSheetModalProvider>
+                        </GestureHandlerRootView>
+                      </KeyboardAvoidingView>
+                    </ThemeProvider>
+                  </PaperProvider>
+                </ServiceProvider>
+              </ProductProvider>
             </StoryProvider>
           </LocationProvider>
         </PostProvider>

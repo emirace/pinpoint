@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getData } from "../utils/storage";
 
-export const baseURL = "http://192.168.0.131:5000/api";
-export const imageURL = "http://192.168.0.131:5000/api/images/";
+// export const baseURL = "http://172.20.10.4:5000/api";
+export const baseURL = "https://pinpoint-72yf.onrender.com/api";
+// export const baseURL = "http://192.168.0.131:5000/api";
+export const imageURL = baseURL + "/images/";
 // baseURL: process.env.EXPO_PUBLIC_API_URL,
-// baseURL: "http://172.20.10.4:5000/api",
-// baseURL: "https://pinpoint-72yf.onrender.com/api",
 
 // Create an Axios instance
 const axiosInstance = axios.create({
