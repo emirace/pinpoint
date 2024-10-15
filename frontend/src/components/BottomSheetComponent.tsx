@@ -7,7 +7,7 @@ import {
 } from "@gorhom/bottom-sheet";
 
 type BottomSheetComponentProps = {
-  content: (close: () => void) => ReactNode; // Change here to accept a function
+  content: (close: () => void) => ReactNode;
   snapPoints?: string[];
   button: ReactNode;
   actionButtonStyle?: object;

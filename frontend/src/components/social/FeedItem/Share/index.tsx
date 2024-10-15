@@ -115,7 +115,7 @@ const Share: React.FC<Props> = ({ buttonStyle, icon }) => {
                 </View>
               }
             >
-              <More />
+              {(close) => <More />}
             </Modal>
           )}
           keyExtractor={(item) => item.toString()}

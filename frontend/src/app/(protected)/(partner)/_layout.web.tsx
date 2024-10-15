@@ -81,7 +81,7 @@ export default function Layout() {
                         />
                       }
                     >
-                      <AddPost />
+                      {(close) => <AddPost onClose={close} />}
                     </Modal>
                     <Menu.Item
                       leadingIcon="movie-open-play-outline"

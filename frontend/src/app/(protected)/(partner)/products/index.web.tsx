@@ -11,6 +11,7 @@ import Modal from "@/src/components/modals/modal";
 import Details from "@/src/components/partner/product/details";
 import { useProduct } from "@/src/context/Product";
 import { IProduct } from "@/src/types/product";
+import ProductDetailWeb from "@/src/components/partner/product/webDetail";
 
 const Location = () => {
   const { colors } = useTheme();
@@ -123,7 +124,7 @@ const Location = () => {
                   </View>
                 }
               >
-                <Details />
+                {(close) => <ProductDetailWeb id={item._id} />}
               </Modal>
             ))}
           </ScrollView>
@@ -131,7 +132,7 @@ const Location = () => {
         <View
           style={{ backgroundColor: "white", padding: 20, borderRadius: 10 }}
         >
-          <Text style={styles.subTitle}>Rated Product</Text>
+          <Text style={styles.subTitle}>Reviewed Product</Text>
           <View
             style={[
               styles.tableHeader,
@@ -165,7 +166,9 @@ const Location = () => {
                 <View style={[styles.actionButtons]}>
                   <Rating rating={item.rating} show={false} />
                 </View>
-                <Text style={styles.tableCell}>{item.description}</Text>
+                <Text style={styles.tableCell} numberOfLines={2}>
+                  {item.description}
+                </Text>
                 <View style={styles.actionButtons}>
                   <Image
                     source={{ uri: item.images[0] }}

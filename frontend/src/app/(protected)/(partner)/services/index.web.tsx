@@ -130,7 +130,7 @@ const Location = () => {
                   </View>
                 }
               >
-                <Details />
+                {() => <Details />}
               </Modal>
             ))}
           </ScrollView>
@@ -172,7 +172,9 @@ const Location = () => {
                 <View style={[styles.actionButtons]}>
                   <Rating rating={item.rating} show={false} />
                 </View>
-                <Text style={styles.tableCell}>{item.description}</Text>
+                <Text style={styles.tableCell} numberOfLines={2}>
+                  {item.description}
+                </Text>
                 <View style={styles.actionButtons}>
                   <Image
                     source={{ uri: item.images[0] }}

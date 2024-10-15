@@ -68,7 +68,7 @@ const PendingLeadsCard: React.FC = () => {
                 />
               }
             >
-              <LeadsModal />
+              {(close) => <LeadsModal />}
             </Modal>
           ))}
         </ScrollView>

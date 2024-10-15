@@ -163,7 +163,7 @@ const Menu = () => {
               </View>
             }
           >
-            <Logout />
+            {(close) => <Logout />}
           </Modal>
           <Modal
             button={
@@ -173,7 +173,7 @@ const Menu = () => {
               </View>
             }
           >
-            <DeleteAccount />
+            {(close) => <DeleteAccount />}
           </Modal>
         </View>
       </ScrollView>
