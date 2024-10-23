@@ -39,6 +39,7 @@ export interface GetServiceData {
 export interface ReviewData {
   content: string;
   rating: number;
+  image?: File;
 }
 
 export const getAllServices = async ({
@@ -81,6 +82,18 @@ export const getAllServices = async ({
     return response.data.services;
   } catch (error) {
     console.error("Error fetching services with filters:", error);
+    throw error;
+  }
+};
+
+export const fetchServicesForLocation = async (locationId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/services/location/${locationId}`
+    );
+    return response.data.services;
+  } catch (error) {
+    console.error("Error fetching services:", error);
     throw error;
   }
 };
@@ -269,6 +282,6 @@ export const submitReview = async (
       `Error submitting review for service with ID: ${serviceId}`,
       error
     );
-    throw error;
+    throw getBackendErrorMessage(error);
   }
 };

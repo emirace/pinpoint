@@ -4,6 +4,7 @@ import {
   deleteService,
   getAllServices,
   getServiceById,
+  getServicesForLocation,
   submitReview,
   updateService,
 } from "../controllers/service";
@@ -36,6 +37,7 @@ const upload = multer({
 router.get("/", getAllServices);
 
 router.get("/:id", getServiceById);
+router.get("/location/:locationId", getServicesForLocation);
 
 router.post(
   "/",

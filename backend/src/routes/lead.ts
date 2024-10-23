@@ -1,9 +1,11 @@
 import { Router } from "express";
 import {
   addNoteToLead,
-  approveOrDeclineLead,
   createLead,
+  getLeadById,
   getPartnerLeads,
+  getUserLeads,
+  updateLeadStatus,
 } from "../controllers/lead";
 import { leadValidation } from "../utils/validations";
 import { auth } from "../middleware/auth";
@@ -29,27 +31,23 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
+router.get("/", auth(), getUserLeads);
 router.get("/partner", auth(), getPartnerLeads);
+router.get("/:id", auth(), getLeadById);
 
-router.post("/", auth(), leadValidation, upload.array("media"), createLead);
-
+router.post(
+  "/",
+  auth(),
+  // leadValidation,
+  upload.array("media"),
+  createLead
+);
+router.put("/:leadId/status", auth(), updateLeadStatus);
 router.put(
   "/:leadId/note",
   auth(),
   [check("note").notEmpty().withMessage("Note is required")],
   addNoteToLead
-);
-
-// Route to approve or decline a lead by partner
-router.put(
-  "/:leadId/status",
-  auth(),
-  [
-    check("status")
-      .isIn(["approved", "declined"])
-      .withMessage("Status must be either 'approved' or 'declined'"),
-  ],
-  approveOrDeclineLead
 );
 
 export default router;

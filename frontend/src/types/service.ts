@@ -6,11 +6,13 @@ interface ServiceOption {
   optionName: string;
 }
 
-interface IReivew {
-  userId: string;
+export interface IReview {
+  userId: User;
   _id: string;
-  content: string;
+  content?: string;
   rating: number;
+  createdAt: Date;
+  images?: string[];
 }
 export interface IService {
   _id: string;
@@ -27,7 +29,7 @@ export interface IService {
   category: string[];
   subCategory?: string[];
   options?: ServiceOption[];
-  reviews: IReivew[];
+  reviews: IReview[];
   rating: number;
   homeService: boolean;
   serviceRadius?: string;

@@ -1,14 +1,6 @@
 import { Location } from "./location";
 import { User } from "./user";
 
-export type Product = {
-  id: string;
-  name: string;
-  options: string;
-  price: string;
-  image: any;
-};
-
 interface ProductOption {
   optionCategory: string;
   optionName: string;

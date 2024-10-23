@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
-import Service from "../models/service";
+import Service, { IReview } from "../models/service";
 import { CustomRequest } from "../middleware/auth";
 import { deleteMediaFromS3, uploadMediaToS3 } from "../utils/media";
 import { ObjectId } from "mongoose";
@@ -295,6 +295,24 @@ export const getAllServices = async (req: Request, res: Response) => {
   }
 };
 
+// Controller to get all services for a specific location
+export const getServicesForLocation = async (req: Request, res: Response) => {
+  try {
+    const { locationId } = req.params;
+
+    // Fetch services related to the locationId
+    const services = await Service.find({ location: locationId });
+
+    res.status(200).json({
+      message: "Services fetched successfully",
+      services,
+    });
+  } catch (error) {
+    console.error("Error fetching services for location:", error);
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
 // Get Service by ID Controller
 export const getServiceById = async (req: Request, res: Response) => {
   const serviceId = req.params.id;
@@ -302,7 +320,8 @@ export const getServiceById = async (req: Request, res: Response) => {
   try {
     const service = await Service.findById(serviceId)
       .populate("location")
-      .populate("user", "username");
+      .populate("user", "username")
+      .populate("reviews.userId", "username");
 
     if (!service) {
       res.status(404).json({
@@ -350,7 +369,7 @@ export const submitReview = async (req: CustomRequest, res: Response) => {
       return;
     }
 
-    const newReview = {
+    const newReview: IReview = {
       userId: userId as unknown as ObjectId,
       content,
       rating,

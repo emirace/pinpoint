@@ -4,6 +4,7 @@ import {
   deleteProduct,
   getAllProducts,
   getProductById,
+  getProductsForLocation,
   submitReview,
   updateProduct,
 } from "../controllers/product";
@@ -36,6 +37,7 @@ const upload = multer({
 router.get("/", getAllProducts);
 
 router.get("/:id", getProductById);
+router.get("/location/:locationId", getProductsForLocation);
 
 router.post(
   "/",

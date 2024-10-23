@@ -5,10 +5,11 @@ interface ProductOption {
   optionName: string;
 }
 
-interface IReivew {
+interface IReview {
   userId: Schema.Types.ObjectId;
   content: string;
   rating: number;
+  image?: string;
 }
 
 interface IProduct extends Document {
@@ -22,7 +23,7 @@ interface IProduct extends Document {
   category: string[];
   subCategory?: string[];
   options?: ProductOption[];
-  reviews?: IReivew[];
+  reviews?: IReview[];
   rating: number;
   availableOnline: boolean;
   productUrl?: string;
@@ -35,11 +36,16 @@ const ProductOptionSchema: Schema = new Schema({
   optionCategory: { type: String, required: true },
   optionName: { type: String, required: true },
 });
-const ReviewSchema: Schema<IReivew> = new Schema({
-  userId: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  content: { type: String, required: true },
-  rating: { type: Number, required: true },
-});
+
+const ReviewSchema: Schema<IReview> = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    content: { type: String, required: true },
+    rating: { type: Number, required: true },
+    image: { type: String },
+  },
+  { timestamps: true }
+);
 
 const ProductSchema: Schema<IProduct> = new Schema(
   {

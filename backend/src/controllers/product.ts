@@ -292,6 +292,24 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 };
 
+// Controller to get all products for a specific location
+export const getProductsForLocation = async (req: Request, res: Response) => {
+  try {
+    const { locationId } = req.params;
+
+    // Fetch products related to the locationId
+    const products = await Product.find({ location: locationId });
+
+    res.status(200).json({
+      message: "Products fetched successfully",
+      products,
+    });
+  } catch (error) {
+    console.error("Error fetching products for location:", error);
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
 // Get Product by ID Controller
 export const getProductById = async (req: Request, res: Response) => {
   const productId = req.params.id;

@@ -29,6 +29,7 @@ import { useProduct } from "@/src/context/Product";
 import { useService } from "@/src/context/Service";
 import { IService } from "@/src/types/service";
 import { imageURL } from "@/src/services/api";
+import CustomFlatList from "@/src/components/CustomFlatList";
 
 const Discover = () => {
   const { colors } = useTheme();
@@ -79,7 +80,6 @@ const Discover = () => {
           options,
         });
         setServices(result);
-        console.log(result);
       } catch (error: any) {
         setError(error as string);
       } finally {
@@ -136,89 +136,53 @@ const Discover = () => {
     }
   };
 
-  const renderHeader = () => {
-    const options = getOptions();
+  const selectedOptions = getOptions();
 
-    // Get the detail options based on the first selected type
-    const selectedTypeOptions = options
-      .filter((option) => selectedTypeValues.includes(option.value))
-      .flatMap((option) => option.detailOptions);
+  const selectedTypeOptions = selectedOptions
+    .filter((option) => selectedTypeValues.includes(option.value))
+    .flatMap((option) => option.detailOptions);
 
-    return (
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>What are you looking for?</Text>
-        <View style={styles.buttonGroup}>
-          <ItemButton
-            label="Services"
-            icon={
-              <Ionicons
-                name="person-outline"
-                size={24}
-                color={getColor("Services")}
-              />
-            }
-            selected={selectedItem === "Services"}
-            onPress={() => {
-              setSelectedItem("Services");
-              setSelectedTypeValues([]);
-            }}
-          />
-          <ItemButton
-            label="Products"
-            icon={<Feather name="box" size={24} color={getColor("Products")} />}
-            selected={selectedItem === "Products"}
-            onPress={() => {
-              setSelectedItem("Products");
-              setSelectedTypeValues([]);
-            }}
-          />
-        </View>
+  const getColor = (item: string) =>
+    selectedItem === item ? colors.primary : "black";
 
-        <TextInput
-          mode="outlined"
-          placeholder="Search Categories"
-          left={<TextInput.Icon icon="magnify" />}
-          value={search}
-          onChangeText={(text) => setSearch(text)}
-          outlineStyle={{ borderRadius: 10, borderColor: "#e1e1e1e1" }}
-          style={{ height: 50, marginVertical: 20 }}
+  const renderHeader = (
+    <View style={styles.headerContainer}>
+      <Text style={styles.headerTitle}>What are you looking for?</Text>
+      <View style={styles.buttonGroup}>
+        <ItemButton
+          label="Services"
+          icon={
+            <Ionicons
+              name="person-outline"
+              size={24}
+              color={getColor("Services")}
+            />
+          }
+          selected={selectedItem === "Services"}
+          onPress={() => {
+            setSelectedItem("Services");
+            setSelectedTypeValues([]);
+          }}
         />
-        <View style={styles.selectGroup}>
-          <MultiSelect
-            placeholder="Select type..."
-            modalTitle={
-              selectedItem === "Products"
-                ? "Product Categories"
-                : "Service Categories"
-            }
-            selectedValues={selectedTypeValues}
-            onValuesChange={(values) =>
-              setSelectedTypeValues(values as string[])
-            }
-            options={options.map((option) => ({
-              label: option.label,
-              value: option.value,
-            }))}
-            containerStyle={styles.selectContainer}
-          />
-          <MultiSelect
-            placeholder="Select details..."
-            modalTitle={
-              (selectedTypeValues as unknown as string) + " Subcategories"
-            }
-            selectedValues={selectedDetailValues}
-            onValuesChange={(values) =>
-              setSelectedDetailValues(values as string[])
-            }
-            options={selectedTypeOptions}
-            containerStyle={styles.selectContainer}
-          />
-        </View>
+        <ItemButton
+          label="Products"
+          icon={<Feather name="box" size={24} color={getColor("Products")} />}
+          selected={selectedItem === "Products"}
+          onPress={() => {
+            setSelectedItem("Products");
+            setSelectedTypeValues([]);
+          }}
+        />
       </View>
-    );
-  };
+    </View>
+  );
 
   const RenderItem = ({ item }: { item: IProduct & IService }) => {
+    const availableOptions = [
+      item.availableOnline && "Buy Online",
+      item.ships && "Shipping",
+      item.homeService && "In-Home Service",
+    ].filter(Boolean);
     return (
       <TouchableOpacity
         onPress={() =>
@@ -241,18 +205,18 @@ const Discover = () => {
           {selectedItem === "Products"
             ? `$${item.price}`
             : item.priceType === "flat"
-            ? item.price
+            ? `$${item.price}`
             : `$${item.priceRange?.from} - $${item.priceRange?.to}`}
         </Text>
         <View style={{ marginBottom: 5 }}>
           <Rating rating={item.rating} textStyle={{ color: "black" }} />
         </View>
-        <Text
-          style={{ flexDirection: "row", alignItems: "center", color: "#888" }}
-        >
-          {item.options?.map((option) => option.optionName)}{" "}
-          <Ionicons name="checkmark" size={12} />
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+          <Text style={{ color: "#888" }}>{availableOptions.join(" + ")}</Text>
+          {availableOptions.length > 0 && (
+            <Ionicons name="checkmark" size={15} />
+          )}
+        </View>
         {selectedItem === "Services" && (
           <TouchableOpacity
             onPress={() => handleSelect(item._id)}
@@ -290,19 +254,66 @@ const Discover = () => {
     );
   };
 
-  const getColor = (item: string) =>
-    selectedItem === item ? colors.primary : "black";
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      {renderHeader()}
-      <FlatList
+      <CustomFlatList
         data={selectedItem === "Products" ? products : services}
+        style={styles.list}
         renderItem={({ item }) => <RenderItem item={item} />}
-        keyExtractor={(item) => item._id}
-        numColumns={2}
-        contentContainerStyle={styles.productGrid}
+        HeaderComponent={renderHeader}
+        StickyElementComponent={
+          <View
+            style={{
+              paddingTop: 20,
+              paddingBottom: 10,
+              backgroundColor: "white",
+            }}
+          >
+            <TextInput
+              mode="outlined"
+              placeholder="Search Categories"
+              left={<TextInput.Icon icon="magnify" />}
+              value={search}
+              onChangeText={(text) => setSearch(text)}
+              outlineStyle={{ borderRadius: 10, borderColor: "#e1e1e1e1" }}
+              style={{ height: 50 }}
+            />
+          </View>
+        }
+        TopListElementComponent={
+          <View style={styles.selectGroup}>
+            <MultiSelect
+              placeholder="Select type..."
+              modalTitle={
+                selectedItem === "Products"
+                  ? "Product Categories"
+                  : "Service Categories"
+              }
+              selectedValues={selectedTypeValues}
+              onValuesChange={(values) =>
+                setSelectedTypeValues(values as string[])
+              }
+              options={selectedOptions.map((option) => ({
+                label: option.label,
+                value: option.value,
+              }))}
+              containerStyle={styles.selectContainer}
+            />
+            <MultiSelect
+              placeholder="Select details..."
+              modalTitle={
+                (selectedTypeValues as unknown as string) + " Subcategories"
+              }
+              selectedValues={selectedDetailValues}
+              onValuesChange={(values) =>
+                setSelectedDetailValues(values as string[])
+              }
+              options={selectedTypeOptions}
+              containerStyle={styles.selectContainer}
+            />
+          </View>
+        }
       />
       {isSelected.length > 0 && (
         <Button
@@ -323,6 +334,7 @@ const Discover = () => {
             setIsOnlineShopping={setAvailableOnline}
             setOptions={setOptions}
             isOnlineShopping={availableOnline}
+            selectedItem={selectedItem}
             count={
               selectedItem === "Products" ? products.length : services.length
             }
@@ -390,9 +402,10 @@ export default Discover;
 const WIDTH = Dimensions.get("screen").width;
 const styles = StyleSheet.create({
   container: {
-    margin: 15,
+    marginHorizontal: 15,
     flex: 1,
   },
+  list: { overflow: "hidden", gap: 25, flex: 1 },
   productGrid: {
     paddingBottom: 15,
     gap: 25,
@@ -423,6 +436,7 @@ const styles = StyleSheet.create({
   selectGroup: {
     marginBottom: 30,
     gap: 10,
+    marginTop: 10,
   },
   selectContainer: {
     backgroundColor: "white",
@@ -431,6 +445,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: WIDTH / 2 - 22.5,
     marginRight: 15,
+    marginBottom: 10,
   },
   image: {
     width: "100%",

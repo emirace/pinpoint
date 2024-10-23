@@ -5,10 +5,11 @@ interface ServiceOption {
   optionName: string;
 }
 
-interface IReivew {
+export interface IReview {
   userId: Schema.Types.ObjectId;
   content: string;
   rating: number;
+  image?: string;
 }
 
 interface IPriceRange {
@@ -30,7 +31,7 @@ interface IService extends Document {
   category: string[];
   subCategory?: string[];
   options?: ServiceOption[];
-  reviews?: IReivew[];
+  reviews?: IReview[];
   rating: number;
   homeService: boolean;
   serviceRadius?: string;
@@ -41,11 +42,15 @@ const ProductOptionSchema: Schema = new Schema({
   optionCategory: { type: String, required: true },
   optionName: { type: String, required: true },
 });
-const ReviewSchema: Schema<IReivew> = new Schema({
-  userId: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  content: { type: String, required: true },
-  rating: { type: Number, required: true },
-});
+const ReviewSchema: Schema<IReview> = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    content: { type: String, required: true },
+    rating: { type: Number, required: true },
+    image: { type: String },
+  },
+  { timestamps: true }
+);
 
 const PriceRangeSchema: Schema<IPriceRange> = new Schema({
   from: { type: Number },
@@ -58,6 +63,7 @@ const serviceSchema: Schema<IService> = new Schema(
     name: { type: String, required: true },
     description: { type: String, required: true },
     duration: { type: String, required: true },
+    priceType: { type: String, enum: ["flat", "range"], required: true },
     price: { type: Number },
     priceRange: PriceRangeSchema,
     images: { type: [String], required: true },

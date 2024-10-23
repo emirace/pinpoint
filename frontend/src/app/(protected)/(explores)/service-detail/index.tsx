@@ -20,6 +20,7 @@ import { useService } from "@/src/context/Service";
 import { IService } from "@/src/types/service";
 import LoadingOverlay from "@/src/components/LoadingOverlay";
 import { imageURL } from "@/src/services/api";
+import moment from "moment";
 
 const Detail = () => {
   const [visible, setVisible] = React.useState(false);
@@ -29,7 +30,6 @@ const Detail = () => {
   const [service, setService] = useState<IService | undefined>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  console.log(id);
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -37,6 +37,7 @@ const Detail = () => {
         setLoading(true);
         const response = await getService(id as string);
         setService(response);
+        console.log(response);
         setLoading(false);
       } catch (error: any) {
         setError(error.message);
@@ -47,12 +48,15 @@ const Detail = () => {
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
+  const availableOptions = [service?.homeService && "In-Home Service"].filter(
+    Boolean
+  );
 
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Detail" />
+        <Appbar.Content title="Details" />
 
         <Menu
           visible={visible}
@@ -148,44 +152,41 @@ const Detail = () => {
                 ]}
               >
                 {service?.priceType === "flat"
-                  ? service?.price
+                  ? `$${service.price}`
                   : `$${service?.priceRange?.from} - $${service?.priceRange?.to}`}
               </Text>
-
-              <View style={{ flexDirection: "row", marginBottom: 10 }}>
-                <Text style={{ flex: 1, fontWeight: "500" }}>
-                  Variant Category:
-                </Text>
-                <Text style={{ flex: 2 }}>Option</Text>
-              </View>
-              <View style={{ flexDirection: "row", marginBottom: 10 }}>
-                <Text style={{ flex: 1, fontWeight: "500" }}>
-                  Variant Category:
-                </Text>
-                <Text style={{ flex: 2 }}>Option</Text>
-              </View>
-            </View>
-
-            <View
-              style={[
-                styles.section,
-                { flexDirection: "row", gap: 5, alignItems: "center" },
-              ]}
-            >
-              <Text style={{}}>In Home </Text>
-              <Ionicons name="checkmark" size={20} />
-            </View>
-            <View style={styles.section}>
               {service?.options?.map((option, index) => (
                 <View
                   key={index}
                   style={{ flexDirection: "row", marginBottom: 10 }}
                 >
-                  <Text style={{ flex: 1 }}>{option.optionCategory}:</Text>
+                  <Text
+                    style={{
+                      flex: 1,
+                      fontWeight: "500",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {option.optionCategory}:
+                  </Text>
                   <Text style={{ flex: 3 }}>{option.optionName}</Text>
                 </View>
               ))}
             </View>
+
+            {availableOptions.length > 0 && (
+              <View
+                style={[
+                  styles.section,
+                  { flexDirection: "row", gap: 5, alignItems: "center" },
+                ]}
+              >
+                <Text style={{ color: "#888" }}>
+                  {availableOptions.join(" + ")}
+                </Text>
+                <Ionicons name="checkmark" size={15} />
+              </View>
+            )}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>
                 Reviews ({service?.reviews?.length})
@@ -194,47 +195,56 @@ const Detail = () => {
                 <View
                   key={review._id}
                   style={{
-                    paddingVertical: 15,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#e8e8e8",
+                    paddingBottom: 15,
                   }}
                 >
-                  <Rating rating={5} show={false} />
-                  <Text
-                    style={[
-                      styles.sectionText,
-                      { fontWeight: "500", marginVertical: 3 },
-                    ]}
-                  >
-                    {/* {review.title} */}
-                  </Text>
+                  <Rating rating={review.rating} show={false} />
                   {review.content && (
-                    <Text style={[styles.sectionText, { marginBottom: 8 }]}>
+                    <Text
+                      style={[
+                        styles.sectionText,
+                        { marginBottom: 8, marginTop: 4 },
+                      ]}
+                    >
                       {review.content}
                     </Text>
                   )}
-                  <View
+                  {/* <View
                     style={{ flexDirection: "row", gap: 5, marginBottom: 8 }}
                   >
-                    {/* {review.images.map((image, index) => (
+                    {review.images.map((image, index) => (
                       <Image
                         key={index}
                         source={image}
                         style={{ width: 50, height: 50, borderRadius: 8 }}
                         resizeMode="cover"
                       />
-                    ))} */}
-                  </View>
-                  <Text style={[styles.sectionText, { fontWeight: "500" }]}>
-                    {review.userId}
+                    ))}
+                  </View> */}
+                  <Text
+                    style={[
+                      styles.sectionText,
+                      { fontWeight: "600", marginBottom: 4 },
+                    ]}
+                  >
+                    {review.userId.username}
                   </Text>
-                  {/* <Text style={styles.sectionText}>{review.date}</Text> */}
+                  <Text style={styles.sectionText}>
+                    {moment(review.createdAt).calendar()}
+                  </Text>
                 </View>
               ))}
             </View>
           </ScrollView>
           <View style={styles.buttonContainer}>
-            <Button onPress={() => router.push("/service-detail/inquire")}>
+            <Button
+              onPress={() =>
+                router.push({
+                  pathname: "/service-detail/inquire",
+                  params: { id: service?._id },
+                })
+              }
+            >
               Inquire
             </Button>
           </View>

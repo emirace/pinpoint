@@ -85,6 +85,18 @@ export const getAllProducts = async ({
   }
 };
 
+export const fetchProductsForLocation = async (locationId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/products/location/${locationId}`
+    );
+    return response.data.products;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+};
+
 export const getProductById = async (productId: string) => {
   try {
     const response = await axiosInstance.get(`/products/${productId}`);

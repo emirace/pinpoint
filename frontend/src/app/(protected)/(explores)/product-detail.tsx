@@ -52,11 +52,16 @@ const Detail = () => {
 
   const closeMenu = () => setVisible(false);
 
+  const availableOptions = [
+    product?.availableOnline && "Buy Online",
+    product?.ships && "Shipping",
+  ].filter(Boolean);
+
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Detail" />
+        <Appbar.Content title="Details" />
 
         <Menu
           visible={visible}
@@ -87,9 +92,7 @@ const Detail = () => {
 
           <MultiSelect
             button={
-              <View
-                style={{ flexDirection: "row", gap: 10, paddingHorizontal: 15 }}
-              >
+              <View style={{ flexDirection: "row", gap: 10 }}>
                 <Ionicons name="flag-outline" size={20} />
                 <Text>Report Partner</Text>
               </View>
@@ -148,25 +151,16 @@ const Detail = () => {
               <Text
                 style={[
                   styles.sectionTitle,
-                  { marginTop: 10, fontWeight: "bold", fontSize: 20 },
+                  {
+                    marginTop: 10,
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    marginBottom: 0,
+                  },
                 ]}
               >
                 ${product?.price}
               </Text>
-            </View>
-            <View style={styles.section}>
-              <View
-                style={[{ flexDirection: "row", gap: 5, alignItems: "center" }]}
-              >
-                <Text style={{}}>Shipping Available</Text>
-                <Ionicons name="checkmark" size={20} />
-              </View>
-              <View
-                style={[{ flexDirection: "row", gap: 5, alignItems: "center" }]}
-              >
-                <Text style={{}}>Pickup</Text>
-                <Ionicons name="checkmark" size={20} />
-              </View>
             </View>
             <View style={styles.section}>
               {product?.options?.map((option, index) => (
@@ -174,11 +168,32 @@ const Detail = () => {
                   key={index}
                   style={{ flexDirection: "row", marginBottom: 10 }}
                 >
-                  <Text style={{ flex: 1 }}>{option.optionCategory}:</Text>
+                  <Text
+                    style={{
+                      flex: 1,
+                      fontWeight: "500",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {option.optionCategory}:
+                  </Text>
                   <Text style={{ flex: 3 }}>{option.optionName}</Text>
                 </View>
               ))}
             </View>
+            {availableOptions.length > 0 && (
+              <View
+                style={[
+                  styles.section,
+                  { flexDirection: "row", alignItems: "center", gap: 5 },
+                ]}
+              >
+                <Text style={{ color: "#888" }}>
+                  {availableOptions.join(" + ")}
+                </Text>
+                <Ionicons name="checkmark" size={15} />
+              </View>
+            )}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>
                 Reviews ({product?.reviews.length})

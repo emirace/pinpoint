@@ -4,7 +4,6 @@ import * as Location from "expo-location";
 import { mapStyle } from "@/src/utils/map";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Button from "@/src/components/Button";
-import { generateRandomLocations } from "@/src/utils/data/map";
 import BottomSheetComponent from "@/src/components/BottomSheetComponent";
 import Filter from "@/src/components/map/Filter";
 import List from "@/src/components/map/List";
@@ -17,17 +16,26 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from "@/src/components/mapview/Mapview";
 import { CameraType, RegionType } from "@/src/types/map";
+import { getNearbyLocations } from "@/src/services/location";
+import { Location as ILocation } from "@/src/types/location";
+import MapViewDirections from "react-native-maps-directions";
 
-interface LocationCoords {
+export interface LocationCoords {
   latitude: number;
   longitude: number;
 }
 
 export default function App() {
   const [location, setLocation] = useState<LocationCoords | null>(null);
-  const [nearbyLocations, setNearbyLocations] = useState<LocationCoords[]>([]);
-  const [selectedLocation, setSelectedLocation] =
-    useState<LocationCoords | null>(null);
+  const [locations, setLocations] = useState<ILocation[]>([]);
+  const [nearbyLocations, setNearbyLocations] = useState<
+    { location: LocationCoords; name: string; id: string }[]
+  >([]);
+  const [selectedLocation, setSelectedLocation] = useState<{
+    location: LocationCoords;
+    name: string;
+    image: string;
+  } | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const mapRef = useRef<MapView | null>(null);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -52,35 +60,52 @@ export default function App() {
         longitude: locationResult.coords.longitude,
       };
       setLocation(userLocation);
-      setNearbyLocations(generateRandomLocations(userLocation, 7));
     })();
   }, []);
 
   useEffect(() => {
     if (location && selectedLocation && mapRef.current) {
-      const edgePadding = { top: 200, right: 50, bottom: 500, left: 50 }; // Adjusted padding for bottom modal
-      mapRef.current.fitToCoordinates([location, selectedLocation], {
+      const edgePadding = { top: 120, right: 50, bottom: 200, left: 50 }; // Adjusted padding for bottom modal
+      mapRef.current.fitToCoordinates([location, selectedLocation.location], {
         edgePadding: edgePadding,
         animated: true,
       });
-
-      // Optional: Animate camera to center the view slightly upwards
-      const midPoint = {
-        latitude: (location.latitude + selectedLocation.latitude) / 2,
-        longitude: (location.longitude + selectedLocation.longitude) / 2,
-      };
-
-      const camera: CameraType = {
-        center: midPoint,
-        pitch: 0,
-        heading: 0,
-        zoom: 20, // Adjust zoom as needed
-        altitude: 1000, // Adjust altitude if necessary
-      };
-
-      mapRef.current.animateCamera(camera, { duration: 1000 }); // Smooth transition
     }
   }, [location, selectedLocation]);
+
+  useEffect(() => {
+    const fetchNearByLocation = async () => {
+      try {
+        if (!location) return;
+        const res = await getNearbyLocations({
+          latitude: location?.latitude,
+          longitude: location?.longitude,
+          businessType: "both",
+          category: "",
+          radius: undefined,
+        });
+        const nearLocation = res
+          .map(
+            (loc: any) =>
+              loc.coordinates.coordinates && {
+                image: loc.images[0],
+                name: loc.locationName,
+                location: {
+                  latitude: loc?.coordinates?.coordinates[1],
+                  longitude: loc?.coordinates?.coordinates[0],
+                },
+              }
+          )
+          .filter((loc: any) => loc !== undefined);
+        console.log(nearLocation);
+        setNearbyLocations(nearLocation);
+        setLocations(res);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchNearByLocation();
+  }, [location]);
 
   const mapRegion: RegionType | undefined = location
     ? {
@@ -91,7 +116,11 @@ export default function App() {
       }
     : undefined;
 
-  const handleMarkerPress = (loc: LocationCoords) => {
+  const handleMarkerPress = (loc: {
+    location: LocationCoords;
+    name: string;
+    id: string;
+  }) => {
     setSelectedLocation(loc);
     openSheet();
   };
@@ -118,23 +147,27 @@ export default function App() {
         {nearbyLocations.map((loc, index) => (
           <Marker
             key={index}
-            coordinate={loc}
+            coordinate={loc.location}
             onPress={() => handleMarkerPress(loc)}
           >
-            <Image
-              source={require("@/assets/images/logo1.png")} // Replace with your custom image path
-              style={styles.customImageMarker}
-              resizeMode="contain"
-            />
-            <Text>Location name</Text>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Image
+                source={require("@/assets/images/logo1.png")}
+                style={styles.customImageMarker}
+                resizeMode="contain"
+              />
+              <Text>{loc.name}</Text>
+            </View>
           </Marker>
         ))}
 
         {selectedLocation && location && (
-          <Polyline
-            coordinates={[location, selectedLocation]}
-            strokeColor={lightColors.colors.primary} // Blue color for the route
-            strokeWidth={7}
+          <MapViewDirections
+            origin={location}
+            destination={selectedLocation.location}
+            apikey={"AIzaSyBAG6Xy390W6KIWFx3DFQAtIDVnW3gqCFQ"}
+            strokeWidth={4}
+            strokeColor={lightColors.colors.primary}
           />
         )}
       </MapView>
@@ -154,10 +187,10 @@ export default function App() {
             </Button>
           }
           actionButtonStyle={{ flex: 1 }}
-          snapPoints={["60"]}
+          snapPoints={["50"]}
         />
         <BottomSheetComponent
-          content={(close) => <List />}
+          content={(close) => <List data={locations} />}
           button={
             <Button
               disabled
@@ -182,7 +215,7 @@ export default function App() {
         index={0}
       >
         <BottomSheetView style={[styles.contentContainer]}>
-          <SelectedLocations />
+          <SelectedLocations origin={location} destination={selectedLocation} />
         </BottomSheetView>
       </BottomSheetModal>
 

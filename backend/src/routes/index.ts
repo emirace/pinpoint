@@ -8,6 +8,7 @@ import story from "./story";
 import image from "./image";
 import product from "./product";
 import service from "./service";
+import message from "./message";
 import lead from "./lead";
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.use("/images", image);
 router.use("/products", product);
 router.use("/services", service);
 router.use("/leads", lead);
+router.use("/messages", message);
 
 export default router;

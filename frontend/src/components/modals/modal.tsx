@@ -63,9 +63,9 @@ const Modal: React.FC<CustomModalProps> = ({
               style={styles.close}
               onPress={handleClose}
             />
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {children(handleClose)} {/* Passing handleClose to children */}
-            </ScrollView>
+            {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+            {children(handleClose)}
+            {/* </ScrollView> */}
           </View>
         </TouchableOpacity>
       </DefaultModal>

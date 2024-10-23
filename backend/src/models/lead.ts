@@ -11,10 +11,14 @@ interface ILead extends Document {
   location: Schema.Types.ObjectId;
   service: Schema.Types.ObjectId;
   partner: Schema.Types.ObjectId;
+  conversationId?: Schema.Types.ObjectId;
   user: Schema.Types.ObjectId;
   uploadedMedia?: string[];
-  status: string;
+  status: "Pending" | "Active" | "Pool" | "Complete";
+  reason?: string;
   note: string;
+  offer?: string;
+  dateCompleted?: Date;
 }
 
 const LeadSchema: Schema<ILead> = new Schema(
@@ -33,10 +37,18 @@ const LeadSchema: Schema<ILead> = new Schema(
     location: { type: Schema.Types.ObjectId, ref: "Location" },
     service: { type: Schema.Types.ObjectId, ref: "Service" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
+    conversationId: { type: Schema.Types.ObjectId, ref: "Conversation" },
     partner: { type: Schema.Types.ObjectId, ref: "User" },
     uploadedMedia: { type: [String], default: [] },
-    status: { type: String, default: "pending" },
+    status: {
+      type: String,
+      enum: ["Pending", "Active", "Complete"],
+      default: "Pending",
+    },
+    reason: { type: String },
     note: { type: String },
+    offer: { type: String },
+    dateCompleted: { type: String },
   },
   { timestamps: true }
 );

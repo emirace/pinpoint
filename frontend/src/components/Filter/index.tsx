@@ -19,7 +19,8 @@ interface FilterProps {
   isOnlineShopping?: boolean;
   setIsOnlineShopping: (value?: boolean) => void;
   inShopOnly?: boolean;
-  setInShopOnly: (value: boolean) => void;
+  selectedItem: string;
+  setInShopOnly: (value?: boolean) => void;
   options: any;
   setOptions: (options: any) => void;
   count: number;
@@ -31,6 +32,7 @@ const Filter: React.FC<FilterProps> = ({
   setIsOnlineShopping,
   inShopOnly,
   setInShopOnly,
+  selectedItem,
   options,
   setOptions,
   count,
@@ -76,6 +78,7 @@ const Filter: React.FC<FilterProps> = ({
     setDistance(14);
     setPriceRange([10, 50]);
     setIsOnlineShopping();
+    setInShopOnly();
     setSelectedGenders([]);
     setSelectedColors([]);
     setOptions({});
@@ -191,44 +194,68 @@ const Filter: React.FC<FilterProps> = ({
           />
         </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1,
-            paddingVertical: 15,
-          }}
-        >
-          <Text style={{ fontWeight: "500", marginRight: 8 }}>
-            In-Store Shopping
-          </Text>
-          <Checkbox.Android
-            status={isOnlineShopping ? "checked" : "unchecked"}
-            onPress={() => setIsOnlineShopping(!isOnlineShopping)}
-          />
-        </View>
+        {selectedItem === "Products" && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderBottomColor: "#e1e1e1",
+                borderBottomWidth: 1,
+                paddingVertical: 15,
+              }}
+            >
+              <Text style={{ fontWeight: "500", marginRight: 8 }}>
+                In-Store Shopping
+              </Text>
+              <Checkbox.Android
+                status={isOnlineShopping ? "checked" : "unchecked"}
+                onPress={() => setIsOnlineShopping(!isOnlineShopping)}
+              />
+            </View>
 
-        {/* Online Shopping */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1,
-            paddingVertical: 15,
-          }}
-        >
-          <Text style={{ fontWeight: "500", marginRight: 8 }}>
-            Online Shopping
-          </Text>
-          <Checkbox.Android
-            status={inShopOnly ? "checked" : "unchecked"}
-            onPress={() => setInShopOnly(!inShopOnly)}
-          />
-        </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderBottomColor: "#e1e1e1",
+                borderBottomWidth: 1,
+                paddingVertical: 15,
+              }}
+            >
+              <Text style={{ fontWeight: "500", marginRight: 8 }}>
+                Online Shopping
+              </Text>
+              <Checkbox.Android
+                status={inShopOnly ? "checked" : "unchecked"}
+                onPress={() => setInShopOnly(!inShopOnly)}
+              />
+            </View>
+          </>
+        )}
+
+        {selectedItem === "Services" && (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderBottomColor: "#e1e1e1",
+              borderBottomWidth: 1,
+              paddingVertical: 15,
+            }}
+          >
+            <Text style={{ fontWeight: "500", marginRight: 8 }}>
+              In-Home Service
+            </Text>
+            <Checkbox.Android
+              status={isOnlineShopping ? "checked" : "unchecked"}
+              onPress={() => setIsOnlineShopping(!isOnlineShopping)}
+            />
+          </View>
+        )}
 
         {/* Gender */}
         <View
