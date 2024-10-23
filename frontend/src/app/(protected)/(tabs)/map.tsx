@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, Platform } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import * as Location from "expo-location";
 import { mapStyle } from "@/src/utils/map";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -11,14 +11,13 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import SelectedLocations from "@/src/components/map/SelectedLocations";
 import { lightColors } from "@/src/utils/colors";
 import MapView, {
+  MapViewDirections,
   Marker,
-  Polyline,
   PROVIDER_GOOGLE,
 } from "@/src/components/mapview/Mapview";
 import { CameraType, RegionType } from "@/src/types/map";
 import { getNearbyLocations } from "@/src/services/location";
 import { Location as ILocation } from "@/src/types/location";
-import MapViewDirections from "react-native-maps-directions";
 
 export interface LocationCoords {
   latitude: number;
@@ -29,7 +28,7 @@ export default function App() {
   const [location, setLocation] = useState<LocationCoords | null>(null);
   const [locations, setLocations] = useState<ILocation[]>([]);
   const [nearbyLocations, setNearbyLocations] = useState<
-    { location: LocationCoords; name: string; id: string }[]
+    { location: LocationCoords; name: string; image: string }[]
   >([]);
   const [selectedLocation, setSelectedLocation] = useState<{
     location: LocationCoords;
@@ -119,7 +118,7 @@ export default function App() {
   const handleMarkerPress = (loc: {
     location: LocationCoords;
     name: string;
-    id: string;
+    image: string;
   }) => {
     setSelectedLocation(loc);
     openSheet();
@@ -215,7 +214,10 @@ export default function App() {
         index={0}
       >
         <BottomSheetView style={[styles.contentContainer]}>
-          <SelectedLocations origin={location} destination={selectedLocation} />
+          <SelectedLocations
+            origin={location!}
+            destination={selectedLocation!}
+          />
         </BottomSheetView>
       </BottomSheetModal>
 

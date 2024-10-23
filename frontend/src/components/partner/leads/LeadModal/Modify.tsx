@@ -1,19 +1,11 @@
-import {
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { Checkbox, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Button from "@/src/components/Button";
 import { useLead } from "@/src/context/Lead";
 import { useToastNotification } from "@/src/context/ToastNotificationContext";
 import { Lead } from "@/src/types/lead";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 interface Props {
   close: () => void;
@@ -54,54 +46,6 @@ const Modify: React.FC<Props> = ({ close, id, setLead }) => {
     }
   };
 
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
-  const [mode, setMode] = useState<"date" | "time">("date"); // Control for date or time mode
-
-  const onChange = (event: any, selectedDate: any) => {
-    if (event.type === "set") {
-      const currentDate = selectedDate || date;
-      setDate(currentDate);
-      if (Platform.OS === "android") {
-        toggleDateTime(); // Close picker after selection on Android
-      }
-      if (mode === "date") {
-        handleInputChange("date", currentDate.toDateString());
-      } else if (mode === "time") {
-        handleInputChange(
-          "time",
-          currentDate.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        );
-      }
-    } else {
-      toggleDateTime();
-    }
-  };
-
-  const confirmDateTime = () => {
-    if (mode === "date") {
-      handleInputChange("date", date.toDateString());
-    } else if (mode === "time") {
-      handleInputChange(
-        "time",
-        date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      );
-    }
-    toggleDateTime();
-  };
-
-  const toggleDateTime = () => {
-    setShow(!show);
-  };
-
-  const toggleMode = (newMode: "date" | "time") => {
-    setMode(newMode);
-    setShow(true);
-  };
-
   return (
     <View>
       <Text style={styles.title}>Modify Lead</Text>
@@ -119,71 +63,27 @@ const Modify: React.FC<Props> = ({ close, id, setLead }) => {
         <FontAwesome style={styles.currency} name="dollar" size={16} />
       </View>
 
-      {show && (
-        <>
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={mode} // Set mode to date or time
-            display="spinner"
-            is24Hour={true}
-            onChange={onChange}
-          />
-          {Platform.OS === "ios" && (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around",
-                marginBottom: 20,
-                gap: 20,
-                marginTop: -20,
-              }}
-            >
-              <Button
-                variant="outlined"
-                onPress={toggleDateTime}
-                containerStyle={{ flex: 1 }}
-              >
-                Cancel
-              </Button>
-              <Button onPress={confirmDateTime} containerStyle={{ flex: 1 }}>
-                Confirm
-              </Button>
-            </View>
-          )}
-        </>
-      )}
+      <Pressable>
+        <TextInput
+          mode="outlined"
+          placeholder="Change Date"
+          value={formData.date}
+          style={[styles.textContainer]}
+          editable={false}
+        />
+        <Ionicons name="calendar-outline" style={styles.calendar} size={18} />
+      </Pressable>
 
-      {/* Date Selector */}
-      {!show && (
-        <Pressable onPress={() => toggleMode("date")}>
-          <TextInput
-            mode="outlined"
-            placeholder="Change Date"
-            value={formData.date}
-            style={[styles.textContainer]}
-            editable={false}
-            onPress={() => toggleMode("date")}
-          />
-          <Ionicons name="calendar-outline" style={styles.calendar} size={18} />
-        </Pressable>
-      )}
-
-      {/* Time Selector */}
-      {!show && (
-        <Pressable onPress={() => toggleMode("time")}>
-          <TextInput
-            mode="outlined"
-            placeholder="Change Time"
-            value={formData.time}
-            style={styles.textContainer}
-            editable={false}
-            onPress={() => toggleMode("time")}
-          />
-          <Ionicons name="time-outline" style={styles.calendar} size={18} />
-        </Pressable>
-      )}
+      <Pressable onPress={() => {}}>
+        <TextInput
+          mode="outlined"
+          placeholder="Change Time"
+          value={formData.time}
+          style={styles.textContainer}
+          editable={false}
+        />
+        <Ionicons name="time-outline" style={styles.calendar} size={18} />
+      </Pressable>
 
       <Button onPress={modifyLead} loading={approving}>
         Save
