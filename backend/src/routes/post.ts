@@ -7,7 +7,6 @@ import {
   likePost,
   reportPost,
   getAllPost,
-  getPostsByLocation,
 } from "../controllers/post";
 import { auth } from "../middleware/auth";
 import multer from "multer";
@@ -37,8 +36,6 @@ router.get("/", getAllPost);
 
 // Get a post by ID
 router.get("/:id", auth(), getPostById);
-
-router.get("/location/:locationId", getPostsByLocation);
 
 // Update a post (Only owner can update)
 router.put("/:id", upload.array("media"), auth(["partner"]), updatePost);

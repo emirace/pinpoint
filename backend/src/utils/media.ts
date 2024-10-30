@@ -72,17 +72,7 @@ export const downloadMediaFromS3 = async (key: string) => {
 
     const command = new GetObjectCommand(params);
     const response = await s3Client.send(command);
-    if (!response.Body) {
-      throw new Error(`Image not found`);
-    }
-    const str = await response.Body.transformToByteArray();
-
-    const bodyBuffer = Buffer.from(str);
-
-    return {
-      contentType: response.ContentType,
-      bodyBuffer,
-    };
+    return response;
   } catch (error: any) {
     throw new Error(`Could not download media from S3: ${error.message}`);
   }
