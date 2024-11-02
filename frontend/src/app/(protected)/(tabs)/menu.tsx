@@ -142,8 +142,8 @@ const Menu = () => {
             {renderGridItem(
               <Ionicons name="headset-outline" size={24} color="#555" />,
               "Support",
-              // () => router.push("/dashboard")
-              () => router.push("/support")
+              () => router.push("/dashboard")
+              // () => router.push("/support")
             )}
             {renderGridItem(
               <Ionicons name="document-text-outline" size={24} color="#555" />,
@@ -174,7 +174,7 @@ const Menu = () => {
               </View>
             }
           >
-            {(close) => <DeleteAccount />}
+            {(close) => <DeleteAccount close={close} />}
           </Modal>
         </View>
       </ScrollView>
