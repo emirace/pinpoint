@@ -23,7 +23,7 @@ export const createStory = async (
       for (const file of req.files) {
         const mediaType = file.mimetype.startsWith("image") ? "image" : "video";
         mediaUploadPromises.push(
-          uploadMediaToS3(file.path, file.filename, mediaType)
+          uploadMediaToS3(file.buffer, file.filename, mediaType)
         );
       }
     }
