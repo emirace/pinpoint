@@ -11,7 +11,6 @@ export const register = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
-
       return;
     }
 
@@ -134,7 +133,7 @@ export const login = async (req: Request, res: Response) => {
   const { email, password, role } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, delected: false });
 
     if (!user) {
       res.status(404).json({ message: "Invalid credentials" });
@@ -173,7 +172,7 @@ export const sendVerificationCode = async (req: Request, res: Response) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, delected: false });
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -213,7 +212,7 @@ export const requestForgotPasswordCode = async (
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, delected: false });
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
