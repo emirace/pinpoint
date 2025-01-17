@@ -29,7 +29,7 @@ export const register = async (req: Request, res: Response) => {
       firstName,
       lastName,
       username,
-      email,
+      email: userEmail,
       password,
       role,
       city,
@@ -37,6 +37,8 @@ export const register = async (req: Request, res: Response) => {
       ...otherFields
     } = filteredBody;
     console.log(req.body);
+
+    const email = userEmail.trim().toLowerCase();
 
     // Check if email is already in use
     const existingUserByEmail = await User.findOne({ email });

@@ -63,7 +63,7 @@ const Login = () => {
     try {
       setLoading(true);
       await login(
-        email,
+        email.trim().toLowerCase(),
         password,
         currentTab === "User" ? "customer" : "partner"
       );
