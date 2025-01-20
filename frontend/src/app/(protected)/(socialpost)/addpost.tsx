@@ -94,12 +94,7 @@ const AddPost: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const handlePost = async () => {
-    if (
-      (user?.role === "partner" && !selectedLocation) ||
-      !description ||
-      images.length < 1
-    )
-      return;
+    if (user?.role === "partner" && !selectedLocation) return;
     const postData = {
       content: description,
       media: images.map((image) => ({
