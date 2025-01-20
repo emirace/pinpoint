@@ -26,7 +26,11 @@ export const createPost = async (data: PostData) => {
   }
 
   try {
-    const response = await axiosInstance.post("/posts", formData);
+    const response = await axiosInstance.post("/posts", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error: any) {
     // Handle error here
