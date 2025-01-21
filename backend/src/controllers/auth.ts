@@ -246,6 +246,37 @@ export const requestForgotPasswordCode = async (
   }
 };
 
+export const verifyForgotPasswordToken = async (
+  req: Request,
+  res: Response
+) => {
+  const { email, code } = req.body;
+
+  try {
+    // Find the user with the matching email and non-deleted status
+    const user = await User.findOne({ email, delected: false });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    // Check if the code matches and has not expired
+    if (
+      user.verificationCode !== code ||
+      !user.verificationCodeExpires ||
+      user.verificationCodeExpires < new Date()
+    ) {
+      res.status(400).json({ message: "Invalid or expired code" });
+      return;
+    }
+
+    // Code is valid; respond with success
+    res.status(200).json({ message: "Code verified successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
 // Verify Code and Reset Password
 export const resetForgotPasswordCode = async (req: Request, res: Response) => {
   const { email, verificationCode, newPassword } = req.body;
