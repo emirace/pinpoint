@@ -214,7 +214,7 @@ export const requestForgotPasswordCode = async (
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email, delected: false });
+    const user = await User.findOne({ email });
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -242,6 +242,7 @@ export const requestForgotPasswordCode = async (
 
     res.status(200).json({ message: "Password reset code sent to your email" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server Error", error });
   }
 };
@@ -273,6 +274,7 @@ export const verifyForgotPasswordToken = async (
     // Code is valid; respond with success
     res.status(200).json({ message: "Code verified successfully" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server Error", error });
   }
 };
@@ -298,7 +300,7 @@ export const resetForgotPasswordCode = async (req: Request, res: Response) => {
       res.status(400).json({ message: "Verification code has expired." });
       return;
     }
-
+    console.log(verificationCode, user.verificationCode);
     // Validate the verification code
     if (user.verificationCode !== verificationCode) {
       res.status(400).json({ message: "Invalid verification code." });
